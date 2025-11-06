@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Morph Gallery — Ultra‑Cheap Static</title>
+  <style>
+    :root{--bg:#0b0d10;--fg:#e9eef5;--muted:#9fb0c3;--card:#14181f;--accent:#7aa2ff;--chip:#1d2430;--ring:#2a3342}
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font:16px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu; color:var(--fg); background:radial-gradient(1200px 800px at 80% -10%,#162032 0%,transparent 60%), var(--bg)}
+    header{position:sticky;top:0;background:rgba(11,13,16,.6);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--ring);z-index:5}
+    .wrap{max-width:1150px;margin:0 auto;padding:16px}
+    h1{font-size:22px;margin:0}
+    nav{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+    .tab{padding:8px 12px;border-radius:999px;border:1px solid var(--ring);background:var(--chip);color:var(--muted);text-decoration:none}
+    .tab.active{color:#081329;background:var(--accent);border-color:transparent;font-weight:700}
+
+    .controls{display:grid;grid-template-columns:1fr 1fr 1fr auto auto;gap:10px;margin-top:12px}
+    input,select,button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);background:var(--card);color:var(--fg)}
+    .btn{background:var(--accent);color:#081329;border:none;font-weight:700;cursor:pointer}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;padding:18px}
+    .card{background:var(--card);border:1px solid var(--ring);border-radius:18px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .15s ease}
+    .card:hover{transform:translateY(-2px)}
+    .thumb{aspect-ratio:4/5;width:100%;object-fit:cover;display:block}
+    .meta{padding:12px}
+    .title{font-weight:600}
+    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .chip{background:var(--chip);border:1px solid var(--ring);color:var(--muted);padding:4px 8px;border-radius:999px;font-size:12px}
+    .empty{opacity:.7;text-align:center;padding:50px}
+    .footer{opacity:.7;text-align:center;padding:28px}
+    .muted{opacity:.75}
+
+    /* Lists */
+    .list{padding:18px}
+    .list h2{font-size:18px;margin:16px 0 8px}
+    .az{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+    .az a{display:block;padding:8px 10px;border-radius:10px;border:1px solid var(--ring);background:var(--card);text-decoration:none;color:var(--fg)}
+    .kvs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+
+    /* Modal */
+    dialog{border:none;border-radius:18px;max-width:min(980px,92vw);padding:0;background:var(--card);color:var(--fg);box-shadow:0 20px 70px rgba(0,0,0,.5)}
+    dialog::backdrop{background:rgba(0,0,0,.6)}
+    .modalHead{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--ring)}
+    .modalBody{display:grid;grid-template-columns:minmax(260px,44%) 1fr;gap:16px;padding:16px}
+    .modalBody img{width:100%;height:auto;border-radius:14px;border:1px solid var(--ring)}
+    .pill{font-size:12px;background:var(--chip);border:1px solid var(--ring);padding:3px 8px;border-radius:999px;margin-right:6px;color:var(--muted)}
+    .badges{display:flex;flex-wrap:wrap;gap:6px}
+    .close{background:transparent;border:1px solid var(--ring);color:var(--fg);padding:8px 10px;border-radius:12px;cursor:pointer}
+
+    @media (max-width:900px){.controls{grid-template-columns:1fr 1fr;grid-auto-rows:auto}.modalBody{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Human Morph Gallery</h1>
+      <nav>
+        <a class="tab" data-tab="gallery" href="#/gallery">Gallery</a>
+        <a class="tab" data-tab="az" href="#/a-z">A–Z</a>
+        <a class="tab" data-tab="regions" href="#/regions">Regions</a>
+        <a class="tab" data-tab="about" href="#/about">About</a>
+      </nav>
+      <div class="controls">
+        <input id="q" placeholder="Search name, region, notes…" />
+        <select id="region"><option value="">All regions</option></select>
+        <select id="category"><option value="">All categories</option><option>Male</option><option>Female</option><option>Mixed</option></select>
+        <button id="csvBtn" class="btn" title="Import CSV">Import CSV</button>
+        <button id="dlBtn" title="Download CSV">Export CSV</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="view-gallery" class="grid" aria-live="polite"></section>
+    <section id="view-az" class="list" hidden></section>
+    <section id="view-regions" class="list" hidden></section>
+    <section id="view-about" class="list" hidden>
+      <h2>About & Methods</h2>
+      <p>This is a static, free-to-host gallery for average faces and morphs. Images live in <code>/images/</code>; entries are stored as in‑page data or loaded from CSV. Avoid essentialist language; include sources where possible.</p>
+      <h3>Disclaimer</h3>
+      <p>Entries are demonstrative. Traits reflect image sets and processing choices; not definitive of any population. Please read notes and sources on each item.</p>
+    </section>
+    <div id="empty" class="empty" hidden>Nothing found. Adjust filters or add your first morph.</div>
+    <div class="footer">© <span id="year"></span> Your Site. Host on GitHub/Netlify for $0. Use <strong>Import CSV</strong> to bulk load items.</div>
+  </main>
+
+  <dialog id="modal">
+    <div class="modalHead">
+      <div>
+        <strong id="mTitle"></strong>
+        <div class="badges" id="mBadges"></div>
+      </div>
+      <div>
+        <button class="close" onclick="modal.close()">Close</button>
+      </div>
+    </div>
+    <div class="modalBody">
+      <img id="mImg" alt="Morph preview" />
+      <div>
+        <p id="mNotes" style="margin-top:0"></p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <div class="pill">Source(s)</div>
+            <ul id="mSources" style="margin-top:8px"></ul>
+          </div>
+          <div>
+            <div class="pill">Tags</div>
+            <div id="mTags" class="chips" style="margin-top:8px"></div>
+          </div>
+        </div>
+        <div style="margin-top:14px">
+          <a id="mFile" download>Download image</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="csvDialog">
+    <div class="modalHead">
+      <strong>Import CSV</strong>
+      <button class="close" onclick="csvDialog.close()">Close</button>
+    </div>
+    <div class="modalBody" style="grid-template-columns:1fr">
+      <p>Paste CSV with headers: <code>id,title,region,category,img,tags,notes,sources</code>. Use <code>|</code> to separate multiple tags. For <code>sources</code>, use <code>Label|URL;Label|URL</code>.</p>
+      <textarea id="csvText" rows="10" style="width:100%;border-radius:12px;border:1px solid var(--ring);background:var(--card);color:var(--fg);padding:10px"></textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="file" id="csvFile" accept=".csv" />
+        <button class="btn" id="applyCsv">Apply</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+  // --- Starter data (edit or replace via CSV) -------------------------------
+  let DATA = [
+    {
+      id: "eng_male_avg_001",
+      title: "Average English Male",
+      region: "United Kingdom / England",
+      category: "Male",
+      img: "images/eng_male_avg_001.jpg",
+      tags: ["English","Average","2025"],
+      sources: [ {label: "Averaged from 65 faces", url: ""} ],
+      notes: "Demo entry; replace with your own."
+    },
+    {
+      id: "pashtun_female_avg_002",
+      title: "Average Pashtun Female",
+      region: "Afghanistan / Pakistan",
+      category: "Female",
+      img: "images/pashtun_female_avg_002.jpg",
+      tags: ["Pashtun","Average"],
+      sources: [ {label:"Averaged from 40 images", url: ""} ],
+      notes: "Illustrates metadata layout."
+    }
+  ]
+  // -------------------------------------------------------------------------
+  const $ = s=>document.querySelector(s)
+  const grid = $('#view-gallery'), q = $('#q'), regionSel = $('#region'), catSel = $('#category')
+  const modal = $('#modal'), csvDialog = $('#csvDialog')
+  const mTitle = $('#mTitle'), mImg = $('#mImg'), mNotes = $('#mNotes'), mSources = $('#mSources'), mTags = $('#mTags'), mBadges = $('#mBadges'), mFile = $('#mFile')
+  const viewAZ = $('#view-az'), viewRegions = $('#view-regions'), viewAbout = $('#view-about')
+  document.getElementById('year').textContent = new Date().getFullYear()
+
+  // Tabs
+  const tabs = [...document.querySelectorAll('.tab')]
+  function setTab(name){
+    tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name))
+    grid.hidden = name!== 'gallery'
+    viewAZ.hidden = name!== 'az'
+    viewRegions.hidden = name!== 'regions'
+    viewAbout.hidden = name!== 'about'
+  }
+
+  // Populate region dropdown
+  function fillRegions(){
+    const current = regionSel.value
+    regionSel.innerHTML = '<option value="">All regions</option>'
+    ;([...new Set(DATA.map(d=>d.region))].sort()).forEach(r=>{
+      const o=document.createElement('option'); o.textContent=r; o.value=r; regionSel.appendChild(o)
+    })
+    regionSel.value = current
+  }
+
+  // Render Gallery
+  function render(list){
+    grid.innerHTML = ''
+    const empty = document.getElementById('empty')
+    if(!list.length){ empty.hidden=false; return } else { empty.hidden=true }
+    list.forEach(item=>{
+      const card=document.createElement('article'); card.className='card'; card.tabIndex=0; card.setAttribute('role','button'); card.title='Open details'
+      card.innerHTML = `
+        <img class="thumb" src="${item.img}" alt="${item.title}" loading="lazy" />
+        <div class="meta">
+          <div class="title">${item.title}</div>
+          <div class="chips">
+            <span class="chip">${item.region}</span>
+            <span class="chip">${item.category}</span>
+          </div>
+        </div>`
+      card.addEventListener('click',()=>openModal(item))
+      card.addEventListener('keypress',e=>{ if(e.key==='Enter') openModal(item) })
+      grid.appendChild(card)
+    })
+  }
+
+  function openModal(item){
+    mTitle.textContent = item.title
+    mBadges.innerHTML = `<span class="pill">${item.region}</span><span class="pill">${item.category}</span>`
+    mImg.src = item.img; mImg.alt = item.title
+    mNotes.textContent = item.notes||''
+    mSources.innerHTML = (item.sources||[]).map(s=>`<li>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`:s.label}</li>`).join('')
+    mTags.innerHTML = (item.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')
+    const ext = (item.img.split('.').pop()||'jpg')
+    mFile.href = item.img; mFile.download = `${item.id||item.title}.${ext}`
+    modal.showModal(); history.replaceState(null,'',`#/morph/${encodeURIComponent(item.id||item.title)}`)
+  }
+
+  // Filters
+  function applyFilters(){
+    const term = q.value.trim().toLowerCase(); const r=regionSel.value; const c=catSel.value
+    const out = DATA.filter(d=>{
+      const inText = (d.title+" "+d.region+" "+(d.notes||" ")+" "+(d.tags||[]).join(' ')).toLowerCase().includes(term)
+      const inR = !r || d.region===r
+      const inC = !c || d.category===c
+      return inText && inR && inC
+    })
+    render(out)
+  }
+  q.addEventListener('input', applyFilters)
+  regionSel.addEventListener('change', applyFilters)
+  catSel.addEventListener('change', applyFilters)
+
+  // A–Z view
+  function renderAZ(){
+    const byTitle = [...DATA].sort((a,b)=>a.title.localeCompare(b.title))
+    let html=''
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+    letters.forEach(L=>{
+      const group = byTitle.filter(x=> (x.title||'').toUpperCase().startsWith(L))
+      if(group.length){
+        html += `<h2>${L}</h2><div class="az">` + group.map(x=>`<a href="#/morph/${encodeURIComponent(x.id||x.title)}" data-id="${x.id}">${x.title}</a>`).join('') + '</div>'
+      }
+    })
+    viewAZ.innerHTML = html || '<div class="empty">No entries yet.</div>'
+    // link behavior
+    viewAZ.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{
+      e.preventDefault(); const id=decodeURIComponent(a.getAttribute('href').split('/').pop()); const it=DATA.find(d=>(d.id||d.title)===id); if(it) openModal(it)
+    }))
+  }
+
+  // Regions view
+  function renderRegions(){
+    const map = {}
+    DATA.forEach(d=>{ map[d.region] = (map[d.region]||0)+1 })
+    const rows = Object.entries(map).sort((a,b)=>a[0].localeCompare(b[0]))
+    viewRegions.innerHTML = rows.length? `<div class="kvs">${rows.map(([k,v])=>`<a href="#/gallery" class="az" data-region="${k}"><strong>${k}</strong><br/><span class="muted">${v} entr${v===1?'y':'ies'}</span></a>`).join('')}</div>` : '<div class="empty">No regions yet.</div>'
+    viewRegions.querySelectorAll('a[data-region]').forEach(a=>a.addEventListener('click',e=>{
+      e.preventDefault(); regionSel.value=a.dataset.region; setTab('gallery'); applyFilters()
+    }))
+  }
+
+  // CSV import/export
+  function parseCSV(text){
+    // Minimal CSV parser supporting quotes
+    const rows=[]; let i=0; let cur=''; let inQ=false; const push=()=>{(rows[rows.length-1]||rows.push([]),rows[rows.length-1]).push(cur); cur=''}
+    rows.push([])
+    while(i<text.length){ const ch=text[i]
+      if(inQ){
+        if(ch==='"'){
+          if(text[i+1]==='"'){cur+='"'; i++} else {inQ=false}
+        } else {cur+=ch}
+      } else {
+        if(ch==='"'){inQ=true}
+        else if(ch===','){ push() }
+        else if(ch==='\n' || ch==='\r'){
+          if(cur!=='' || (rows[rows.length-1]&&rows[rows.length-1].length)){ push(); rows.push([]) }
+        } else { cur+=ch }
+      }
+      i++
+    }
+    if(cur!=='' || (rows[rows.length-1]&&rows[rows.length-1].length)) push()
+    // Trim empty trailing row
+    if(rows[rows.length-1] && rows[rows.length-1].length===1 && rows[rows.length-1][0]==='') rows.pop()
+    return rows.filter(r=>r.length>0)
+  }
+
+  function csvToData(rows){
+    const headers = rows.shift().map(h=>h.trim().toLowerCase())
+    const idx = (k)=>headers.indexOf(k)
+    const out = rows.map(r=>{
+      const get = k => r[idx(k)]||''
+      const tags = get('tags').split('|').map(x=>x.trim()).filter(Boolean)
+      const sources = get('sources').split(';').map(s=>{
+        const [label,url] = s.split('|'); if(!label) return null; return {label:label.trim(), url:(url||'').trim()}
+      }).filter(Boolean)
+      return {
+        id: get('id').trim() || get('title').trim().toLowerCase().replace(/[^a-z0-9]+/g,'_'),
+        title: get('title').trim(),
+        region: get('region').trim(),
+        category: get('category').trim(),
+        img: get('img').trim(),
+        tags, sources,
+        notes: get('notes').trim()
+      }
+    })
+    return out
+  }
+
+  function dataToCSV(data){
+    const esc = v=> '"'+String(v||'').replace(/"/g,'""')+'"'
+    const header = 'id,title,region,category,img,tags,notes,sources'
+    const rows = data.map(d=>{
+      const tags = (d.tags||[]).join('|')
+      const sources = (d.sources||[]).map(s=> (s.label||'')+'|'+(s.url||'')).join(';')
+      return [d.id,d.title,d.region,d.category,d.img,tags,d.notes,sources].map(esc).join(',')
+    })
+    return header + '\n' + rows.join('\n')
+  }
+
+  document.getElementById('csvBtn').addEventListener('click',()=>{ csvDialog.showModal() })
+  document.getElementById('dlBtn').addEventListener('click',()=>{
+    const blob=new Blob([dataToCSV(DATA)],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='morphs.csv'; a.click(); URL.revokeObjectURL(a.href)
+  })
+
+  document.getElementById('applyCsv').addEventListener('click',()=>{
+    const text = document.getElementById('csvText').value.trim(); if(!text) { alert('Paste CSV first or choose a file.'); return }
+    try{ const rows=parseCSV(text); const items=csvToData(rows); if(!items.length) throw new Error('No rows'); DATA=items; fillRegions(); applyFilters(); renderAZ(); renderRegions(); csvDialog.close() }
+    catch(e){ alert('CSV error: '+e.message) }
+  })
+
+  document.getElementById('csvFile').addEventListener('change',e=>{
+    const f=e.target.files[0]; if(!f) return; const reader=new FileReader(); reader.onload=ev=>{document.getElementById('csvText').value=ev.target.result}; reader.readAsText(f)
+  })
+
+  // Router
+  function route(){
+    const h=location.hash||'#/gallery'
+    if(h.startsWith('#/morph/')){
+      const id=decodeURIComponent(h.split('/').pop()); const it=DATA.find(d=>(d.id||d.title)===id); if(it) openModal(it)
+      setTab('gallery')
+    } else if(h.startsWith('#/a-z')){ setTab('az') }
+    else if(h.startsWith('#/regions')){ setTab('regions') }
+    else if(h.startsWith('#/about')){ setTab('about') }
+    else { setTab('gallery') }
+  }
+  window.addEventListener('hashchange', route)
+
+  // Init
+  function init(){ fillRegions(); applyFilters(); renderAZ(); renderRegions(); route() }
+  init()
+
+  // --- Minimal tests (run in console) --------------------------------------
+  ;(function runTests(){
+    try {
+      const sample = [
+        {id:'t1',title:'Test One',region:'X',category:'Male',img:'images/x1.jpg',tags:['A','B'],sources:[{label:'S1',url:''}],notes:'hello, world'},
+        {id:'t2',title:'Test Two',region:'Y',category:'Female',img:'images/x2.jpg',tags:['C'],sources:[{label:'S2',url:'http://example.com'}],notes:'line1\nline2'}
+      ]
+      const csv = dataToCSV(sample)
+      console.assert(csv.includes('\n'), 'CSV should contain\\n')
+      const rows = parseCSV(csv)
+      console.assert(rows.length===3, 'CSV rows should be header+2')
+      const objs = csvToData(rows)
+      console.assert(objs[0].title==='Test One', 'Title preserved')
+      console.assert(objs[1].notes.includes('line1\nline2'), 'Newlines preserved in notes')
+
+      const tricky = [
+        {id:'t3',title:'Quoted, Title',region:'Z',category:'Mixed',img:'images/x3.jpg',tags:[],sources:[],notes:'He said "hello", then left'}
+      ]
+      const csv2 = dataToCSV(tricky)
+      const objs2 = csvToData(parseCSV(csv2))
+      console.assert(objs2[0].notes.includes('"hello"'), 'Quotes preserved')
+      console.log('[Morphs Gallery] Tests passed')
+    } catch (e) {
+      console.error('[Morphs Gallery] Tests failed:', e)
+    }
+  })()
+  // -------------------------------------------------------------------------
+  </script>
+</body>
+</html>
