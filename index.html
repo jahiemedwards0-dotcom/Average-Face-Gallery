@@ -37,7 +37,7 @@
     .footer{opacity:.7;text-align:center;padding:28px}
     .muted{opacity:.75}
 
-    .contribute{margin:28px 0;padding:20px;border:1px solid var(--ring);border-radius:18px;background:var(--card)}
+    .contribute{margin:18px 0 28px;padding:20px;border:1px solid var(--ring);border-radius:18px;background:var(--card)}
     .contribute h2{margin-top:0}
     .formGrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));align-items:end}
     .formGrid label{display:flex;flex-direction:column;gap:6px;font-weight:600;color:var(--muted)}
@@ -72,7 +72,7 @@
     <div class="wrap">
       <h1>Human Morph Gallery</h1>
       <nav>
-        <a class="tab" data-tab="gallery" href="#/gallery">Gallery</a>
+        <a class="tab active" data-tab="gallery" href="#/gallery">Gallery</a>
         <a class="tab" data-tab="az" href="#/a-z">A–Z</a>
         <a class="tab" data-tab="regions" href="#/regions">Regions</a>
         <a class="tab" data-tab="about" href="#/about">About</a>
@@ -96,9 +96,14 @@
       <h3>Disclaimer</h3>
       <p>Faces here are averaged from real people, then lightly enhanced for clarity and hyperrealism. They illustrate trends in the source sets but are neither definitive nor absolute; as more material is gathered or methods improve, each entry may change. Please read notes and sources on each item.</p>
     </section>
-    <section class="contribute" id="contribute">
+    <div style="margin:18px 0">
+      <button id="toggleContribute" class="btn" type="button" style="width:100%">Request an average face or phenotype</button>
+      <div class="note" style="margin-top:6px">Optional: share a clear front-facing or side-profile photo, then submit what phenotype or average you want to see.</div>
+    </div>
+
+    <section class="contribute" id="contribute" hidden>
       <h2>Contribute to the project</h2>
-      <p>Upload a clear, front-facing photo or request the next phenotype / average face to guide what gets added next.</p>
+      <p>Upload a clear, front-facing or side-profile photo (optional) or request the next phenotype / average face to guide what gets added next.</p>
 
       <div class="formGrid" style="margin-bottom:16px">
         <label>Upload front-facing photo
@@ -185,6 +190,338 @@
       region: "Latin America",
       country: "Mexico (Northwest & North-Central)",
       category: "Phenotype",
+      img: "images/sinaloid.jpg",
+      tags: ["Sinaloid","Centralid-Mestizo","Pueblid-Mestizo","NW Mexico","ranching","mining","regional variant"],
+      sources: [ {label:"User composite & notes", url: ""} ],
+      notes: `
+        <h3>Description</h3>
+        <p>
+          A regional variant within the broader Centralid-Mestizo complex, more specifically
+          the Pueblid-Mestizo branch. Formed in the ranching–mining belt of northwest and
+          north-central Mexico through long-term Spanish–Indigenous admixture.
+          <strong>Skin:</strong> light- to medium-brown and tans deeply. Build tends toward
+          average height with a compact, stockier frame.
+        </p>
+
+        <h3>Traits</h3>
+        <ul>
+          <li>Faces often rounder in men and slightly longer in women; mild neoteny (soft, baby-faced look) is common.</li>
+          <li>Nose medium and usually projecting; lips full.</li>
+          <li>Eyes predominantly dark and slightly upturned; lighter shades appear in a minority; occasional epicanthic folds.</li>
+          <li>Hair dark brown to black; straight or wavy; curls not rare.</li>
+        </ul>
+
+        <img src="images/sinaloid-map.jpg"
+             alt="Sinaloid map"
+             style="display:block;width:100%;margin-top:10px;border-radius:12px;">
+      `
+    },
+    {
+      id: "avg_afghan_pashtun",
+      title: "Average Afghan Pashtun",
+      region: "South Asia",
+      country: "Afghanistan / Pakistan (Pashtun belt)",
+      category: "Average Face",
+      img: "images/avg_afghan_pashtun.jpg",
+      tags: ["Afghan","Pashtun","Average"],
+      sources: [ {label:"Average Afghan Pashtun morph", url: ""} ],
+      notes: "National/regional facial average morph. Add detailed traits and description later."
+    },
+    {
+      id: "avg_salvadoran",
+      title: "Average Salvadoran",
+      region: "Latin America",
+      country: "El Salvador",
+      category: "Average Face",
+      img: "images/avg_salvadoran.jpg",
+      tags: ["El Salvador","Mestizo","Average"],
+      sources: [ {label:"Average Salvadoran morph", url: ""} ],
+      notes: "National facial average morph. Add phenotype write-up and traits later."
+    },
+    {
+      id: "avg_english",
+      title: "Average English",
+      region: "Europe",
+      country: "United Kingdom / England",
+      category: "Average Face",
+      img: "images/avg_english.png?v=2",
+      tags: ["English","UK","Average","Male","Female"],
+      sources: [ {label:"User-supplied dual-sex composite", url: ""} ],
+      notes: "Updated with the provided dual-sex English average composite to pair male and female references side by side."
+    },
+    {
+      id: "avg_irish",
+      title: "Average Irish",
+      region: "Europe",
+      country: "Ireland",
+      category: "Average Face",
+      img: "images/avg_irish.png?v=2",
+      tags: ["Irish","Ireland","Average","Male","Female"],
+      sources: [ {label:"User-provided dual-sex composite", url: ""} ],
+      notes: "Updated with the provided dual-sex Irish average composite pairing male and female references side by side."
+    }
+  ]
+  // -------------------------------------------------------------------------
+  const $ = s=>document.querySelector(s)
+  const grid = $('#view-gallery'), q = $('#q'), regionSel = $('#region'), catSel = $('#category')
+  const modal = $('#modal')
+  const mTitle = $('#mTitle'), mImg = $('#mImg'), mNotes = $('#mNotes'), mSources = $('#mSources'), mTags = $('#mTags'), mBadges = $('#mBadges'), mFile = $('#mFile')
+  const viewAZ = $('#view-az'), viewRegions = $('#view-regions'), viewAbout = $('#view-about')
+  const contribute = $('#contribute'), toggleContribute = $('#toggleContribute')
+  const macroRegionReq = $('#macroRegionReq'), countryReq = $('#countryReq'), requestForm = $('#requestForm'), requestStatus = $('#requestStatus'), contactEmail = $('#contactEmail')
+  document.getElementById('year').textContent = new Date().getFullYear()
+
+  const hashForTab = {
+    gallery: '#/gallery',
+    az: '#/a-z',
+    regions: '#/regions',
+    about: '#/about'
+  }
+  let lastViewHash = '#/gallery'
+
+  // Tabs
+  const tabs = [...document.querySelectorAll('.tab')]
+  function setTab(name){
+    tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name))
+    grid.hidden = name!== 'gallery'; grid.setAttribute('aria-hidden', grid.hidden)
+    viewAZ.hidden = name!== 'az'; viewAZ.setAttribute('aria-hidden', viewAZ.hidden)
+    viewRegions.hidden = name!== 'regions'; viewRegions.setAttribute('aria-hidden', viewRegions.hidden)
+    viewAbout.hidden = name!== 'about'; viewAbout.setAttribute('aria-hidden', viewAbout.hidden)
+    if(hashForTab[name]){
+      lastViewHash = hashForTab[name]
+    }
+  }
+
+  tabs.forEach(tab=>tab.addEventListener('click',e=>{
+    e.preventDefault()
+    const target = tab.dataset.tab || 'gallery'
+    setTab(target)
+    location.hash = hashForTab[target] || '#/gallery'
+  }))
+
+  if(toggleContribute && contribute){
+    toggleContribute.addEventListener('click',()=>{
+      const isHidden = contribute.hasAttribute('hidden')
+      contribute.toggleAttribute('hidden', !isHidden)
+      toggleContribute.textContent = isHidden ? 'Hide request form' : 'Request an average face or phenotype'
+      toggleContribute.setAttribute('aria-expanded', isHidden ? 'true' : 'false')
+      if(isHidden){
+        contribute.scrollIntoView({behavior:'smooth', block:'start'})
+      }
+    })
+  }
+
+  function buildRegionCountryIndex(){
+    const index = {}
+    DATA.forEach(d=>{
+      const macro = d.region || 'Other'
+      const country = d.country || 'Unspecified area'
+      if(!index[macro]) index[macro] = {}
+      index[macro][country] = (index[macro][country]||0) + 1
+    })
+    return index
+  }
+
+  // Populate region dropdown
+  function fillRegions(){
+    const current = regionSel.value
+    regionSel.innerHTML = '<option value="">All regions</option>'
+    const regions = Object.keys(buildRegionCountryIndex()).sort()
+    regions.forEach(r=>{
+      if(!r) return
+      const o=document.createElement('option')
+      o.textContent=r
+      o.value=r
+      regionSel.appendChild(o)
+    })
+    regionSel.value = current
+  }
+
+  // Populate category dropdown from DATA
+  function fillCategories(){
+    const current = catSel.value
+    catSel.innerHTML = '<option value="">All categories</option>'
+    ;(['Average Face','Phenotype']).forEach(c=>{
+      const o=document.createElement('option')
+      o.textContent=c
+      o.value=c
+      catSel.appendChild(o)
+    })
+    catSel.value = current
+  }
+
+  // Render Gallery
+  function render(list){
+    grid.innerHTML = ''
+    const empty = document.getElementById('empty')
+    if(!list.length){ empty.hidden=false; return } else { empty.hidden=true }
+    list.forEach(item=>{
+      const card=document.createElement('article'); card.className='card'; card.tabIndex=0; card.setAttribute('role','button'); card.title='Open details'
+      const regionChip = item.region ? `<span class="chip">${item.region}</span>` : ''
+      const countryChip = item.country ? `<span class="chip">${item.country}</span>` : ''
+      card.innerHTML = `
+        <div class="thumbWrap">
+          <img class="thumb" src="${item.img}" alt="${item.title}" loading="lazy" />
+        </div>
+        <div class="meta">
+          <div class="title">${item.title}</div>
+          <div class="chips">
+            ${countryChip}
+            ${regionChip}
+            <span class="chip">${item.category}</span>
+          </div>
+        </div>`
+      card.addEventListener('click',()=>openModal(item))
+      card.addEventListener('keypress',e=>{ if(e.key==='Enter') openModal(item) })
+      grid.appendChild(card)
+    })
+  }
+
+  function openModal(item){
+    mTitle.textContent = item.title
+    const badges = [item.region, item.country, item.category].filter(Boolean)
+    mBadges.innerHTML = badges.map(b=>`<span class="pill">${b}</span>`).join('')
+    mImg.src = item.img; mImg.alt = item.title
+    mNotes.innerHTML = item.notes || ''
+    mSources.innerHTML = (item.sources||[]).map(s=>`<li>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`:s.label}</li>`).join('')
+    mTags.innerHTML = (item.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')
+    const ext = (item.img.split('.').pop()||'jpg').split('?')[0]
+    mFile.href = item.img; mFile.download = `${item.id||item.title}.${ext}`
+    modal.showModal(); history.replaceState(null,'',`#/morph/${encodeURIComponent(item.id||item.title)}`)
+  }
+
+  modal.addEventListener('close',()=>{
+    if(location.hash.startsWith('#/morph/')){
+      history.replaceState(null,'', lastViewHash)
+    }
+    route()
+  })
+
+  // Filters
+  function applyFilters(){
+    const term = q.value.trim().toLowerCase(); const r=regionSel.value; const c=catSel.value
+    const out = DATA.filter(d=>{
+      const inText = (d.title+" "+(d.country||" ")+" "+d.region+" "+(d.notes||" ")+" "+(d.tags||[]).join(' ')).toLowerCase().includes(term)
+      const inR = !r || d.region===r
+      const inC = !c || d.category===c
+      return inText && inR && inC
+    })
+    render(out)
+  }
+  q.addEventListener('input', applyFilters)
+  regionSel.addEventListener('change', applyFilters)
+  catSel.addEventListener('change', applyFilters)
+
+  // A–Z view
+  function renderAZ(){
+    const byTitle = [...DATA].sort((a,b)=>a.title.localeCompare(b.title))
+    let html=''
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+    letters.forEach(L=>{
+      const group = byTitle.filter(x=> (x.title||'').toUpperCase().startsWith(L))
+      if(group.length){
+        html += `<h2>${L}</h2><div class="az">` + group.map(x=>`<a href="#/morph/${encodeURIComponent(x.id||x.title)}" data-id="${x.id}">${x.title}</a>`).join('') + '</div>'
+      }
+    })
+    viewAZ.innerHTML = html || '<div class="empty">No entries yet.</div>'
+    viewAZ.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{
+      e.preventDefault(); const id=decodeURIComponent(a.getAttribute('href').split('/').pop()); const it=DATA.find(d=>(d.id||d.title)===id); if(it) openModal(it)
+    }))
+  }
+
+  // Regions view
+  function renderRegions(){
+    const index = buildRegionCountryIndex()
+    const macros = Object.entries(index).sort((a,b)=>a[0].localeCompare(b[0]))
+    viewRegions.innerHTML = macros.length
+      ? macros.map(([region, countries])=>{
+          const countryLinks = Object.entries(countries)
+            .sort((a,b)=>a[0].localeCompare(b[0]))
+            .map(([country,count])=>`<a href="#/gallery" class="az" data-region="${region}" data-country="${country}"><strong>${country}</strong><br/><span class="muted">${count} entr${count===1?'y':'ies'}</span></a>`)
+            .join('')
+          return `<h2>${region}</h2><div class="kvs">${countryLinks}</div>`
+        }).join('')
+      : '<div class="empty">No regions yet.</div>'
+    viewRegions.querySelectorAll('a[data-region]').forEach(a=>a.addEventListener('click',e=>{
+      e.preventDefault();
+      regionSel.value=a.dataset.region;
+      q.value=a.dataset.country || '';
+      setTab('gallery');
+      applyFilters();
+    }))
+  }
+
+  function populateRequestOptions(){
+    if(!macroRegionReq || !countryReq) return
+    const index = buildRegionCountryIndex()
+    macroRegionReq.innerHTML = Object.keys(index).sort().map(r=>`<option value="${r}">${r}</option>`).join('') || '<option value="">No regions yet</option>'
+    const firstRegion = macroRegionReq.value
+    fillCountryOptions(firstRegion, index)
+  }
+
+  function fillCountryOptions(region, index){
+    const countries = region && index[region] ? Object.keys(index[region]).sort() : []
+    countryReq.innerHTML = countries.length ? countries.map(c=>`<option value="${c}">${c}</option>`).join('') : '<option value="">No countries yet</option>'
+  }
+
+  if(macroRegionReq){
+    macroRegionReq.addEventListener('change',()=>{
+      const idx = buildRegionCountryIndex()
+      fillCountryOptions(macroRegionReq.value, idx)
+    })
+  }
+
+  if(requestForm){
+    requestForm.addEventListener('submit',e=>{
+      e.preventDefault()
+      const typeSel = document.getElementById('requestType')
+      const groupInput = document.getElementById('groupReq')
+      const notesInput = document.getElementById('notesReq')
+      const payload = {
+        type: typeSel ? typeSel.value : '',
+        region: macroRegionReq ? macroRegionReq.value : '',
+        country: countryReq ? countryReq.value : '',
+        group: groupInput ? groupInput.value : '',
+        notes: notesInput ? notesInput.value : '',
+        email: contactEmail ? contactEmail.value : ''
+      }
+      const summary = `Saved request: ${payload.type || 'Request'} for ${payload.country || 'a country'} in ${payload.region || 'a region'}${payload.group?` (group: ${payload.group})`:''}. ${payload.notes?`Notes: ${payload.notes}`:'No notes provided.'} ${payload.email?`Contact: ${payload.email}`:'No contact email supplied.'}`
+      requestStatus.textContent = summary
+      requestForm.reset()
+      populateRequestOptions()
+    })
+  }
+
+  // Router
+  function route(){
+    const h=location.hash||'#/gallery'
+    if(h.startsWith('#/morph/')){
+      const id=decodeURIComponent(h.split('/').pop())
+      const it=DATA.find(d=>(d.id||d.title)===id)
+      if(it) openModal(it)
+      return
+    } else if(h.startsWith('#/a-z')){ setTab('az') }
+    else if(h.startsWith('#/regions')){ setTab('regions') }
+    else if(h.startsWith('#/about')){ setTab('about') }
+    else { setTab('gallery') }
+  }
+  window.addEventListener('hashchange', route)
+
+  // Init
+  function init(){
+    fillRegions()
+    fillCategories()
+    populateRequestOptions()
+    applyFilters()
+    renderAZ()
+    renderRegions()
+    route()
+  }
+  init()
+  </script>
+</body>
+</html>
+
       img: "images/sinaloid.jpg",
       tags: ["Sinaloid","Centralid-Mestizo","Pueblid-Mestizo","NW Mexico","ranching","mining","regional variant"],
       sources: [ {label:"User composite & notes", url: ""} ],
