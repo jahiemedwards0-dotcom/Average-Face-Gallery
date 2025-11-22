@@ -48,7 +48,10 @@
     .badges{display:flex;flex-wrap:wrap;gap:6px}
     .close{background:transparent;border:1px solid var(--ring);color:var(--fg);padding:8px 10px;border-radius:12px;cursor:pointer}
 
-    @media (max-width:900px){.controls{grid-template-columns:1fr 1fr;grid-auto-rows:auto}.modalBody{grid-template-columns:1fr}}
+    @media (max-width:900px){
+      .controls{grid-template-columns:1fr 1fr;grid-auto-rows:auto}
+      .modalBody{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
@@ -64,7 +67,8 @@
       <div class="controls">
         <input id="q" placeholder="Search name, region, notes…" />
         <select id="region"><option value="">All regions</option></select>
-        <select id="category"><option value="">All categories</option><option>Male</option><option>Female</option><option>Mixed</option></select>
+        <!-- categories will be filled from DATA/CSV dynamically -->
+        <select id="category"><option value="">All categories</option></select>
         <button id="csvBtn" class="btn" title="Import CSV">Import CSV</button>
         <button id="dlBtn" title="Download CSV">Export CSV</button>
       </div>
@@ -138,9 +142,9 @@
       id: "eng_male_avg_001",
       title: "Average English Male",
       region: "United Kingdom / England",
-      category: "Male",
+      category: "Demo",
       img: "images/eng_male_avg_001.jpg",
-      tags: ["English","Average","2025"],
+      tags: ["English","Average","demo"],
       sources: [ {label: "Averaged from 65 faces", url: ""} ],
       notes: "Demo entry; replace with your own."
     },
@@ -148,11 +152,42 @@
       id: "pashtun_female_avg_002",
       title: "Average Pashtun Female",
       region: "Afghanistan / Pakistan",
-      category: "Female",
+      category: "Demo",
       img: "images/pashtun_female_avg_002.jpg",
-      tags: ["Pashtun","Average"],
+      tags: ["Pashtun","Average","demo"],
       sources: [ {label:"Averaged from 40 images", url: ""} ],
       notes: "Illustrates metadata layout."
+    },
+    {
+      id: "sinaloid",
+      title: "Sinaloid",
+      region: "Northwest & North-Central Mexico",
+      category: "Pueblid-Mestizo",
+      img: "images/sinaloid.jpg",
+      tags: ["Sinaloid","Centralid-Mestizo","Pueblid-Mestizo","NW Mexico","ranching","mining","regional variant"],
+      sources: [ {label:"User composite & notes", url: ""} ],
+      notes: `
+        <h3>Description</h3>
+        <p>
+          A regional variant within the broader Centralid-Mestizo complex, more specifically
+          the Pueblid-Mestizo branch. Formed in the ranching–mining belt of northwest and
+          north-central Mexico through long-term Spanish–Indigenous admixture.
+          <strong>Skin:</strong> light- to medium-brown and tans deeply. Build tends toward
+          average height with a compact, stockier frame.
+        </p>
+
+        <h3>Traits</h3>
+        <ul>
+          <li>Faces often rounder in men and slightly longer in women; mild neoteny (soft, baby-faced look) is common.</li>
+          <li>Nose medium and usually projecting; lips full.</li>
+          <li>Eyes predominantly dark and slightly upturned; lighter shades appear in a minority; occasional epicanthic folds.</li>
+          <li>Hair dark brown to black; straight or wavy; curls not rare.</li>
+        </ul>
+
+        <img src="images/sinaloid-map.jpg"
+             alt="Sinaloid map"
+             style="display:block;width:100%;margin-top:10px;border-radius:12px;">
+      `
     }
   ]
   // -------------------------------------------------------------------------
@@ -178,9 +213,27 @@
     const current = regionSel.value
     regionSel.innerHTML = '<option value="">All regions</option>'
     ;([...new Set(DATA.map(d=>d.region))].sort()).forEach(r=>{
-      const o=document.createElement('option'); o.textContent=r; o.value=r; regionSel.appendChild(o)
+      if(!r) return
+      const o=document.createElement('option')
+      o.textContent=r
+      o.value=r
+      regionSel.appendChild(o)
     })
     regionSel.value = current
+  }
+
+  // Populate category dropdown from DATA
+  function fillCategories(){
+    const current = catSel.value
+    catSel.innerHTML = '<option value="">All categories</option>'
+    ;([...new Set(DATA.map(d=>d.category))].sort()).forEach(c=>{
+      if(!c) return
+      const o=document.createElement('option')
+      o.textContent=c
+      o.value=c
+      catSel.appendChild(o)
+    })
+    catSel.value = current
   }
 
   // Render Gallery
@@ -209,7 +262,7 @@
     mTitle.textContent = item.title
     mBadges.innerHTML = `<span class="pill">${item.region}</span><span class="pill">${item.category}</span>`
     mImg.src = item.img; mImg.alt = item.title
-    mNotes.innerHTML = item.notes || ''     // ✅ changed from textContent to innerHTML
+    mNotes.innerHTML = item.notes || ''
     mSources.innerHTML = (item.sources||[]).map(s=>`<li>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`:s.label}</li>`).join('')
     mTags.innerHTML = (item.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')
     const ext = (item.img.split('.').pop()||'jpg')
@@ -255,13 +308,15 @@
     const map = {}
     DATA.forEach(d=>{ map[d.region] = (map[d.region]||0)+1 })
     const rows = Object.entries(map).sort((a,b)=>a[0].localeCompare(b[0]))
-    viewRegions.innerHTML = rows.length? `<div class="kvs">${rows.map(([k,v])=>`<a href="#/gallery" class="az" data-region="${k}"><strong>${k}</strong><br/><span class="muted">${v} entr${v===1?'y':'ies'}</span></a>`).join('')}</div>` : '<div class="empty">No regions yet.</div>'
+    viewRegions.innerHTML = rows.length
+      ? `<div class="kvs">${rows.map(([k,v])=>`<a href="#/gallery" class="az" data-region="${k}"><strong>${k}</strong><br/><span class="muted">${v} entr${v===1?'y':'ies'}</span></a>`).join('')}</div>`
+      : '<div class="empty">No regions yet.</div>'
     viewRegions.querySelectorAll('a[data-region]').forEach(a=>a.addEventListener('click',e=>{
       e.preventDefault(); regionSel.value=a.dataset.region; setTab('gallery'); applyFilters()
     }))
   }
 
-  // CSV import/export
+  // CSV import/export helpers
   function parseCSV(text){
     // Minimal CSV parser supporting quotes
     const rows=[]; let i=0; let cur=''; let inQ=false; const push=()=>{(rows[rows.length-1]||rows.push([]),rows[rows.length-1]).push(cur); cur=''}
@@ -319,15 +374,38 @@
     return header + '\n' + rows.join('\n')
   }
 
+  // CSV buttons
   document.getElementById('csvBtn').addEventListener('click',()=>{ csvDialog.showModal() })
   document.getElementById('dlBtn').addEventListener('click',()=>{
     const blob=new Blob([dataToCSV(DATA)],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='morphs.csv'; a.click(); URL.revokeObjectURL(a.href)
   })
 
+  // ✅ MERGE CSV into DATA instead of wiping everything
   document.getElementById('applyCsv').addEventListener('click',()=>{
-    const text = document.getElementById('csvText').value.trim(); if(!text) { alert('Paste CSV first or choose a file.'); return }
-    try{ const rows=parseCSV(text); const items=csvToData(rows); if(!items.length) throw new Error('No rows'); DATA=items; fillRegions(); applyFilters(); renderAZ(); renderRegions(); csvDialog.close() }
-    catch(e){ alert('CSV error: '+e.message) }
+    const text = document.getElementById('csvText').value.trim()
+    if(!text){
+      alert('Paste CSV first or choose a file.'); 
+      return
+    }
+    try {
+      const rows  = parseCSV(text)
+      const items = csvToData(rows)
+      if(!items.length) throw new Error('No rows')
+
+      const byId = {}
+      DATA.forEach(d => { if(d.id) byId[d.id] = d })
+      items.forEach(d => { if(d.id) byId[d.id] = d })  // add/update by id
+      DATA = Object.values(byId)
+
+      fillRegions()
+      fillCategories()
+      applyFilters()
+      renderAZ()
+      renderRegions()
+      csvDialog.close()
+    } catch(e){
+      alert('CSV error: '+e.message)
+    }
   })
 
   document.getElementById('csvFile').addEventListener('change',e=>{
@@ -348,15 +426,22 @@
   window.addEventListener('hashchange', route)
 
   // Init
-  function init(){ fillRegions(); applyFilters(); renderAZ(); renderRegions(); route() }
+  function init(){
+    fillRegions()
+    fillCategories()
+    applyFilters()
+    renderAZ()
+    renderRegions()
+    route()
+  }
   init()
 
   // --- Minimal tests (run in console) --------------------------------------
   ;(function runTests(){
     try {
       const sample = [
-        {id:'t1',title:'Test One',region:'X',category:'Male',img:'images/x1.jpg',tags:['A','B'],sources:[{label:'S1',url:''}],notes:'hello, world'},
-        {id:'t2',title:'Test Two',region:'Y',category:'Female',img:'images/x2.jpg',tags:['C'],sources:[{label:'S2',url:'http://example.com'}],notes:'line1\nline2'}
+        {id:'t1',title:'Test One',region:'X',category:'Demo',img:'images/x1.jpg',tags:['A','B'],sources:[{label:'S1',url:''}],notes:'hello, world'},
+        {id:'t2',title:'Test Two',region:'Y',category:'Demo',img:'images/x2.jpg',tags:['C'],sources:[{label:'S2',url:'http://example.com'}],notes:'line1\nline2'}
       ]
       const csv = dataToCSV(sample)
       console.assert(csv.includes('\n'), 'CSV should contain\\n')
@@ -367,7 +452,7 @@
       console.assert(objs[1].notes.includes('line1\nline2'), 'Newlines preserved in notes')
 
       const tricky = [
-        {id:'t3',title:'Quoted, Title',region:'Z',category:'Mixed',img:'images/x3.jpg',tags:[],sources:[],notes:'He said "hello", then left'}
+        {id:'t3',title:'Quoted, Title',region:'Z',category:'Demo',img:'images/x3.jpg',tags:[],sources:[],notes:'He said "hello", then left'}
       ]
       const csv2 = dataToCSV(tricky)
       const objs2 = csvToData(parseCSV(csv2))
