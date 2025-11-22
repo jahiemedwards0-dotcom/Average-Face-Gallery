@@ -18,7 +18,7 @@
     .tab{padding:8px 12px;border-radius:999px;border:1px solid var(--ring);background:var(--chip);color:var(--muted);text-decoration:none}
     .tab.active{color:#081329;background:var(--accent);border-color:transparent;font-weight:700}
 
-    .controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;margin-top:12px}
+    .controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
     input,select,button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);background:var(--card);color:var(--fg)}
     .btn{background:var(--accent);color:#081329;border:none;font-weight:700;cursor:pointer}
 
@@ -36,6 +36,13 @@
     .empty{opacity:.7;text-align:center;padding:50px}
     .footer{opacity:.7;text-align:center;padding:28px}
     .muted{opacity:.75}
+
+    .contribute{margin:28px 0;padding:20px;border:1px solid var(--ring);border-radius:18px;background:var(--card)}
+    .contribute h2{margin-top:0}
+    .formGrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));align-items:end}
+    .formGrid label{display:flex;flex-direction:column;gap:6px;font-weight:600;color:var(--muted)}
+    .formGrid textarea{min-height:120px;resize:vertical}
+    .note{font-size:14px;color:var(--muted);margin-top:6px}
 
     /* Lists */
     .list{padding:18px}
@@ -75,7 +82,6 @@
         <select id="region"><option value="">All regions</option></select>
         <!-- categories auto-filled from DATA -->
         <select id="category"><option value="">All categories</option></select>
-        <button id="dlBtn" class="btn" title="Download CSV">Export CSV</button>
       </div>
     </div>
   </header>
@@ -86,9 +92,50 @@
     <section id="view-regions" class="list" hidden></section>
     <section id="view-about" class="list" hidden>
       <h2>About & Methods</h2>
-      <p>This is a static, free-to-host gallery for average faces and morphs. Images live in <code>/images/</code>; entries are stored as in-page data (you can export a CSV backup). Avoid essentialist language; include sources where possible.</p>
+      <p>This is a static, free-to-host gallery for average faces and morphs. Images live in <code>/images/</code>; entries are stored as in-page data. Avoid essentialist language; include sources where possible.</p>
       <h3>Disclaimer</h3>
       <p>Faces here are averaged from real people, then lightly enhanced for clarity and hyperrealism. They illustrate trends in the source sets but are neither definitive nor absolute; as more material is gathered or methods improve, each entry may change. Please read notes and sources on each item.</p>
+    </section>
+    <section class="contribute" id="contribute">
+      <h2>Contribute to the project</h2>
+      <p>Upload a clear, front-facing photo or request the next phenotype / average face to guide what gets added next.</p>
+
+      <div class="formGrid" style="margin-bottom:16px">
+        <label>Upload front-facing photo
+          <input type="file" id="photoUpload" accept="image/*" />
+          <span class="note">Files stay on your device; there is no server upload yet.</span>
+        </label>
+        <label>Contact email (optional)
+          <input type="email" id="contactEmail" placeholder="you@example.com" />
+        </label>
+      </div>
+
+      <h3>Request a phenotype or average face</h3>
+      <form id="requestForm" class="formGrid">
+        <label>Request type
+          <select id="requestType">
+            <option value="Average Face">Average face</option>
+            <option value="Phenotype">Phenotype</option>
+          </select>
+        </label>
+        <label>Macro region
+          <select id="macroRegionReq"></select>
+        </label>
+        <label>Country / area
+          <select id="countryReq"></select>
+        </label>
+        <label>Ethnic group (optional)
+          <input id="groupReq" placeholder="e.g., Pashtun, Nahua, Ulster Scots" />
+        </label>
+        <label>Notes or sources
+          <textarea id="notesReq" placeholder="Links to references, preferred traits to highlight, or other guidance"></textarea>
+        </label>
+        <div>
+          <button class="btn" type="submit" style="width:auto">Submit request</button>
+          <div class="note">Requests are stored locally for now; you can copy the summary after submitting.</div>
+        </div>
+      </form>
+      <div id="requestStatus" class="note" aria-live="polite"></div>
     </section>
     <div id="empty" class="empty" hidden>Nothing found. Adjust filters or add your first morph.</div>
     <div class="footer">© <span id="year"></span> Your Site.</div>
@@ -129,14 +176,15 @@
   // --- Starter data: Sinaloid + 4 averages --------------------------------
   // Make sure the following images exist in /images/:
   // sinaloid.jpg, sinaloid-map.jpg, avg_afghan_pashtun.jpg,
-  // avg_salvadoran.jpg, avg_english.jpg, avg_irish.jpg
+  // avg_salvadoran.jpg, avg_english.png, avg_irish.png
 
   let DATA = [
     {
       id: "sinaloid",
       title: "Sinaloid",
-      region: "Northwest & North-Central Mexico",
-      category: "Pueblid-Mestizo",
+      region: "Latin America",
+      country: "Mexico (Northwest & North-Central)",
+      category: "Phenotype",
       img: "images/sinaloid.jpg",
       tags: ["Sinaloid","Centralid-Mestizo","Pueblid-Mestizo","NW Mexico","ranching","mining","regional variant"],
       sources: [ {label:"User composite & notes", url: ""} ],
@@ -166,8 +214,9 @@
     {
       id: "avg_afghan_pashtun",
       title: "Average Afghan Pashtun",
-      region: "Afghanistan / Pakistan (Pashtun belt)",
-      category: "Average Morph",
+      region: "South Asia",
+      country: "Afghanistan / Pakistan (Pashtun belt)",
+      category: "Average Face",
       img: "images/avg_afghan_pashtun.jpg",
       tags: ["Afghan","Pashtun","Average"],
       sources: [ {label:"Average Afghan Pashtun morph", url: ""} ],
@@ -176,8 +225,9 @@
     {
       id: "avg_salvadoran",
       title: "Average Salvadoran",
-      region: "El Salvador",
-      category: "Average Morph",
+      region: "Latin America",
+      country: "El Salvador",
+      category: "Average Face",
       img: "images/avg_salvadoran.jpg",
       tags: ["El Salvador","Mestizo","Average"],
       sources: [ {label:"Average Salvadoran morph", url: ""} ],
@@ -186,22 +236,24 @@
     {
       id: "avg_english",
       title: "Average English",
-      region: "United Kingdom / England",
-      category: "Average Morph",
-      img: "images/avg_english.jpg",
-      tags: ["English","UK","Average"],
-      sources: [ {label:"Average English morph", url: ""} ],
-      notes: "National facial average morph. Add phenotype notes later."
+      region: "Europe",
+      country: "United Kingdom / England",
+      category: "Average Face",
+      img: "images/avg_english.png?v=2",
+      tags: ["English","UK","Average","Male","Female"],
+      sources: [ {label:"User-supplied dual-sex composite", url: ""} ],
+      notes: "Updated with the provided dual-sex English average composite to pair male and female references side by side."
     },
     {
       id: "avg_irish",
       title: "Average Irish",
-      region: "Ireland",
-      category: "Average Morph",
-      img: "images/avg_irish.jpg",
-      tags: ["Irish","Ireland","Average"],
-      sources: [ {label:"Average Irish morph", url: ""} ],
-      notes: "National facial average morph. Add phenotype notes later."
+      region: "Europe",
+      country: "Ireland",
+      category: "Average Face",
+      img: "images/avg_irish.png?v=2",
+      tags: ["Irish","Ireland","Average","Male","Female"],
+      sources: [ {label:"User-provided dual-sex composite", url: ""} ],
+      notes: "Updated with the provided dual-sex Irish average composite pairing male and female references side by side."
     }
   ]
   // -------------------------------------------------------------------------
@@ -210,6 +262,7 @@
   const modal = $('#modal')
   const mTitle = $('#mTitle'), mImg = $('#mImg'), mNotes = $('#mNotes'), mSources = $('#mSources'), mTags = $('#mTags'), mBadges = $('#mBadges'), mFile = $('#mFile')
   const viewAZ = $('#view-az'), viewRegions = $('#view-regions'), viewAbout = $('#view-about')
+  const macroRegionReq = $('#macroRegionReq'), countryReq = $('#countryReq'), requestForm = $('#requestForm'), requestStatus = $('#requestStatus'), contactEmail = $('#contactEmail')
   document.getElementById('year').textContent = new Date().getFullYear()
 
   const hashForTab = {
@@ -224,20 +277,39 @@
   const tabs = [...document.querySelectorAll('.tab')]
   function setTab(name){
     tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name))
-    grid.hidden = name!== 'gallery'
-    viewAZ.hidden = name!== 'az'
-    viewRegions.hidden = name!== 'regions'
-    viewAbout.hidden = name!== 'about'
+    grid.hidden = name!== 'gallery'; grid.setAttribute('aria-hidden', grid.hidden)
+    viewAZ.hidden = name!== 'az'; viewAZ.setAttribute('aria-hidden', viewAZ.hidden)
+    viewRegions.hidden = name!== 'regions'; viewRegions.setAttribute('aria-hidden', viewRegions.hidden)
+    viewAbout.hidden = name!== 'about'; viewAbout.setAttribute('aria-hidden', viewAbout.hidden)
     if(hashForTab[name]){
       lastViewHash = hashForTab[name]
     }
+  }
+
+  tabs.forEach(tab=>tab.addEventListener('click',e=>{
+    e.preventDefault()
+    const target = tab.dataset.tab || 'gallery'
+    setTab(target)
+    location.hash = hashForTab[target] || '#/gallery'
+  }))
+
+  function buildRegionCountryIndex(){
+    const index = {}
+    DATA.forEach(d=>{
+      const macro = d.region || 'Other'
+      const country = d.country || 'Unspecified area'
+      if(!index[macro]) index[macro] = {}
+      index[macro][country] = (index[macro][country]||0) + 1
+    })
+    return index
   }
 
   // Populate region dropdown
   function fillRegions(){
     const current = regionSel.value
     regionSel.innerHTML = '<option value="">All regions</option>'
-    ;([...new Set(DATA.map(d=>d.region))].sort()).forEach(r=>{
+    const regions = Object.keys(buildRegionCountryIndex()).sort()
+    regions.forEach(r=>{
       if(!r) return
       const o=document.createElement('option')
       o.textContent=r
@@ -251,8 +323,7 @@
   function fillCategories(){
     const current = catSel.value
     catSel.innerHTML = '<option value="">All categories</option>'
-    ;([...new Set(DATA.map(d=>d.category))].sort()).forEach(c=>{
-      if(!c) return
+    ;(['Average Face','Phenotype']).forEach(c=>{
       const o=document.createElement('option')
       o.textContent=c
       o.value=c
@@ -268,6 +339,8 @@
     if(!list.length){ empty.hidden=false; return } else { empty.hidden=true }
     list.forEach(item=>{
       const card=document.createElement('article'); card.className='card'; card.tabIndex=0; card.setAttribute('role','button'); card.title='Open details'
+      const regionChip = item.region ? `<span class="chip">${item.region}</span>` : ''
+      const countryChip = item.country ? `<span class="chip">${item.country}</span>` : ''
       card.innerHTML = `
         <div class="thumbWrap">
           <img class="thumb" src="${item.img}" alt="${item.title}" loading="lazy" />
@@ -275,7 +348,8 @@
         <div class="meta">
           <div class="title">${item.title}</div>
           <div class="chips">
-            <span class="chip">${item.region}</span>
+            ${countryChip}
+            ${regionChip}
             <span class="chip">${item.category}</span>
           </div>
         </div>`
@@ -287,12 +361,13 @@
 
   function openModal(item){
     mTitle.textContent = item.title
-    mBadges.innerHTML = `<span class="pill">${item.region}</span><span class="pill">${item.category}</span>`
+    const badges = [item.region, item.country, item.category].filter(Boolean)
+    mBadges.innerHTML = badges.map(b=>`<span class="pill">${b}</span>`).join('')
     mImg.src = item.img; mImg.alt = item.title
     mNotes.innerHTML = item.notes || ''
     mSources.innerHTML = (item.sources||[]).map(s=>`<li>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`:s.label}</li>`).join('')
     mTags.innerHTML = (item.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')
-    const ext = (item.img.split('.').pop()||'jpg')
+    const ext = (item.img.split('.').pop()||'jpg').split('?')[0]
     mFile.href = item.img; mFile.download = `${item.id||item.title}.${ext}`
     modal.showModal(); history.replaceState(null,'',`#/morph/${encodeURIComponent(item.id||item.title)}`)
   }
@@ -308,7 +383,8 @@
   function applyFilters(){
     const term = q.value.trim().toLowerCase(); const r=regionSel.value; const c=catSel.value
     const out = DATA.filter(d=>{
-      const inText = (d.title+" "+d.region+" "+(d.notes||" ")+" "+(d.tags||[]).join(' ')).toLowerCase().includes(term)
+      const inText = (d.title+" "+(d.country||" ")+" "+d.region+" "+(d.notes||" ")+"
+"+(d.tags||[]).join(' ')).toLowerCase().includes(term)
       const inR = !r || d.region===r
       const inC = !c || d.category===c
       return inText && inR && inC
@@ -338,37 +414,63 @@
 
   // Regions view
   function renderRegions(){
-    const map = {}
-    DATA.forEach(d=>{ map[d.region] = (map[d.region]||0)+1 })
-    const rows = Object.entries(map).sort((a,b)=>a[0].localeCompare(b[0]))
-    viewRegions.innerHTML = rows.length
-      ? `<div class="kvs">${rows.map(([k,v])=>`<a href="#/gallery" class="az" data-region="${k}"><strong>${k}</strong><br/><span class="muted">${v} entr${v===1?'y':'ies'}</span></a>`).join('')}</div>`
+    const index = buildRegionCountryIndex()
+    const macros = Object.entries(index).sort((a,b)=>a[0].localeCompare(b[0]))
+    viewRegions.innerHTML = macros.length
+      ? macros.map(([region, countries])=>{
+          const countryLinks = Object.entries(countries)
+            .sort((a,b)=>a[0].localeCompare(b[0]))
+            .map(([country,count])=>`<a href="#/gallery" class="az" data-region="${region}" data-country="${country}"><strong>${country}</strong><br/><span class="muted">${count} entr${count===1?'y':'ies'}</span></a>`)
+            .join('')
+          return `<h2>${region}</h2><div class="kvs">${countryLinks}</div>`
+        }).join('')
       : '<div class="empty">No regions yet.</div>'
     viewRegions.querySelectorAll('a[data-region]').forEach(a=>a.addEventListener('click',e=>{
-      e.preventDefault(); regionSel.value=a.dataset.region; setTab('gallery'); applyFilters()
+      e.preventDefault();
+      regionSel.value=a.dataset.region;
+      q.value=a.dataset.country || '';
+      setTab('gallery');
+      applyFilters();
     }))
   }
 
-  function dataToCSV(data){
-    const esc = v=> '"'+String(v||'').replace(/"/g,'""')+'"'
-    const header = 'id,title,region,category,img,tags,notes,sources'
-    const rows = data.map(d=>{
-      const tags = (d.tags||[]).join('|')
-      const sources = (d.sources||[]).map(s=> (s.label||'')+'|'+(s.url||'')).join(';')
-      return [d.id,d.title,d.region,d.category,d.img,tags,d.notes,sources].map(esc).join(',')
-    })
-    return header + '\n' + rows.join('\n')
+  function populateRequestOptions(){
+    if(!macroRegionReq || !countryReq) return
+    const index = buildRegionCountryIndex()
+    macroRegionReq.innerHTML = Object.keys(index).sort().map(r=>`<option value="${r}">${r}</option>`).join('') || '<option value="">No regions yet</option>'
+    const firstRegion = macroRegionReq.value
+    fillCountryOptions(firstRegion, index)
   }
 
-  // CSV button
-  document.getElementById('dlBtn').addEventListener('click',()=>{
-    const blob=new Blob([dataToCSV(DATA)],{type:'text/csv'})
-    const a=document.createElement('a')
-    a.href=URL.createObjectURL(blob)
-    a.download='morphs.csv'
-    a.click()
-    URL.revokeObjectURL(a.href)
-  })
+  function fillCountryOptions(region, index){
+    const countries = region && index[region] ? Object.keys(index[region]).sort() : []
+    countryReq.innerHTML = countries.length ? countries.map(c=>`<option value="${c}">${c}</option>`).join('') : '<option value="">No countries yet</option>'
+  }
+
+  if(macroRegionReq){
+    macroRegionReq.addEventListener('change',()=>{
+      const idx = buildRegionCountryIndex()
+      fillCountryOptions(macroRegionReq.value, idx)
+    })
+  }
+
+  if(requestForm){
+    requestForm.addEventListener('submit',e=>{
+      e.preventDefault()
+      const payload = {
+        type: document.getElementById('requestType')?.value || '',
+        region: macroRegionReq?.value || '',
+        country: countryReq?.value || '',
+        group: document.getElementById('groupReq')?.value || '',
+        notes: document.getElementById('notesReq')?.value || '',
+        email: contactEmail?.value || ''
+      }
+      const summary = `Saved request: ${payload.type || 'Request'} for ${payload.country || 'a country'} in ${payload.region || 'a region'}${payload.group?` (group: ${payload.group})`:''}. ${payload.notes?`Notes: ${payload.notes}`:'No notes provided.'} ${payload.email?`Contact: ${payload.email}`:'No contact email supplied.'}`
+      requestStatus.textContent = summary
+      requestForm.reset()
+      populateRequestOptions()
+    })
+  }
 
   // Router
   function route(){
@@ -389,6 +491,7 @@
   function init(){
     fillRegions()
     fillCategories()
+    populateRequestOptions()
     applyFilters()
     renderAZ()
     renderRegions()
@@ -398,10 +501,6 @@
   </script>
 </body>
 </html>
-   function setTab(name){
-     tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name))
-     grid.hidden = name!== 'gallery'
-     viewAZ.hidden = name!== 'az'
-     viewRegions.hidden = name!== 'regions'
+
 
 
