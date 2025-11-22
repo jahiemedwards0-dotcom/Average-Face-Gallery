@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Human Morph Gallery</title>
   <style>
     :root{--bg:#0b0d10;--fg:#e9eef5;--muted:#9fb0c3;--card:#14181f;--accent:#7aa2ff;--chip:#1d2430;--ring:#2a3342}
@@ -15,14 +18,17 @@
     .tab{padding:8px 12px;border-radius:999px;border:1px solid var(--ring);background:var(--chip);color:var(--muted);text-decoration:none}
     .tab.active{color:#081329;background:var(--accent);border-color:transparent;font-weight:700}
 
-    .controls{display:grid;grid-template-columns:1fr 1fr 1fr auto auto;gap:10px;margin-top:12px}
+    .controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;margin-top:12px}
     input,select,button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);background:var(--card);color:var(--fg)}
     .btn{background:var(--accent);color:#081329;border:none;font-weight:700;cursor:pointer}
 
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;padding:18px}
     .card{background:var(--card);border:1px solid var(--ring);border-radius:18px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .15s ease}
     .card:hover{transform:translateY(-2px)}
-    .thumb{aspect-ratio:4/5;width:100%;object-fit:cover;display:block}
+    .thumbWrap{position:relative;aspect-ratio:2/3;background:var(--chip);display:flex;align-items:stretch;justify-content:center;overflow:hidden}
+    /* Fallback aspect ratio for older browsers */
+    .thumbWrap::before{content:'';display:block;padding-top:150%;width:100%;pointer-events:none}
+    .thumb{position:absolute;inset:0;margin:auto;width:100%;height:100%;object-fit:contain;display:block}
     .meta{padding:12px}
     .title{font-weight:600}
     .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
@@ -67,9 +73,8 @@
       <div class="controls">
         <input id="q" placeholder="Search name, region, notes…" />
         <select id="region"><option value="">All regions</option></select>
-        <!-- categories auto-filled from DATA/CSV -->
+        <!-- categories auto-filled from DATA -->
         <select id="category"><option value="">All categories</option></select>
-        <button id="csvBtn" class="btn" title="Import CSV">Import CSV</button>
         <button id="dlBtn" class="btn" title="Download CSV">Export CSV</button>
       </div>
     </div>
@@ -81,12 +86,12 @@
     <section id="view-regions" class="list" hidden></section>
     <section id="view-about" class="list" hidden>
       <h2>About & Methods</h2>
-      <p>This is a static, free-to-host gallery for average faces and morphs. Images live in <code>/images/</code>; entries are stored as in-page data or loaded from CSV. Avoid essentialist language; include sources where possible.</p>
+      <p>This is a static, free-to-host gallery for average faces and morphs. Images live in <code>/images/</code>; entries are stored as in-page data (you can export a CSV backup). Avoid essentialist language; include sources where possible.</p>
       <h3>Disclaimer</h3>
-      <p>Entries are demonstrative. Traits reflect image sets and processing choices; not definitive of any population. Please read notes and sources on each item.</p>
+      <p>Faces here are averaged from real people, then lightly enhanced for clarity and hyperrealism. They illustrate trends in the source sets but are neither definitive nor absolute; as more material is gathered or methods improve, each entry may change. Please read notes and sources on each item.</p>
     </section>
     <div id="empty" class="empty" hidden>Nothing found. Adjust filters or add your first morph.</div>
-    <div class="footer">© <span id="year"></span> Your Site. Use <strong>Import CSV</strong> to bulk load items.</div>
+    <div class="footer">© <span id="year"></span> Your Site.</div>
   </main>
 
   <dialog id="modal">
@@ -116,21 +121,6 @@
         <div style="margin-top:14px">
           <a id="mFile" download>Download image</a>
         </div>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog id="csvDialog">
-    <div class="modalHead">
-      <strong>Import CSV</strong>
-      <button class="close" onclick="csvDialog.close()">Close</button>
-    </div>
-    <div class="modalBody" style="grid-template-columns:1fr">
-      <p>Paste CSV with headers: <code>id,title,region,category,img,tags,notes,sources</code>. Use <code>|</code> to separate multiple tags. For <code>sources</code>, use <code>Label|URL;Label|URL</code>.</p>
-      <textarea id="csvText" rows="10" style="width:100%;border-radius:12px;border:1px solid var(--ring);background:var(--card);color:var(--fg);padding:10px"></textarea>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <input type="file" id="csvFile" accept=".csv" />
-        <button class="btn" id="applyCsv">Apply</button>
       </div>
     </div>
   </dialog>
@@ -217,10 +207,18 @@
   // -------------------------------------------------------------------------
   const $ = s=>document.querySelector(s)
   const grid = $('#view-gallery'), q = $('#q'), regionSel = $('#region'), catSel = $('#category')
-  const modal = $('#modal'), csvDialog = $('#csvDialog')
+  const modal = $('#modal')
   const mTitle = $('#mTitle'), mImg = $('#mImg'), mNotes = $('#mNotes'), mSources = $('#mSources'), mTags = $('#mTags'), mBadges = $('#mBadges'), mFile = $('#mFile')
   const viewAZ = $('#view-az'), viewRegions = $('#view-regions'), viewAbout = $('#view-about')
   document.getElementById('year').textContent = new Date().getFullYear()
+
+  const hashForTab = {
+    gallery: '#/gallery',
+    az: '#/a-z',
+    regions: '#/regions',
+    about: '#/about'
+  }
+  let lastViewHash = '#/gallery'
 
   // Tabs
   const tabs = [...document.querySelectorAll('.tab')]
@@ -230,6 +228,9 @@
     viewAZ.hidden = name!== 'az'
     viewRegions.hidden = name!== 'regions'
     viewAbout.hidden = name!== 'about'
+    if(hashForTab[name]){
+      lastViewHash = hashForTab[name]
+    }
   }
 
   // Populate region dropdown
@@ -268,7 +269,9 @@
     list.forEach(item=>{
       const card=document.createElement('article'); card.className='card'; card.tabIndex=0; card.setAttribute('role','button'); card.title='Open details'
       card.innerHTML = `
-        <img class="thumb" src="${item.img}" alt="${item.title}" loading="lazy" />
+        <div class="thumbWrap">
+          <img class="thumb" src="${item.img}" alt="${item.title}" loading="lazy" />
+        </div>
         <div class="meta">
           <div class="title">${item.title}</div>
           <div class="chips">
@@ -293,6 +296,13 @@
     mFile.href = item.img; mFile.download = `${item.id||item.title}.${ext}`
     modal.showModal(); history.replaceState(null,'',`#/morph/${encodeURIComponent(item.id||item.title)}`)
   }
+
+  modal.addEventListener('close',()=>{
+    if(location.hash.startsWith('#/morph/')){
+      history.replaceState(null,'', lastViewHash)
+    }
+    route()
+  })
 
   // Filters
   function applyFilters(){
@@ -339,53 +349,6 @@
     }))
   }
 
-  // CSV helpers
-  function parseCSV(text){
-    const rows=[]; let i=0; let cur=''; let inQ=false;
-    const push=()=>{(rows[rows.length-1]||rows.push([]),rows[rows.length-1]).push(cur); cur=''}
-    rows.push([])
-    while(i<text.length){
-      const ch=text[i]
-      if(inQ){
-        if(ch==='"'){
-          if(text[i+1]==='"'){cur+='"'; i++} else {inQ=false}
-        } else {cur+=ch}
-      } else {
-        if(ch==='"'){inQ=true}
-        else if(ch===','){ push() }
-        else if(ch==='\n' || ch==='\r'){
-          if(cur!=='' || (rows[rows.length-1]&&rows[rows.length-1].length)){ push(); rows.push([]) }
-        } else { cur+=ch }
-      }
-      i++
-    }
-    if(cur!=='' || (rows[rows.length-1]&&rows[rows.length-1].length)) push()
-    if(rows[rows.length-1] && rows[rows.length-1].length===1 && rows[rows.length-1][0]==='') rows.pop()
-    return rows.filter(r=>r.length>0)
-  }
-
-  function csvToData(rows){
-    const headers = rows.shift().map(h=>h.trim().toLowerCase())
-    const idx = (k)=>headers.indexOf(k)
-    const out = rows.map(r=>{
-      const get = k => r[idx(k)]||''
-      const tags = get('tags').split('|').map(x=>x.trim()).filter(Boolean)
-      const sources = get('sources').split(';').map(s=>{
-        const [label,url] = s.split('|'); if(!label) return null; return {label:label.trim(), url:(url||'').trim()}
-      }).filter(Boolean)
-      return {
-        id: get('id').trim() || get('title').trim().toLowerCase().replace(/[^a-z0-9]+/g,'_'),
-        title: get('title').trim(),
-        region: get('region').trim(),
-        category: get('category').trim(),
-        img: get('img').trim(),
-        tags, sources,
-        notes: get('notes').trim()
-      }
-    })
-    return out
-  }
-
   function dataToCSV(data){
     const esc = v=> '"'+String(v||'').replace(/"/g,'""')+'"'
     const header = 'id,title,region,category,img,tags,notes,sources'
@@ -397,8 +360,7 @@
     return header + '\n' + rows.join('\n')
   }
 
-  // CSV buttons
-  document.getElementById('csvBtn').addEventListener('click',()=>{ csvDialog.showModal() })
+  // CSV button
   document.getElementById('dlBtn').addEventListener('click',()=>{
     const blob=new Blob([dataToCSV(DATA)],{type:'text/csv'})
     const a=document.createElement('a')
@@ -408,41 +370,6 @@
     URL.revokeObjectURL(a.href)
   })
 
-  // MERGE CSV into DATA instead of wiping everything
-  document.getElementById('applyCsv').addEventListener('click',()=>{
-    const text = document.getElementById('csvText').value.trim()
-    if(!text){
-      alert('Paste CSV first or choose a file.')
-      return
-    }
-    try {
-      const rows  = parseCSV(text)
-      const items = csvToData(rows)
-      if(!items.length) throw new Error('No rows')
-
-      const byId = {}
-      DATA.forEach(d => { if(d.id) byId[d.id] = d })
-      items.forEach(d => { if(d.id) byId[d.id] = d })  // add/update by id
-      DATA = Object.values(byId)
-
-      fillRegions()
-      fillCategories()
-      applyFilters()
-      renderAZ()
-      renderRegions()
-      csvDialog.close()
-    } catch(e){
-      alert('CSV error: '+e.message)
-    }
-  })
-
-  document.getElementById('csvFile').addEventListener('change',e=>{
-    const f=e.target.files[0]; if(!f) return;
-    const reader=new FileReader()
-    reader.onload=ev=>{document.getElementById('csvText').value=ev.target.result}
-    reader.readAsText(f)
-  })
-
   // Router
   function route(){
     const h=location.hash||'#/gallery'
@@ -450,7 +377,7 @@
       const id=decodeURIComponent(h.split('/').pop())
       const it=DATA.find(d=>(d.id||d.title)===id)
       if(it) openModal(it)
-      setTab('gallery')
+      return
     } else if(h.startsWith('#/a-z')){ setTab('az') }
     else if(h.startsWith('#/regions')){ setTab('regions') }
     else if(h.startsWith('#/about')){ setTab('about') }
@@ -471,3 +398,4 @@
   </script>
 </body>
 </html>
+
