@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Morph Gallery — Ultra-Cheap Static</title>
+  <title>Human Morph Gallery</title>
   <style>
     :root{--bg:#0b0d10;--fg:#e9eef5;--muted:#9fb0c3;--card:#14181f;--accent:#7aa2ff;--chip:#1d2430;--ring:#2a3342}
     *{box-sizing:border-box} html,body{height:100%}
@@ -67,10 +67,10 @@
       <div class="controls">
         <input id="q" placeholder="Search name, region, notes…" />
         <select id="region"><option value="">All regions</option></select>
-        <!-- categories will be filled from DATA/CSV dynamically -->
+        <!-- categories auto-filled from DATA/CSV -->
         <select id="category"><option value="">All categories</option></select>
         <button id="csvBtn" class="btn" title="Import CSV">Import CSV</button>
-        <button id="dlBtn" title="Download CSV">Export CSV</button>
+        <button id="dlBtn" class="btn" title="Download CSV">Export CSV</button>
       </div>
     </div>
   </header>
@@ -86,7 +86,7 @@
       <p>Entries are demonstrative. Traits reflect image sets and processing choices; not definitive of any population. Please read notes and sources on each item.</p>
     </section>
     <div id="empty" class="empty" hidden>Nothing found. Adjust filters or add your first morph.</div>
-    <div class="footer">© <span id="year"></span> Your Site. Host on GitHub/Netlify for $0. Use <strong>Import CSV</strong> to bulk load items.</div>
+    <div class="footer">© <span id="year"></span> Your Site. Use <strong>Import CSV</strong> to bulk load items.</div>
   </main>
 
   <dialog id="modal">
@@ -136,28 +136,12 @@
   </dialog>
 
   <script>
-  // --- Starter data (edit or replace via CSV) -------------------------------
+  // --- Starter data: Sinaloid + 4 averages --------------------------------
+  // Make sure the following images exist in /images/:
+  // sinaloid.jpg, sinaloid-map.jpg, avg_afghan_pashtun.jpg,
+  // avg_salvadoran.jpg, avg_english.jpg, avg_irish.jpg
+
   let DATA = [
-    {
-      id: "eng_male_avg_001",
-      title: "Average English Male",
-      region: "United Kingdom / England",
-      category: "Demo",
-      img: "images/eng_male_avg_001.jpg",
-      tags: ["English","Average","demo"],
-      sources: [ {label: "Averaged from 65 faces", url: ""} ],
-      notes: "Demo entry; replace with your own."
-    },
-    {
-      id: "pashtun_female_avg_002",
-      title: "Average Pashtun Female",
-      region: "Afghanistan / Pakistan",
-      category: "Demo",
-      img: "images/pashtun_female_avg_002.jpg",
-      tags: ["Pashtun","Average","demo"],
-      sources: [ {label:"Averaged from 40 images", url: ""} ],
-      notes: "Illustrates metadata layout."
-    },
     {
       id: "sinaloid",
       title: "Sinaloid",
@@ -188,6 +172,46 @@
              alt="Sinaloid map"
              style="display:block;width:100%;margin-top:10px;border-radius:12px;">
       `
+    },
+    {
+      id: "avg_afghan_pashtun",
+      title: "Average Afghan Pashtun",
+      region: "Afghanistan / Pakistan (Pashtun belt)",
+      category: "Average Morph",
+      img: "images/avg_afghan_pashtun.jpg",
+      tags: ["Afghan","Pashtun","Average"],
+      sources: [ {label:"Average Afghan Pashtun morph", url: ""} ],
+      notes: "National/regional facial average morph. Add detailed traits and description later."
+    },
+    {
+      id: "avg_salvadoran",
+      title: "Average Salvadoran",
+      region: "El Salvador",
+      category: "Average Morph",
+      img: "images/avg_salvadoran.jpg",
+      tags: ["El Salvador","Mestizo","Average"],
+      sources: [ {label:"Average Salvadoran morph", url: ""} ],
+      notes: "National facial average morph. Add phenotype write-up and traits later."
+    },
+    {
+      id: "avg_english",
+      title: "Average English",
+      region: "United Kingdom / England",
+      category: "Average Morph",
+      img: "images/avg_english.jpg",
+      tags: ["English","UK","Average"],
+      sources: [ {label:"Average English morph", url: ""} ],
+      notes: "National facial average morph. Add phenotype notes later."
+    },
+    {
+      id: "avg_irish",
+      title: "Average Irish",
+      region: "Ireland",
+      category: "Average Morph",
+      img: "images/avg_irish.jpg",
+      tags: ["Irish","Ireland","Average"],
+      sources: [ {label:"Average Irish morph", url: ""} ],
+      notes: "National facial average morph. Add phenotype notes later."
     }
   ]
   // -------------------------------------------------------------------------
@@ -297,7 +321,6 @@
       }
     })
     viewAZ.innerHTML = html || '<div class="empty">No entries yet.</div>'
-    // link behavior
     viewAZ.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{
       e.preventDefault(); const id=decodeURIComponent(a.getAttribute('href').split('/').pop()); const it=DATA.find(d=>(d.id||d.title)===id); if(it) openModal(it)
     }))
@@ -316,12 +339,13 @@
     }))
   }
 
-  // CSV import/export helpers
+  // CSV helpers
   function parseCSV(text){
-    // Minimal CSV parser supporting quotes
-    const rows=[]; let i=0; let cur=''; let inQ=false; const push=()=>{(rows[rows.length-1]||rows.push([]),rows[rows.length-1]).push(cur); cur=''}
+    const rows=[]; let i=0; let cur=''; let inQ=false;
+    const push=()=>{(rows[rows.length-1]||rows.push([]),rows[rows.length-1]).push(cur); cur=''}
     rows.push([])
-    while(i<text.length){ const ch=text[i]
+    while(i<text.length){
+      const ch=text[i]
       if(inQ){
         if(ch==='"'){
           if(text[i+1]==='"'){cur+='"'; i++} else {inQ=false}
@@ -336,7 +360,6 @@
       i++
     }
     if(cur!=='' || (rows[rows.length-1]&&rows[rows.length-1].length)) push()
-    // Trim empty trailing row
     if(rows[rows.length-1] && rows[rows.length-1].length===1 && rows[rows.length-1][0]==='') rows.pop()
     return rows.filter(r=>r.length>0)
   }
@@ -377,14 +400,19 @@
   // CSV buttons
   document.getElementById('csvBtn').addEventListener('click',()=>{ csvDialog.showModal() })
   document.getElementById('dlBtn').addEventListener('click',()=>{
-    const blob=new Blob([dataToCSV(DATA)],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='morphs.csv'; a.click(); URL.revokeObjectURL(a.href)
+    const blob=new Blob([dataToCSV(DATA)],{type:'text/csv'})
+    const a=document.createElement('a')
+    a.href=URL.createObjectURL(blob)
+    a.download='morphs.csv'
+    a.click()
+    URL.revokeObjectURL(a.href)
   })
 
-  // ✅ MERGE CSV into DATA instead of wiping everything
+  // MERGE CSV into DATA instead of wiping everything
   document.getElementById('applyCsv').addEventListener('click',()=>{
     const text = document.getElementById('csvText').value.trim()
     if(!text){
-      alert('Paste CSV first or choose a file.'); 
+      alert('Paste CSV first or choose a file.')
       return
     }
     try {
@@ -409,14 +437,19 @@
   })
 
   document.getElementById('csvFile').addEventListener('change',e=>{
-    const f=e.target.files[0]; if(!f) return; const reader=new FileReader(); reader.onload=ev=>{document.getElementById('csvText').value=ev.target.result}; reader.readAsText(f)
+    const f=e.target.files[0]; if(!f) return;
+    const reader=new FileReader()
+    reader.onload=ev=>{document.getElementById('csvText').value=ev.target.result}
+    reader.readAsText(f)
   })
 
   // Router
   function route(){
     const h=location.hash||'#/gallery'
     if(h.startsWith('#/morph/')){
-      const id=decodeURIComponent(h.split('/').pop()); const it=DATA.find(d=>(d.id||d.title)===id); if(it) openModal(it)
+      const id=decodeURIComponent(h.split('/').pop())
+      const it=DATA.find(d=>(d.id||d.title)===id)
+      if(it) openModal(it)
       setTab('gallery')
     } else if(h.startsWith('#/a-z')){ setTab('az') }
     else if(h.startsWith('#/regions')){ setTab('regions') }
@@ -435,34 +468,6 @@
     route()
   }
   init()
-
-  // --- Minimal tests (run in console) --------------------------------------
-  ;(function runTests(){
-    try {
-      const sample = [
-        {id:'t1',title:'Test One',region:'X',category:'Demo',img:'images/x1.jpg',tags:['A','B'],sources:[{label:'S1',url:''}],notes:'hello, world'},
-        {id:'t2',title:'Test Two',region:'Y',category:'Demo',img:'images/x2.jpg',tags:['C'],sources:[{label:'S2',url:'http://example.com'}],notes:'line1\nline2'}
-      ]
-      const csv = dataToCSV(sample)
-      console.assert(csv.includes('\n'), 'CSV should contain\\n')
-      const rows = parseCSV(csv)
-      console.assert(rows.length===3, 'CSV rows should be header+2')
-      const objs = csvToData(rows)
-      console.assert(objs[0].title==='Test One', 'Title preserved')
-      console.assert(objs[1].notes.includes('line1\nline2'), 'Newlines preserved in notes')
-
-      const tricky = [
-        {id:'t3',title:'Quoted, Title',region:'Z',category:'Demo',img:'images/x3.jpg',tags:[],sources:[],notes:'He said "hello", then left'}
-      ]
-      const csv2 = dataToCSV(tricky)
-      const objs2 = csvToData(parseCSV(csv2))
-      console.assert(objs2[0].notes.includes('"hello"'), 'Quotes preserved')
-      console.log('[Morphs Gallery] Tests passed')
-    } catch (e) {
-      console.error('[Morphs Gallery] Tests failed:', e)
-    }
-  })()
-  // -------------------------------------------------------------------------
   </script>
 </body>
 </html>
