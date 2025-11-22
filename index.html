@@ -193,17 +193,6 @@
       cursor:pointer;
     }
 
-    /* Contribute section */
-    form{
-      display:grid;
-      gap:10px;
-      max-width:520px;
-    }
-    textarea{
-      min-height:90px;
-      resize:vertical;
-    }
-
     @media (max-width:900px){
       .controls{
         grid-template-columns:1fr 1fr;
@@ -249,7 +238,7 @@
     <section id="view-about" class="list" hidden>
       <h2>About & Methods</h2>
       <p>
-        This is a static, free-to-host gallery for average faces and morphs.
+        This is a free-to-host gallery for average faces and morphs.
         Images live in <code>/images/</code>; entries are stored directly in the
         page for now. Avoid essentialist language; include sources where possible.
       </p>
@@ -265,25 +254,15 @@
     <section id="contribute" class="list">
       <h2>Contribute photos & requests</h2>
       <p>
-        Upload a front-facing photo to help with the average face and phenotype
-        project, or request a new phenotype / average face. This is a simple
-        placeholder form on a static site – for now it just shows a confirmation
-        message and does not store anything server-side.
+        To submit a clear, front-facing photo or request a new phenotype / average face,
+        please use the external form here:
+        <a href="https://tally.so/r/mDrLBj" target="_blank" rel="noopener">
+          open Tally contribution form
+        </a>.
       </p>
-      <form id="contributeForm">
-        <input name="name" placeholder="Your name (optional)" />
-        <input name="email" type="email" placeholder="Email (optional)" />
-        <input name="country" placeholder="Country or region (e.g. Mexico, Ireland)" />
-        <input name="group" placeholder="Ethnic group / phenotype you’re talking about" />
-        <label class="muted">
-          Upload a clear, front-facing photo (optional):
-          <input name="photo" type="file" accept="image/*" />
-        </label>
-        <textarea name="message" placeholder="Describe your request or notes…"></textarea>
-        <button class="btn" type="submit">Send request (placeholder)</button>
-      </form>
-      <p class="muted" style="margin-top:8px">
-        Later you can wire this up to an email address, Google Form, or other backend.
+      <p class="muted">
+        Submissions are collected privately via Tally.so; this site itself stays static
+        on GitHub Pages.
       </p>
     </section>
 
@@ -355,15 +334,15 @@
         <h3>Description</h3>
         <p>
           A regional variant within the broader Centralid-Mestizo complex,
-          more specifically the Pueblid-Mestizo branch. Formed in the
+          more specifically the Pueblid-Mestizo branch. It formed in the
           ranching–mining belt of northwest and north-central Mexico through
           long-term Spanish–Indigenous admixture.
-          <strong>Skin:</strong> light- to medium-brown and tans deeply.
-          Build tends toward average height with a compact, stockier frame.
         </p>
 
         <h3>Traits</h3>
         <ul>
+          <li><strong>Skin:</strong> light- to medium-brown, usually able to tan quite deeply.</li>
+          <li><strong>Build / height:</strong> average to tall, often with a compact, stockier frame.</li>
           <li>Faces often rounder in men and slightly longer in women; mild neoteny (soft, baby-faced look) is common.</li>
           <li>Nose medium and usually projecting; lips full.</li>
           <li>Eyes predominantly dark and slightly upturned; lighter shades appear in a minority; occasional epicanthic folds.</li>
@@ -455,10 +434,10 @@
   const tabs = [...document.querySelectorAll('.tab')]
   function setTab(name){
     tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name))
-    grid.hidden       = name !== 'gallery'
-    viewAZ.hidden     = name !== 'az'
-    viewRegions.hidden= name !== 'regions'
-    viewAbout.hidden  = name !== 'about'
+    grid.hidden        = name !== 'gallery'
+    viewAZ.hidden      = name !== 'az'
+    viewRegions.hidden = name !== 'regions'
+    viewAbout.hidden   = name !== 'about'
     if (hashForTab[name]) lastViewHash = hashForTab[name]
   }
 
@@ -594,33 +573,50 @@
     }))
   }
 
-  // Regions view: macro regions -> countries -------------------------
+  // Regions view: macro regions -> countries + actual regions + search ------
   function renderRegions(){
     const macroMap = {}
     DATA.forEach(d=>{
       const macro = d.macro || 'Other'
       const country = d.country || d.region || 'Unknown'
+      const region = d.region || ''
       if(!macroMap[macro]) macroMap[macro] = {}
-      macroMap[macro][country] = (macroMap[macro][country] || 0) + 1
+      if(!macroMap[macro][country]) macroMap[macro][country] = { count:0, regions:new Set() }
+      macroMap[macro][country].count += 1
+      if(region) macroMap[macro][country].regions.add(region)
     })
     const macros = Object.keys(macroMap).sort()
     if(!macros.length){
       viewRegions.innerHTML = '<div class="empty">No regions yet.</div>'
       return
     }
-    let html = ''
+
+    let html = `
+      <div style="margin-bottom:12px">
+        <input id="regionSearch" placeholder="Search by country…" />
+      </div>
+      <div id="regionGroups">
+    `
     macros.forEach(macro=>{
       const countries = Object.entries(macroMap[macro]).sort((a,b)=>a[0].localeCompare(b[0]))
       html += `<h2>${macro}</h2><div class="kvs">` +
-        countries.map(([country,count]) =>
-          `<a href="#/gallery" class="az" data-country="${country}">
-             <strong>${country}</strong><br/>
-             <span class="muted">${count} entr${count===1?'y':'ies'}</span>
-           </a>`
-        ).join('') +
+        countries.map(([country,info]) => {
+          const regionText = Array.from(info.regions).join(', ')
+          return `
+            <a href="#/gallery" class="az" data-country="${country}">
+              <strong>${country}</strong><br/>
+              <span class="muted">
+                ${regionText ? regionText + " — " : ""}${info.count} entr${info.count===1?'y':'ies'}
+              </span>
+            </a>
+          `
+        }).join('') +
         '</div>'
     })
+    html += '</div>'
     viewRegions.innerHTML = html
+
+    // Click to filter gallery by country
     viewRegions.querySelectorAll('a[data-country]').forEach(a=>a.addEventListener('click',e=>{
       e.preventDefault()
       const country = a.dataset.country
@@ -628,6 +624,18 @@
       setTab('gallery')
       applyFilters()
     }))
+
+    // Search box to filter countries in-place
+    const search = document.getElementById('regionSearch')
+    if(search){
+      search.addEventListener('input', ()=>{
+        const term = search.value.trim().toLowerCase()
+        viewRegions.querySelectorAll('a[data-country]').forEach(a=>{
+          const name = a.dataset.country.toLowerCase()
+          a.style.display = !term || name.includes(term) ? '' : 'none'
+        })
+      })
+    }
   }
 
   // Router -----------------------------------------------------------
@@ -650,21 +658,11 @@
   }
   window.addEventListener('hashchange', route)
 
-  // Contribute button + form (placeholder) ---------------------------
+  // Contribute button → Tally form -----------------------------------
   const contributeBtn = document.getElementById('contributeBtn')
   if(contributeBtn){
     contributeBtn.addEventListener('click',()=>{
-      const sec = document.getElementById('contribute')
-      if(sec) sec.scrollIntoView({behavior:'smooth'})
-    })
-  }
-
-  const contributeForm = document.getElementById('contributeForm')
-  if(contributeForm){
-    contributeForm.addEventListener('submit',e=>{
-      e.preventDefault()
-      alert("Thanks! On this static site the form is just a placeholder for now.")
-      contributeForm.reset()
+      window.open('https://tally.so/r/mDrLBj','_blank')
     })
   }
 
