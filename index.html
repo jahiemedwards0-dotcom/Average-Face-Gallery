@@ -1,16 +1,3 @@
-Got you. Let’s do three things in one shot:
-
-1. **Keep the gallery visible** and make the tabs just **scroll to their section** (Gallery / A–Z / Regions / About).
-2. **Change the button text** to **“Submit a request”** and have it scroll to the form.
-3. Put your **Tally form on the page** in an `<iframe>`, so it *looks* like it’s native but submits to Tally.
-
-I also fixed Sinaloid so skin + “average to tall” are under **Traits**.
-
-### ✅ Full updated `index.html`
-
-Replace your entire file with this:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +36,6 @@ Replace your entire file with this:
       background:var(--chip);
       color:var(--muted);
       text-decoration:none;
-      cursor:pointer;
     }
     .tab.active{
       color:#081329;
@@ -245,24 +231,17 @@ Replace your entire file with this:
   </header>
 
   <main class="wrap">
-    <!-- GALLERY SECTION -->
+    <!-- Gallery is ALWAYS visible at the top -->
     <section id="view-gallery" class="grid" aria-live="polite"></section>
 
-    <!-- A–Z SECTION -->
-    <section id="view-az" class="list">
-      <!-- filled by JS -->
-    </section>
+    <!-- These sections appear BELOW the gallery depending on the tab -->
+    <section id="view-az" class="list" hidden></section>
+    <section id="view-regions" class="list" hidden></section>
 
-    <!-- REGIONS SECTION -->
-    <section id="view-regions" class="list">
-      <!-- filled by JS -->
-    </section>
-
-    <!-- ABOUT SECTION -->
-    <section id="view-about" class="list">
+    <section id="view-about" class="list" hidden>
       <h2>About & Methods</h2>
       <p>
-        This is a free-to-host gallery for average faces and morphs.
+        This is a static, free-to-host gallery for average faces and morphs.
         Images live in <code>/images/</code>; entries are stored directly in the
         page for now. Avoid essentialist language; include sources where possible.
       </p>
@@ -275,28 +254,25 @@ Replace your entire file with this:
       </p>
     </section>
 
-    <!-- CONTRIBUTE / TALLY FORM SECTION -->
     <section id="contribute" class="list">
-      <h2>Contribute photos & requests</h2>
+      <h2>Submit a request</h2>
       <p>
-        To submit a clear, front-facing photo or request a new phenotype / average face,
-        you can use the embedded form below or open it in a new tab:
-        <a href="https://tally.so/r/mDrLBj" target="_blank" rel="noopener">
-          open Tally contribution form
-        </a>.
+        Fill out the form below to request a new phenotype or average face, or to
+        share information that can help refine existing entries.
       </p>
+      <!-- Embedded Tally form -->
       <iframe
-        src="https://tally.so/r/mDrLBj?transparentBackground=1"
+        src="https://tally.so/r/mDrLBj?transparentBackground=1&hideTitle=1"
         width="100%"
         height="500"
         frameborder="0"
         marginheight="0"
         marginwidth="0"
-        title="Average faces & phenotypes request form">
+        title="Phenotype & average face request form">
       </iframe>
       <p class="muted" style="margin-top:8px">
-        Submissions are collected privately via Tally.so; this site itself stays static
-        on GitHub Pages.
+        If the form does not load, you can open it directly
+        <a href="https://tally.so/r/mDrLBj" target="_blank" rel="noopener">here</a>.
       </p>
     </section>
 
@@ -452,7 +428,8 @@ Replace your entire file with this:
         mFile = $('#mFile')
   const viewAZ = $('#view-az'),
         viewRegions = $('#view-regions'),
-        viewAbout = $('#view-about')
+        viewAbout = $('#view-about'),
+        contributeSection = $('#contribute')
   document.getElementById('year').textContent = new Date().getFullYear()
 
   const hashForTab = {
@@ -463,23 +440,29 @@ Replace your entire file with this:
   }
   let lastViewHash = '#/gallery'
 
+  // Tabs -------------------------------------------------------------
   const tabs = [...document.querySelectorAll('.tab')]
-
-  const sections = {
-    gallery: grid,
-    az: viewAZ,
-    regions: viewRegions,
-    about: viewAbout
-  }
-
-  // Tabs: only scroll, don't hide sections
   function setTab(name){
     tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name))
-    const target = sections[name] || sections.gallery
-    if(target){
-      target.scrollIntoView({behavior:'smooth', block:'start'})
-    }
+
+    // Gallery always visible; we only show ONE extra section under it
+    viewAZ.hidden      = name !== 'az'
+    viewRegions.hidden = name !== 'regions'
+    viewAbout.hidden   = name !== 'about'
+
     if (hashForTab[name]) lastViewHash = hashForTab[name]
+
+    // Scroll to the chosen section (except gallery)
+    let target = null
+    if(name === 'az') target = viewAZ
+    else if(name === 'regions') target = viewRegions
+    else if(name === 'about') target = viewAbout
+    if(target){
+      target.scrollIntoView({behavior:'smooth'})
+    } else {
+      // Gallery tab: scroll back up to top of gallery
+      grid.scrollIntoView({behavior:'smooth'})
+    }
   }
 
   // Region dropdown (uses country + region text)
@@ -562,6 +545,7 @@ Replace your entire file with this:
     if(location.hash.startsWith('#/morph/')){
       history.replaceState(null,'', lastViewHash)
     }
+    route()
   })
 
   // Filters ----------------------------------------------------------
@@ -667,7 +651,7 @@ Replace your entire file with this:
     }
   }
 
-  // Router: just switches active tab + scroll ------------------------
+  // Router -----------------------------------------------------------
   function route(){
     const h=location.hash||'#/gallery'
     if(h.startsWith('#/morph/')){
@@ -687,12 +671,13 @@ Replace your entire file with this:
   }
   window.addEventListener('hashchange', route)
 
-  // Contribute button -> scroll to Tally section ---------------------
+  // Contribute button -> scroll to embedded Tally form ---------------
   const contributeBtn = document.getElementById('contributeBtn')
   if(contributeBtn){
     contributeBtn.addEventListener('click',()=>{
-      const sec = document.getElementById('contribute')
-      if(sec) sec.scrollIntoView({behavior:'smooth', block:'start'})
+      if(contributeSection){
+        contributeSection.scrollIntoView({behavior:'smooth'})
+      }
     })
   }
 
@@ -708,9 +693,3 @@ Replace your entire file with this:
   </script>
 </body>
 </html>
-```
-
-Once you paste + commit this, can you check:
-
-* Does clicking **A–Z / Regions / About** just scroll you down to those sections while the gallery stays on top?
-* Does the **“Submit a request”** button scroll to the Tally form embed and does the form actually submit to Tally?
