@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Morph Gallery — Ultra‑Cheap Static</title>
+  <title>Morph Gallery — Ultra-Cheap Static</title>
   <style>
     :root{--bg:#0b0d10;--fg:#e9eef5;--muted:#9fb0c3;--card:#14181f;--accent:#7aa2ff;--chip:#1d2430;--ring:#2a3342}
     *{box-sizing:border-box} html,body{height:100%}
@@ -77,7 +77,7 @@
     <section id="view-regions" class="list" hidden></section>
     <section id="view-about" class="list" hidden>
       <h2>About & Methods</h2>
-      <p>This is a static, free-to-host gallery for average faces and morphs. Images live in <code>/images/</code>; entries are stored as in‑page data or loaded from CSV. Avoid essentialist language; include sources where possible.</p>
+      <p>This is a static, free-to-host gallery for average faces and morphs. Images live in <code>/images/</code>; entries are stored as in-page data or loaded from CSV. Avoid essentialist language; include sources where possible.</p>
       <h3>Disclaimer</h3>
       <p>Entries are demonstrative. Traits reflect image sets and processing choices; not definitive of any population. Please read notes and sources on each item.</p>
     </section>
@@ -209,7 +209,7 @@
     mTitle.textContent = item.title
     mBadges.innerHTML = `<span class="pill">${item.region}</span><span class="pill">${item.category}</span>`
     mImg.src = item.img; mImg.alt = item.title
-    mNotes.textContent = item.notes||''
+    mNotes.innerHTML = item.notes || ''     // ✅ changed from textContent to innerHTML
     mSources.innerHTML = (item.sources||[]).map(s=>`<li>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`:s.label}</li>`).join('')
     mTags.innerHTML = (item.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')
     const ext = (item.img.split('.').pop()||'jpg')
