@@ -3,29 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Human Morph Gallery</title>
   <style>
-    :root{
-      --bg:#0b0d10;
-      --fg:#e9eef5;
-      --muted:#9fb0c3;
-      --card:#14181f;
-      --accent:#7aa2ff;
-      --chip:#1d2430;
-      --ring:#2a3342;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    :root{--bg:#0b0d10;--fg:#e9eef5;--muted:#9fb0c3;--card:#14181f;--accent:#7aa2ff;--chip:#1d2430;--ring:#2a3342}
+    *{box-sizing:border-box} html,body{height:100%}
     body{
       margin:0;
       font:16px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
       color:var(--fg);
-      background:radial-gradient(1200px 800px at 80% -10%,#162032 0%,transparent 60%), var(--bg);
+      background:
+        radial-gradient(1200px 800px at 80% -10%,#162032 0%,transparent 60%),
+        var(--bg);
     }
     header{
       position:sticky;
       top:0;
-      background:rgba(11,13,16,.7);
+      background:rgba(11,13,16,.6);
       backdrop-filter:saturate(140%) blur(8px);
       border-bottom:1px solid var(--ring);
       z-index:5;
@@ -40,7 +36,6 @@
       background:var(--chip);
       color:var(--muted);
       text-decoration:none;
-      font-size:14px;
     }
     .tab.active{
       color:#081329;
@@ -48,20 +43,20 @@
       border-color:transparent;
       font-weight:700;
     }
+
     .controls{
       display:grid;
-      grid-template-columns:1fr;
+      grid-template-columns:1fr 1fr 1fr auto;
       gap:10px;
-      margin-top:12px;
+      margin-top:12px
     }
-    input,select,button,textarea{
+    input,select,button{
       width:100%;
       padding:10px 12px;
       border-radius:12px;
       border:1px solid var(--ring);
       background:var(--card);
       color:var(--fg);
-      font:inherit;
     }
     .btn{
       background:var(--accent);
@@ -75,7 +70,7 @@
       display:grid;
       grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
       gap:14px;
-      padding:18px 0;
+      padding:18px;
     }
     .card{
       background:var(--card);
@@ -84,22 +79,31 @@
       overflow:hidden;
       box-shadow:0 4px 14px rgba(0,0,0,.25);
       transition:transform .15s ease;
-      cursor:pointer;
     }
     .card:hover{transform:translateY(-2px)}
     .thumbWrap{
       position:relative;
       aspect-ratio:2/3;
       background:var(--chip);
+      display:flex;
+      align-items:stretch;
+      justify-content:center;
       overflow:hidden;
     }
-    .thumbWrap img{
+    .thumbWrap::before{
+      content:'';
+      display:block;
+      padding-top:150%;
+      width:100%;
+      pointer-events:none;
+    }
+    .thumb{
       position:absolute;
       inset:0;
       margin:auto;
       width:100%;
       height:100%;
-      object-fit:cover;
+      object-fit:contain;
       display:block;
     }
     .meta{padding:12px}
@@ -115,33 +119,32 @@
     }
     .empty{opacity:.7;text-align:center;padding:50px}
     .footer{opacity:.7;text-align:center;padding:28px}
-    .muted{opacity:.75;font-size:14px}
+    .muted{opacity:.75}
 
-    .contribToggleWrap{margin:10px 0 24px}
-    .contribute{
-      margin:0 0 28px;
-      padding:20px;
-      border:1px solid var(--ring);
-      border-radius:18px;
-      background:var(--card);
-    }
-    .contribute h2{margin-top:0}
-    .formGrid{
+    /* Lists */
+    .list{padding:18px}
+    .list h2{font-size:18px;margin:16px 0 8px}
+    .az{
       display:grid;
-      gap:12px;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      align-items:flex-start;
+      grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+      gap:10px;
     }
-    .formGrid label{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      font-weight:600;
-      color:var(--muted);
-      font-size:14px;
+    .az a{
+      display:block;
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px solid var(--ring);
+      background:var(--card);
+      text-decoration:none;
+      color:var(--fg);
     }
-    .formGrid textarea{min-height:120px;resize:vertical}
+    .kvs{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:10px;
+    }
 
+    /* Modal */
     dialog{
       border:none;
       border-radius:18px;
@@ -165,13 +168,11 @@
       gap:16px;
       padding:16px;
     }
-    .modalLeft img{
+    .modalBody img{
       width:100%;
       height:auto;
       border-radius:14px;
       border:1px solid var(--ring);
-      display:block;
-      margin-bottom:10px;
     }
     .pill{
       font-size:12px;
@@ -191,13 +192,23 @@
       border-radius:12px;
       cursor:pointer;
     }
-    .modalSection h3{margin:0 0 4px;font-size:15px}
-    .modalSection p{margin:0 0 10px;font-size:14px}
-    .modalSection ul{margin:0 0 10px 18px;font-size:14px}
-    .modalSection li{margin-bottom:4px}
-    #mTags .chip{font-size:11px}
+
+    /* Contribute section */
+    form{
+      display:grid;
+      gap:10px;
+      max-width:520px;
+    }
+    textarea{
+      min-height:90px;
+      resize:vertical;
+    }
 
     @media (max-width:900px){
+      .controls{
+        grid-template-columns:1fr 1fr;
+        grid-auto-rows:auto;
+      }
       .modalBody{grid-template-columns:1fr}
     }
   </style>
@@ -207,91 +218,83 @@
     <div class="wrap">
       <h1>Human Morph Gallery</h1>
       <nav>
-        <a class="tab active" href="#">Gallery</a>
-        <a class="tab" href="#about" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'});return false;">About</a>
+        <a class="tab" data-tab="gallery" href="#/gallery">Gallery</a>
+        <a class="tab" data-tab="az" href="#/a-z">A–Z</a>
+        <a class="tab" data-tab="regions" href="#/regions">Regions</a>
+        <a class="tab" data-tab="about" href="#/about">About</a>
       </nav>
       <div class="controls">
-        <input id="q" placeholder="Search name, region or notes…" />
+        <input id="q" placeholder="Search name, country, notes…" />
+        <select id="region">
+          <option value="">All regions</option>
+        </select>
+        <!-- fixed categories: Average face + Phenotype -->
+        <select id="category">
+          <option value="">All types</option>
+          <option value="Average face">Average face</option>
+          <option value="Phenotype">Phenotype</option>
+        </select>
+        <button id="contributeBtn" class="btn" type="button">
+          Submit photo / request
+        </button>
       </div>
     </div>
   </header>
 
   <main class="wrap">
-    <!-- gallery -->
-    <section id="view-gallery">
-      <div class="grid" id="grid" aria-live="polite"></div>
-      <div id="empty" class="empty" hidden>Nothing found. Try a different search.</div>
-    </section>
+    <section id="view-gallery" class="grid" aria-live="polite"></section>
+    <section id="view-az" class="list" hidden></section>
+    <section id="view-regions" class="list" hidden></section>
 
-    <!-- toggle button + note -->
-    <div class="contribToggleWrap">
-      <button id="toggleContribute" class="btn" type="button">
-        Request an average face or phenotype
-      </button>
-      <div class="muted">
-        Uploading a photo is optional. You can request a front-facing or side-profile average.
-      </div>
-    </div>
-
-    <!-- hidden form -->
-    <section class="contribute" id="contribute" hidden>
-      <h2>Contribute to the project</h2>
-      <p class="muted">
-        This form does not upload anything to a server yet. Use it to draft a request,
-        then copy the summary and send it by email or DM.
-      </p>
-
-      <div class="formGrid" style="margin-bottom:16px">
-        <label>Optional photo (front or side)
-          <input type="file" id="photoUpload" accept="image/*" />
-          <span class="muted">Optional. Stays on your device; it is not uploaded anywhere.</span>
-        </label>
-        <label>Contact email (optional)
-          <input type="email" id="contactEmail" placeholder="you@example.com" />
-        </label>
-      </div>
-
-      <h3 style="margin-top:0">Request details</h3>
-      <form id="requestForm" class="formGrid">
-        <label>Request type
-          <select id="requestType">
-            <option value="Average face">Average face</option>
-            <option value="Phenotype write-up">Phenotype write-up</option>
-          </select>
-        </label>
-        <label>Region
-          <input id="regionReq" placeholder="e.g., Northwest Mexico, Central Europe, Caribbean" />
-        </label>
-        <label>Country / area
-          <input id="countryReq" placeholder="e.g., Sinaloa, Donegal, San Salvador" />
-        </label>
-        <label>Ethnic group (optional)
-          <input id="groupReq" placeholder="e.g., Pashtun, Nahua, Ulster Scots" />
-        </label>
-        <label>Notes or sources
-          <textarea id="notesReq" placeholder="Links, traits to emphasise, or anything that helps you document the type."></textarea>
-        </label>
-        <div>
-          <button class="btn" type="submit" style="width:auto">Save request summary</button>
-          <div class="muted">After submitting, copy the summary text below.</div>
-        </div>
-      </form>
-      <div id="requestStatus" class="muted" style="margin-top:8px" aria-live="polite"></div>
-    </section>
-
-    <section id="about" style="margin-top:30px">
+    <section id="view-about" class="list" hidden>
       <h2>About & Methods</h2>
-      <p class="muted">
-        This is a tiny, static gallery for average faces and regional phenotypes. Images are
-        morphs made from multiple individuals; traits describe tendencies in the source sets,
-        not strict rules for every person. Entries may be updated as better material appears.
+      <p>
+        This is a static, free-to-host gallery for average faces and morphs.
+        Images live in <code>/images/</code>; entries are stored directly in the
+        page for now. Avoid essentialist language; include sources where possible.
+      </p>
+      <h3>Disclaimer</h3>
+      <p>
+        Faces here are averaged from real people, then lightly enhanced for clarity
+        and hyperrealism. They illustrate trends in the source sets but are neither
+        definitive nor absolute; as more material is gathered or methods improve,
+        each entry may change. Please read notes and sources on each item.
       </p>
     </section>
 
-    <div class="footer">© <span id="year"></span> Your Site.</div>
+    <section id="contribute" class="list">
+      <h2>Contribute photos & requests</h2>
+      <p>
+        Upload a front-facing photo to help with the average face and phenotype
+        project, or request a new phenotype / average face. This is a simple
+        placeholder form on a static site – for now it just shows a confirmation
+        message and does not store anything server-side.
+      </p>
+      <form id="contributeForm">
+        <input name="name" placeholder="Your name (optional)" />
+        <input name="email" type="email" placeholder="Email (optional)" />
+        <input name="country" placeholder="Country or region (e.g. Mexico, Ireland)" />
+        <input name="group" placeholder="Ethnic group / phenotype you’re talking about" />
+        <label class="muted">
+          Upload a clear, front-facing photo (optional):
+          <input name="photo" type="file" accept="image/*" />
+        </label>
+        <textarea name="message" placeholder="Describe your request or notes…"></textarea>
+        <button class="btn" type="submit">Send request (placeholder)</button>
+      </form>
+      <p class="muted" style="margin-top:8px">
+        Later you can wire this up to an email address, Google Form, or other backend.
+      </p>
+    </section>
+
+    <div id="empty" class="empty" hidden>
+      Nothing found. Adjust filters or add more morphs.
+    </div>
+    <div class="footer">
+      © <span id="year"></span> Your Site.
+    </div>
   </main>
 
-  <!-- Modal -->
   <dialog id="modal">
     <div class="modalHead">
       <div>
@@ -299,29 +302,24 @@
         <div class="badges" id="mBadges"></div>
       </div>
       <div>
-        <button class="close" onclick="modal.close()">Close</button>
+        <button class="close" type="button" onclick="modal.close()">Close</button>
       </div>
     </div>
     <div class="modalBody">
-      <div class="modalLeft">
-        <img id="mImg" alt="Morph preview" />
-        <img id="mMap" alt="Regional map" style="display:none" />
-      </div>
+      <img id="mImg" alt="Morph preview" />
       <div>
-        <div class="modalSection">
-          <h3>Description</h3>
-          <p id="mDesc"></p>
+        <p id="mNotes" style="margin-top:0"></p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <div class="pill">Source(s)</div>
+            <ul id="mSources" style="margin-top:8px"></ul>
+          </div>
+          <div>
+            <div class="pill">Tags</div>
+            <div id="mTags" class="chips" style="margin-top:8px"></div>
+          </div>
         </div>
-        <div class="modalSection">
-          <h3>Traits</h3>
-          <ul id="mTraits"></ul>
-        </div>
-        <div class="modalSection">
-          <h3>Tags & sources</h3>
-          <div id="mTags" class="chips"></div>
-          <ul id="mSources" style="margin-top:8px"></ul>
-        </div>
-        <div style="margin-top:10px">
+        <div style="margin-top:14px">
           <a id="mFile" download>Download image</a>
         </div>
       </div>
@@ -329,253 +327,356 @@
   </dialog>
 
   <script>
-  // --------- Data: Sinaloid + 4 averages -----------------------------------
-  // Make sure these files exist in /images/:
+  // ---------- Starter data: Sinaloid + 4 averages --------------------------
+  // Make sure these images exist in /images/:
   // sinaloid.jpg, sinaloid-map.jpg, avg_afghan_pashtun.jpg,
-  // avg_salvadoran.jpg, avg_english.png, avg_irish.png
+  // avg_salvadoran.jpg, avg_english.jpg, avg_irish.jpg
 
-  const DATA = [
+  let DATA = [
     {
       id: "sinaloid",
       title: "Sinaloid",
-      region: "Latin America",
-      country: "Northwest & North-Central Mexico",
+      macro: "Latin America",
+      country: "Mexico",
+      region: "Northwest & North-Central Mexico",
       category: "Phenotype",
       img: "images/sinaloid.jpg",
-      map: "images/sinaloid-map.jpg",
-      description:
-        "A regional variant within the broader Pueblid-Mestizo phenotype, itself part of the Centralid-Mestizo cluster. It formed in the ranching and mining belt of northwest and north-central Mexico through long-term Spanish–Indigenous admixture. Skin runs light- to medium-brown and tans deeply. Build tends toward average height with a compact, stockier frame.",
-      traits: [
-        "Faces are often rounder in men and slightly longer in women, with a frequent soft, baby-faced (neotenous) look.",
-        "Nose is medium in size and usually projects; lips are full without looking swollen.",
-        "Eyes are predominantly dark and slightly upturned; lighter shades appear in a minority, and mild epicanthic folds show up occasionally.",
-        "Hair is almost always dark brown to black; usually straight or wavy, though curls are not rare."
+      tags: [
+        "Sinaloid",
+        "Centralid-Mestizo",
+        "Pueblid-Mestizo",
+        "NW Mexico",
+        "ranching",
+        "mining",
+        "regional variant"
       ],
-      tags: ["Sinaloid","Pueblid-Mestizo","Centralid-Mestizo","NW Mexico","ranching","mining","regional variant"],
-      sources: [{label:"User composite & notes", url:""}]
+      sources: [ {label:"User composite & notes", url: ""} ],
+      notes: `
+        <h3>Description</h3>
+        <p>
+          A regional variant within the broader Centralid-Mestizo complex,
+          more specifically the Pueblid-Mestizo branch. Formed in the
+          ranching–mining belt of northwest and north-central Mexico through
+          long-term Spanish–Indigenous admixture.
+          <strong>Skin:</strong> light- to medium-brown and tans deeply.
+          Build tends toward average height with a compact, stockier frame.
+        </p>
+
+        <h3>Traits</h3>
+        <ul>
+          <li>Faces often rounder in men and slightly longer in women; mild neoteny (soft, baby-faced look) is common.</li>
+          <li>Nose medium and usually projecting; lips full.</li>
+          <li>Eyes predominantly dark and slightly upturned; lighter shades appear in a minority; occasional epicanthic folds.</li>
+          <li>Hair dark brown to black; straight or wavy; curls not rare.</li>
+        </ul>
+
+        <img src="images/sinaloid-map.jpg"
+             alt="Sinaloid map"
+             style="display:block;width:100%;margin-top:10px;border-radius:12px;">
+      `
     },
     {
       id: "avg_afghan_pashtun",
       title: "Average Afghan Pashtun",
-      region: "South Asia",
-      country: "Afghanistan / Pakistan (Pashtun belt)",
+      macro: "South Asia",
+      country: "Afghanistan / Pakistan",
+      region: "Pashtun belt",
       category: "Average face",
       img: "images/avg_afghan_pashtun.jpg",
-      description:
-        "Morph average of Afghan / trans-border Pashtuns. Serves as a reference point for Pashtun facial structure rather than a strict template.",
-      traits: [
-        "Medium to fair brown skin tones depending on valley vs. highland origin.",
-        "Straight to wavy dark hair; beards common in male samples.",
-        "Straight or slightly convex noses; deep-set, often almond-shaped eyes."
-      ],
-      tags: ["Afghan","Pashtun","Average"],
-      sources: [{label:"Average Pashtun morph", url:""}]
+      tags: ["Afghan","Pashtun","Average face"],
+      sources: [ {label:"Average Afghan Pashtun morph", url: ""} ],
+      notes: "National / regional facial average morph. Add detailed traits and description later."
     },
     {
       id: "avg_salvadoran",
       title: "Average Salvadoran",
-      region: "Latin America",
+      macro: "Latin America",
       country: "El Salvador",
+      region: "El Salvador",
       category: "Average face",
       img: "images/avg_salvadoran.jpg",
-      description:
-        "National facial average morph from Salvadoran samples, representing the dominant mestizo profile.",
-      traits: [
-        "Light- to medium-brown skin; many individuals tan deeply.",
-        "Oval to gently rounded faces with soft jawlines.",
-        "Dark eyes and hair; hair mostly straight or softly wavy."
-      ],
-      tags: ["El Salvador","Mestizo","Average"],
-      sources: [{label:"Average Salvadoran morph", url:""}]
+      tags: ["El Salvador","Mestizo","Average face"],
+      sources: [ {label:"Average Salvadoran morph", url: ""} ],
+      notes: "National facial average morph. Add phenotype write-up and traits later."
     },
     {
       id: "avg_english",
       title: "Average English",
-      region: "Europe",
-      country: "England",
+      macro: "Europe",
+      country: "United Kingdom",
+      region: "England",
       category: "Average face",
-      img: "images/avg_english.png",
-      description:
-        "Dual-sex composite of English faces, blending male and female sets into one reference morph.",
-      traits: [
-        "Fair to light-medium skin, with freckling in some subsets.",
-        "Straight to slightly wavy hair; light browns and dark blondes common.",
-        "Faces tend toward mesomorphic, with moderate noses and balanced features."
-      ],
-      tags: ["English","UK","Average"],
-      sources: [{label:"User dual-sex English composite", url:""}]
+      img: "images/avg_english.jpg",
+      tags: ["English","UK","Average face"],
+      sources: [ {label:"Average English morph", url: ""} ],
+      notes: "National facial average morph. Add phenotype notes later."
     },
     {
       id: "avg_irish",
       title: "Average Irish",
-      region: "Europe",
+      macro: "Europe",
       country: "Ireland",
+      region: "Ireland",
       category: "Average face",
-      img: "images/avg_irish.png",
-      description:
-        "Dual-sex composite from Irish samples, intended as a general reference for modern Irish faces.",
-      traits: [
-        "Light skin tones are common, often with pink or ruddy undertones.",
-        "Hair ranges from dark brown to light brown and auburn; waves and loose curls are frequent.",
-        "Faces often show softer jawlines with strongly defined midfaces and expressive eyes."
-      ],
-      tags: ["Irish","Ireland","Average"],
-      sources: [{label:"User dual-sex Irish composite", url:""}]
+      img: "images/avg_irish.jpg",
+      tags: ["Irish","Ireland","Average face"],
+      sources: [ {label:"Average Irish morph", url: ""} ],
+      notes: "National facial average morph. Add phenotype notes later."
     }
-  ];
+  ]
+  // -------------------------------------------------------------------------
+  const $ = s=>document.querySelector(s)
+  const grid = $('#view-gallery'),
+        q = $('#q'),
+        regionSel = $('#region'),
+        catSel = $('#category')
+  const modal = $('#modal')
+  const mTitle = $('#mTitle'),
+        mImg = $('#mImg'),
+        mNotes = $('#mNotes'),
+        mSources = $('#mSources'),
+        mTags = $('#mTags'),
+        mBadges = $('#mBadges'),
+        mFile = $('#mFile')
+  const viewAZ = $('#view-az'),
+        viewRegions = $('#view-regions'),
+        viewAbout = $('#view-about')
+  document.getElementById('year').textContent = new Date().getFullYear()
 
-  // --------- DOM refs -------------------------------------------------------
-  const $ = (s)=>document.querySelector(s);
-  const grid = $("#grid");
-  const q = $("#q");
-  const emptyEl = $("#empty");
-  const modal = $("#modal");
-  const mTitle = $("#mTitle");
-  const mImg = $("#mImg");
-  const mMap = $("#mMap");
-  const mDesc = $("#mDesc");
-  const mTraits = $("#mTraits");
-  const mTags = $("#mTags");
-  const mSources = $("#mSources");
-  const mBadges = $("#mBadges");
-  const mFile = $("#mFile");
-  const toggleContribute = $("#toggleContribute");
-  const contribute = $("#contribute");
-  const requestForm = $("#requestForm");
-  const requestStatus = $("#requestStatus");
-  const yearSpan = document.getElementById("year");
-  yearSpan.textContent = new Date().getFullYear();
+  const hashForTab = {
+    gallery: '#/gallery',
+    az: '#/a-z',
+    regions: '#/regions',
+    about: '#/about'
+  }
+  let lastViewHash = '#/gallery'
 
-  // --------- Render gallery -------------------------------------------------
-  function renderGallery(list){
-    grid.innerHTML = "";
+  // Tabs -------------------------------------------------------------
+  const tabs = [...document.querySelectorAll('.tab')]
+  function setTab(name){
+    tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name))
+    grid.hidden       = name !== 'gallery'
+    viewAZ.hidden     = name !== 'az'
+    viewRegions.hidden= name !== 'regions'
+    viewAbout.hidden  = name !== 'about'
+    if (hashForTab[name]) lastViewHash = hashForTab[name]
+  }
+
+  // Region dropdown (uses country + region text)
+  function fillRegions(){
+    const current = regionSel.value
+    regionSel.innerHTML = '<option value="">All regions</option>'
+    const labels = new Set()
+    DATA.forEach(d=>{
+      const label = d.country || d.region
+      if(label) labels.add(label)
+    })
+    Array.from(labels).sort().forEach(label=>{
+      const o=document.createElement('option')
+      o.textContent = label
+      o.value = label
+      regionSel.appendChild(o)
+    })
+    regionSel.value = current
+  }
+
+  // Render Gallery ---------------------------------------------------
+  function render(list){
+    grid.innerHTML = ''
+    const empty = document.getElementById('empty')
     if(!list.length){
-      emptyEl.hidden = false;
-      return;
+      empty.hidden = false
+      return
+    } else {
+      empty.hidden = true
     }
-    emptyEl.hidden = true;
-
     list.forEach(item=>{
-      const card = document.createElement("article");
-      card.className = "card";
-      card.setAttribute("tabindex","0");
+      const card=document.createElement('article')
+      card.className='card'
+      card.tabIndex=0
+      card.setAttribute('role','button')
+      card.title='Open details'
       card.innerHTML = `
         <div class="thumbWrap">
-          <img src="${item.img}" alt="${item.title}" loading="lazy">
+          <img class="thumb" src="${item.img}" alt="${item.title}" loading="lazy" />
         </div>
         <div class="meta">
           <div class="title">${item.title}</div>
           <div class="chips">
-            ${item.country ? `<span class="chip">${item.country}</span>` : ""}
-            ${item.region ? `<span class="chip">${item.region}</span>` : ""}
+            <span class="chip">${item.country || item.region}</span>
             <span class="chip">${item.category}</span>
           </div>
-        </div>
-      `;
-      card.addEventListener("click",()=>openModal(item));
-      card.addEventListener("keypress",e=>{ if(e.key==="Enter") openModal(item); });
-      grid.appendChild(card);
-    });
+        </div>`
+      card.addEventListener('click',()=>openModal(item))
+      card.addEventListener('keypress',e=>{ if(e.key==='Enter') openModal(item) })
+      grid.appendChild(card)
+    })
   }
 
-  function applySearch(){
-    const term = (q.value || "").trim().toLowerCase();
+  function openModal(item){
+    mTitle.textContent = item.title
+    const loc = item.country || item.region
+    const macro = item.macro || ''
+    mBadges.innerHTML = `
+      ${loc ? `<span class="pill">${loc}</span>` : ''}
+      ${macro ? `<span class="pill">${macro}</span>` : ''}
+      <span class="pill">${item.category}</span>
+    `
+    mImg.src = item.img
+    mImg.alt = item.title
+    mNotes.innerHTML = item.notes || ''
+    mSources.innerHTML = (item.sources||[]).map(s=>
+      `<li>${s.url
+        ? `<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`
+        : s.label}</li>`
+    ).join('')
+    mTags.innerHTML = (item.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')
+    const ext = (item.img.split('.').pop()||'jpg')
+    mFile.href = item.img
+    mFile.download = `${item.id||item.title}.${ext}`
+    modal.showModal()
+    history.replaceState(null,'',`#/morph/${encodeURIComponent(item.id||item.title)}`)
+  }
+
+  modal.addEventListener('close',()=>{
+    if(location.hash.startsWith('#/morph/')){
+      history.replaceState(null,'', lastViewHash)
+    }
+    route()
+  })
+
+  // Filters ----------------------------------------------------------
+  function applyFilters(){
+    const term = q.value.trim().toLowerCase()
+    const regionFilter = regionSel.value
+    const catFilter = catSel.value
     const out = DATA.filter(d=>{
       const text = [
         d.title,
-        d.region,
         d.country,
+        d.region,
+        d.macro,
         d.category,
-        d.description,
-        (d.tags || []).join(" ")
-      ].join(" ").toLowerCase();
-      return !term || text.includes(term);
-    });
-    renderGallery(out);
+        d.notes || '',
+        (d.tags||[]).join(' ')
+      ].join(' ').toLowerCase()
+      const matchesText = !term || text.includes(term)
+      const locLabel = d.country || d.region
+      const matchesRegion = !regionFilter || regionFilter === locLabel
+      const matchesCategory = !catFilter || catFilter === d.category
+      return matchesText && matchesRegion && matchesCategory
+    })
+    render(out)
+  }
+  q.addEventListener('input', applyFilters)
+  regionSel.addEventListener('change', applyFilters)
+  catSel.addEventListener('change', applyFilters)
+
+  // A–Z view ---------------------------------------------------------
+  function renderAZ(){
+    const byTitle = [...DATA].sort((a,b)=>a.title.localeCompare(b.title))
+    let html=''
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+    letters.forEach(L=>{
+      const group = byTitle.filter(x=> (x.title||'').toUpperCase().startsWith(L))
+      if(group.length){
+        html += `<h2>${L}</h2><div class="az">` +
+          group.map(x=>`<a href="#/morph/${encodeURIComponent(x.id||x.title)}" data-id="${x.id}">${x.title}</a>`).join('') +
+          '</div>'
+      }
+    })
+    viewAZ.innerHTML = html || '<div class="empty">No entries yet.</div>'
+    viewAZ.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{
+      e.preventDefault()
+      const id=decodeURIComponent(a.getAttribute('href').split('/').pop())
+      const it=DATA.find(d=>(d.id||d.title)===id)
+      if(it) openModal(it)
+    }))
   }
 
-  q.addEventListener("input", applySearch);
-
-  // --------- Modal ----------------------------------------------------------
-  function openModal(item){
-    mTitle.textContent = item.title;
-    const badges = [item.country, item.region, item.category].filter(Boolean);
-    mBadges.innerHTML = badges.map(b=>`<span class="pill">${b}</span>`).join("");
-
-    mImg.src = item.img;
-    mImg.alt = item.title;
-
-    if(item.map){
-      mMap.style.display = "block";
-      mMap.src = item.map;
-      mMap.alt = item.title + " map";
-    } else {
-      mMap.style.display = "none";
-      mMap.removeAttribute("src");
+  // Regions view: macro regions -> countries -------------------------
+  function renderRegions(){
+    const macroMap = {}
+    DATA.forEach(d=>{
+      const macro = d.macro || 'Other'
+      const country = d.country || d.region || 'Unknown'
+      if(!macroMap[macro]) macroMap[macro] = {}
+      macroMap[macro][country] = (macroMap[macro][country] || 0) + 1
+    })
+    const macros = Object.keys(macroMap).sort()
+    if(!macros.length){
+      viewRegions.innerHTML = '<div class="empty">No regions yet.</div>'
+      return
     }
-
-    mDesc.textContent = item.description || "";
-
-    mTraits.innerHTML = "";
-    (item.traits || []).forEach(t=>{
-      const li = document.createElement("li");
-      li.textContent = t;
-      mTraits.appendChild(li);
-    });
-
-    mTags.innerHTML = (item.tags || []).map(t=>`<span class="chip">${t}</span>`).join("");
-
-    mSources.innerHTML = (item.sources || []).map(s=>{
-      if(s.url){
-        return `<li><a href="${s.url}" target="_blank" rel="noopener">${s.label}</a></li>`;
-      }
-      return `<li>${s.label}</li>`;
-    }).join("");
-
-    const ext = (item.img.split(".").pop() || "jpg").split("?")[0];
-    mFile.href = item.img;
-    mFile.download = (item.id || item.title) + "." + ext;
-
-    modal.showModal();
+    let html = ''
+    macros.forEach(macro=>{
+      const countries = Object.entries(macroMap[macro]).sort((a,b)=>a[0].localeCompare(b[0]))
+      html += `<h2>${macro}</h2><div class="kvs">` +
+        countries.map(([country,count]) =>
+          `<a href="#/gallery" class="az" data-country="${country}">
+             <strong>${country}</strong><br/>
+             <span class="muted">${count} entr${count===1?'y':'ies'}</span>
+           </a>`
+        ).join('') +
+        '</div>'
+    })
+    viewRegions.innerHTML = html
+    viewRegions.querySelectorAll('a[data-country]').forEach(a=>a.addEventListener('click',e=>{
+      e.preventDefault()
+      const country = a.dataset.country
+      regionSel.value = country
+      setTab('gallery')
+      applyFilters()
+    }))
   }
 
-  // --------- Contribute form toggle ----------------------------------------
-  if(toggleContribute && contribute){
-    toggleContribute.addEventListener("click",()=>{
-      const isHidden = contribute.hasAttribute("hidden");
-      if(isHidden){
-        contribute.removeAttribute("hidden");
-        toggleContribute.textContent = "Hide request form";
-      } else {
-        contribute.setAttribute("hidden","hidden");
-        toggleContribute.textContent = "Request an average face or phenotype";
-      }
-    });
+  // Router -----------------------------------------------------------
+  function route(){
+    const h=location.hash||'#/gallery'
+    if(h.startsWith('#/morph/')){
+      const id=decodeURIComponent(h.split('/').pop())
+      const it=DATA.find(d=>(d.id||d.title)===id)
+      if(it) openModal(it)
+      return
+    } else if(h.startsWith('#/a-z')){
+      setTab('az')
+    } else if(h.startsWith('#/regions')){
+      setTab('regions')
+    } else if(h.startsWith('#/about')){
+      setTab('about')
+    } else {
+      setTab('gallery')
+    }
+  }
+  window.addEventListener('hashchange', route)
+
+  // Contribute button + form (placeholder) ---------------------------
+  const contributeBtn = document.getElementById('contributeBtn')
+  if(contributeBtn){
+    contributeBtn.addEventListener('click',()=>{
+      const sec = document.getElementById('contribute')
+      if(sec) sec.scrollIntoView({behavior:'smooth'})
+    })
   }
 
-  // --------- Form summary (local only) -------------------------------------
-  if(requestForm){
-    requestForm.addEventListener("submit",e=>{
-      e.preventDefault();
-      const type = document.getElementById("requestType").value;
-      const region = document.getElementById("regionReq").value;
-      const country = document.getElementById("countryReq").value;
-      const group = document.getElementById("groupReq").value;
-      const notes = document.getElementById("notesReq").value;
-      const email = document.getElementById("contactEmail").value;
-
-      const summary =
-        `Saved request: ${type || "Request"} for ${country || "an area"} ` +
-        `in ${region || "a region"}${group ? ` (group: ${group})` : ""}. ` +
-        `${notes ? "Notes: " + notes + ". " : ""}` +
-        `${email ? "Contact: " + email : "No contact email supplied."}`;
-
-      requestStatus.textContent = summary;
-    });
+  const contributeForm = document.getElementById('contributeForm')
+  if(contributeForm){
+    contributeForm.addEventListener('submit',e=>{
+      e.preventDefault()
+      alert("Thanks! On this static site the form is just a placeholder for now.")
+      contributeForm.reset()
+    })
   }
 
-  // --------- Init ----------------------------------------------------------
-  renderGallery(DATA);
+  // Init -------------------------------------------------------------
+  function init(){
+    fillRegions()
+    applyFilters()
+    renderAZ()
+    renderRegions()
+    route()
+  }
+  init()
   </script>
 </body>
 </html>
