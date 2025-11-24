@@ -316,10 +316,10 @@
   </dialog>
 
   <script>
-  // ---------- Starter data: Sinaloid + 4 averages --------------------------
+  // ---------- Starter data: Sinaloid + averages --------------------------
   // Make sure these images exist in /images/:
   // sinaloid.jpg, sinaloid-map.jpg, avg_afghan_pashtun.jpg,
-  // avg_salvadoran.jpg, avg_english.jpg, avg_irish.jpg
+  // avg_salvadoran.jpg, avg_english.jpg, avg_irish.jpg, avg_bengali.jpg
 
   let DATA = [
     {
@@ -410,6 +410,27 @@
       tags: ["Irish","Ireland","Average face"],
       sources: [ {label:"Average Irish morph", url: ""} ],
       notes: "National facial average morph. Add phenotype notes later."
+    },
+    {
+      id: "avg_bengali_bd",
+      title: "Average Bengali (Bangladesh)",
+      macro: "South Asia",
+      country: "Bangladesh",
+      region: "Bangladesh",
+      category: "Average face",
+      img: "images/avg_bengali.jpg",
+      tags: ["Bangladesh","Bengali","Average face"],
+      sources: [ {label:"Average Bengali morph (Bangladesh)", url: ""} ],
+      notes: `
+        Bengalis of Bangladesh often have broad, round faces, though more angular
+        shapes are also common. The nose is usually medium in size, slightly wide,
+        and may have a gently convex bridge. Skin tones range from light brown to
+        deep medium brown, and hair is generally straight to very wavy and dark in
+        color. Lips tend to be medium to full. The eyes are usually dark brown—
+        lighter shades are uncommon—and some individuals may have a faint inner eye
+        fold, high cheekbones, or features that lean toward an East Eurasian
+        appearance.
+      `
     }
   ]
   // -------------------------------------------------------------------------
