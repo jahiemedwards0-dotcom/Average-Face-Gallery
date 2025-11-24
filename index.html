@@ -217,7 +217,6 @@
         <select id="region">
           <option value="">All regions</option>
         </select>
-        <!-- fixed categories: Average face + Phenotype -->
         <select id="category">
           <option value="">All types</option>
           <option value="Average face">Average face</option>
@@ -231,10 +230,7 @@
   </header>
 
   <main class="wrap">
-    <!-- Gallery is ALWAYS visible at the top -->
     <section id="view-gallery" class="grid" aria-live="polite"></section>
-
-    <!-- These sections appear BELOW the gallery depending on the tab -->
     <section id="view-az" class="list" hidden></section>
     <section id="view-regions" class="list" hidden></section>
 
@@ -260,7 +256,6 @@
         Fill out the form below to request a new phenotype or average face, or to
         share information that can help refine existing entries.
       </p>
-      <!-- Embedded Tally form -->
       <iframe
         src="https://tally.so/r/mDrLBj?transparentBackground=1&hideTitle=1"
         width="100%"
@@ -316,11 +311,6 @@
   </dialog>
 
   <script>
-  // ---------- Starter data: Sinaloid + averages --------------------------
-  // Make sure these images exist in /images/:
-  // sinaloid.jpg, sinaloid-map.jpg, avg_afghan_pashtun.jpg,
-  // avg_salvadoran.jpg, avg_english.jpg, avg_irish.jpg, avg_bengali.jpg
-
   let DATA = [
     {
       id: "sinaloid",
@@ -333,7 +323,7 @@
       tags: [
         "Sinaloid",
         "Mestizo",
-        "Mexico",
+        "NW Mexico",
         "ranching",
         "mining",
         "regional variant"
@@ -342,7 +332,7 @@
       notes: `
         <h3>Description</h3>
         <p>
-          A regional variant within the broader Mexico and Central American Mestizo complex,
+          A regional variant within the broader Mexico and Central American-Mestizo complex.
           It developed in the ranching–mining belt of northwest and north-central Mexico
           through long-term Spanish–Indigenous admixture.
         </p>
@@ -372,6 +362,42 @@
       tags: ["Afghan","Pashtun","Average face"],
       sources: [ {label:"Average Afghan Pashtun morph", url: ""} ],
       notes: "National / regional facial average morph. Add detailed traits and description later."
+    },
+    {
+      id: "mississipid",
+      title: "Mississipid",
+      macro: "North America",
+      country: "United States",
+      region: "Deep South & Great Migration corridors",
+      category: "Phenotype",
+      img: "images/mississipid.jpg",   // make sure the file is in /images/
+      tags: [
+        "Mississipid",
+        "African American",
+        "Deep South",
+        "Great Migration",
+        "Phenotype"
+      ],
+      sources: [ { label: "User composite & notes", url: "" } ],
+      notes: `
+        <h3>Description</h3>
+        <p>
+          Historically, this African American phenotype developed in the plantation
+          South of the United States. From the Deep South, it spread into the Great
+          Lakes region, the East Coast corridor, and the West Coast during the
+          Great Migration. It is especially common among Gullah Geechee communities,
+          church-based networks, and multi-generation Southern families.
+        </p>
+
+        <h3>Traits</h3>
+        <ul>
+          <li>Medium-to-dark brown skin with warm or reddish undertones.</li>
+          <li>Face usually round or oval; nose typically medium-broad.</li>
+          <li>Lips full; jawline tapered rather than boxy.</li>
+          <li>Eyes predominantly dark brown, with hazel appearing randomly in some individuals; medium-set with slightly hooded lids and, on rare occasions, faint epicanthic folds.</li>
+          <li>Hair texture most often ranges from tight coils to looser curls (approximately 4C to 3C).</li>
+        </ul>
+      `
     },
     {
       id: "avg_salvadoran",
@@ -421,8 +447,8 @@
       sources: [ {label:"Average Bengali morph (Bangladesh)", url: ""} ],
       notes: `
         Bengalis of Bangladesh often have broad, round faces, though more angular
-        shapes are also common. The nose is usually straight and narrow, and sometimes  
-        have a gently convex or convex bridge. Skin tones range from light brown to
+        shapes are also common. The nose is usually straight and narrow, and may
+        have a gently convex bridge. Skin tones range from light brown to
         deep medium brown, and hair is generally straight to very wavy and dark in
         color. Lips tend to be medium to full. The eyes are usually dark brown;
         lighter shades are uncommon, and some individuals may have a faint inner eye
@@ -431,7 +457,7 @@
       `
     }
   ]
-  // -------------------------------------------------------------------------
+
   const $ = s=>document.querySelector(s)
   const grid = $('#view-gallery'),
         q = $('#q'),
@@ -459,19 +485,13 @@
   }
   let lastViewHash = '#/gallery'
 
-  // Tabs -------------------------------------------------------------
   const tabs = [...document.querySelectorAll('.tab')]
   function setTab(name){
     tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name))
-
-    // Gallery always visible; we only show ONE extra section under it
     viewAZ.hidden      = name !== 'az'
     viewRegions.hidden = name !== 'regions'
     viewAbout.hidden   = name !== 'about'
-
     if (hashForTab[name]) lastViewHash = hashForTab[name]
-
-    // Scroll to the chosen section (except gallery)
     let target = null
     if(name === 'az') target = viewAZ
     else if(name === 'regions') target = viewRegions
@@ -479,12 +499,10 @@
     if(target){
       target.scrollIntoView({behavior:'smooth'})
     } else {
-      // Gallery tab: scroll back up to top of gallery
       grid.scrollIntoView({behavior:'smooth'})
     }
   }
 
-  // Region dropdown (uses country + region text)
   function fillRegions(){
     const current = regionSel.value
     regionSel.innerHTML = '<option value="">All regions</option>'
@@ -502,7 +520,6 @@
     regionSel.value = current
   }
 
-  // Render Gallery ---------------------------------------------------
   function render(list){
     grid.innerHTML = ''
     const empty = document.getElementById('empty')
@@ -567,7 +584,6 @@
     route()
   })
 
-  // Filters ----------------------------------------------------------
   function applyFilters(){
     const term = q.value.trim().toLowerCase()
     const regionFilter = regionSel.value
@@ -594,7 +610,6 @@
   regionSel.addEventListener('change', applyFilters)
   catSel.addEventListener('change', applyFilters)
 
-  // A–Z view ---------------------------------------------------------
   function renderAZ(){
     const byTitle = [...DATA].sort((a,b)=>a.title.localeCompare(b.title))
     let html=''
@@ -616,7 +631,6 @@
     }))
   }
 
-  // Regions view: macro regions -> countries + search ----------------
   function renderRegions(){
     const macroMap = {}
     DATA.forEach(d=>{
@@ -644,11 +658,10 @@
              <span class="muted">${count} entr${count===1?'y':'ies'}</span>
            </a>`
         ).join('') +
-        '</div>'
+        '</div>`
     })
     viewRegions.innerHTML = html
 
-    // Click to filter gallery by country
     viewRegions.querySelectorAll('a[data-country]').forEach(a=>a.addEventListener('click',e=>{
       e.preventDefault()
       const country = a.dataset.country
@@ -657,7 +670,6 @@
       applyFilters()
     }))
 
-    // Search box to filter countries in-place
     const search = document.getElementById('regionSearch')
     if(search){
       search.addEventListener('input', ()=>{
@@ -670,7 +682,6 @@
     }
   }
 
-  // Router -----------------------------------------------------------
   function route(){
     const h=location.hash||'#/gallery'
     if(h.startsWith('#/morph/')){
@@ -690,7 +701,6 @@
   }
   window.addEventListener('hashchange', route)
 
-  // Contribute button -> scroll to embedded Tally form ---------------
   const contributeBtn = document.getElementById('contributeBtn')
   if(contributeBtn){
     contributeBtn.addEventListener('click',()=>{
@@ -700,7 +710,6 @@
     })
   }
 
-  // Init -------------------------------------------------------------
   function init(){
     fillRegions()
     applyFilters()
