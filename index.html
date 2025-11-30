@@ -319,8 +319,9 @@
   // ---------- Starter data: Sinaloid + averages --------------------------
   // Make sure these images exist in /images/:
   // sinaloid.jpg, sinaloid-map.jpg, mississipid.jpg, mississipid-map.jpg,
+  // chesapeakid.jpg, chesapeakid-map.jpg,
   // avg_afghan_pashtun.jpg, avg_salvadorann.jpg, avg_english.jpg,
-  // avg_irish.jpg, avg_bengali.jpg
+  // avg_irish.jpg, avg_bengali.jpg, avg_yakut.jpg
 
   let DATA = [
     {
@@ -397,7 +398,7 @@
           South of the United States. From the Deep South, it spread into the Great
           Lakes region, the East Coast corridor, and the West Coast during the
           Great Migration. It is the most common phenotypic pattern among African Americans.
-          It is especially common among Urban African Americans, Gullah Geechee communities,
+          It is especially common among urban African Americans, Gullah Geechee communities,
           church-based networks, and multi-generation Southern families.
         </p>
 
@@ -416,13 +417,79 @@
       `
     },
     {
+      id: "chesapeakid",
+      title: "Chesapeakid",
+      macro: "North America",
+      country: "United States",
+      region: "Chesapeake Bay region",
+      category: "Phenotype",
+      img: "images/chesapeakid.jpg",
+      tags: [
+        "Chesapeakid",
+        "African American",
+        "Free people of color",
+        "Chesapeake",
+        "Mid-Atlantic",
+        "Phenotype"
+      ],
+      sources: [ { label: "User composite, historical & genetic notes", url: "" } ],
+      notes: `
+        <h3>Description</h3>
+        <p>
+          Chesapeakid is a Black / African American phenotype that developed in the
+          Chesapeake Bay region during the slave era. It grew out of one of the
+          earliest and longest-lasting free people of color communities in the
+          United States.During the twentieth-century Great Migration, Black migrants from the Deep
+          South moved into Mid-Atlantic cities, so older Chesapeakid lineages
+          overlap and blend with Mississippid-types in places like
+          Philadelphia, Baltimore, Washington, D.C., and parts of the industrial
+          North. Most common among the descendants of Chesapeake free people of colour.
+          Similar types can also be found among the mixed-race Louisiana Creole population 
+          and other generationally mixed families in the U.S.
+          </p>
+
+        <h3>Traits</h3>
+        <ul>
+          <li>Faces are medium in size and softly oval
+          <li>Noses are usually medium-wide, with a straight to slightly convex bridge,
+            a rounded tip, and a mild nostril flare.
+          <li>Lips are very full, and the jawline tends to be rounder or squarer than
+            in Mississippid types.
+          </li>Eyes are almond-shaped and predominantly dark brown, with occasional
+            light-brown or hazel shaded.
+          <li>Skin ranges from light brown to dark brown, usually with warm or golden
+            undertones; freckles can appear.
+          </li>Hair is curly to tightly coily, typically ranging from 3A to 4C,
+            and body hair is moderate to heavy.
+        </ul>
+
+        <h3>Sources & context</h3>
+        <p class="muted">
+          This write-up draws on historical work on free people of color and “mulatto”
+          communities in the Chesapeake and Deep South (for example Ira Berlin’s
+          <em>Slaves Without Masters</em>, Paul Heinegg’s genealogical study of free
+          African Americans), colonial and early state laws on racial classification
+          from the Virginia and Maryland archives, census-based research on
+          nineteenth-century “mulatto” populations, and genetic studies of African
+          American ancestry and regional variation (Bryc et al., Shriver et al., and
+          public DNA summaries popularized by Henry Louis Gates Jr.).
+        </p>
+
+        <img
+          src="images/chesapeakid-map.jpg"
+          alt="Approximate core range of the Chesapeakid phenotype in the Chesapeake Bay region"
+          style="display:block;width:100%;margin-top:10px;border-radius:12px;"
+        >
+      `
+    },
+    {
       id: "avg_yakut",
       title: "Average Yakut",
       macro: "North Asia",
       country: "Russia",
       region: "Sakha Republic (Yakutia)",
       category: "Average face",
-      img: "images/avg_yakut.jpg",   // make sure this file is in /images/
+      img: "images/avg_yakut.jpg",
       tags: ["Yakut", "Sakha Republic", "Russia", "Average face"],
       sources: [{ label: "Average Yakut morph", url: "" }],
       notes: `
@@ -547,7 +614,6 @@
     if(target){
       target.scrollIntoView({behavior:'smooth'})
     } else {
-      // Gallery tab: scroll back up to top of gallery
       grid.scrollIntoView({behavior:'smooth'})
     }
   }
