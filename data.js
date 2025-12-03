@@ -113,7 +113,7 @@ window.MORPHS = [
     country: "United States",
     region: "Chesapeake Bay region",
     category: "Phenotype",
-    img: "images/chesapeakid.jpg",  // make sure this filename matches your actual image
+    img: "images/chesapeakid.jpg.JPEG",  // make sure this filename matches your actual image
     tags: [
       "Chesapeakid",
       "African American",
