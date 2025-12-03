@@ -73,14 +73,20 @@
       padding:18px;
     }
     .card{
+      display:block;
       background:var(--card);
       border:1px solid var(--ring);
       border-radius:18px;
       overflow:hidden;
       box-shadow:0 4px 14px rgba(0,0,0,.25);
-      transition:transform .15s ease;
+      transition:transform .15s ease, box-shadow .15s ease;
+      text-decoration:none;
+      color:inherit;
     }
-    .card:hover{transform:translateY(-2px)}
+    .card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 18px rgba(0,0,0,.35);
+    }
     .thumbWrap{
       position:relative;
       aspect-ratio:2/3;
@@ -144,61 +150,11 @@
       gap:10px;
     }
 
-    /* Modal */
-    dialog{
-      border:none;
-      border-radius:18px;
-      max-width:min(980px,92vw);
-      padding:0;
-      background:var(--card);
-      color:var(--fg);
-      box-shadow:0 20px 70px rgba(0,0,0,.5);
-    }
-    dialog::backdrop{background:rgba(0,0,0,.6)}
-    .modalHead{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:14px 16px;
-      border-bottom:1px solid var(--ring);
-    }
-    .modalBody{
-      display:grid;
-      grid-template-columns:minmax(260px,44%) 1fr;
-      gap:16px;
-      padding:16px;
-    }
-    .modalBody img{
-      width:100%;
-      height:auto;
-      border-radius:14px;
-      border:1px solid var(--ring);
-    }
-    .pill{
-      font-size:12px;
-      background:var(--chip);
-      border:1px solid var(--ring);
-      padding:3px 8px;
-      border-radius:999px;
-      margin-right:6px;
-      color:var(--muted);
-    }
-    .badges{display:flex;flex-wrap:wrap;gap:6px}
-    .close{
-      background:transparent;
-      border:1px solid var(--ring);
-      color:var(--fg);
-      padding:8px 10px;
-      border-radius:12px;
-      cursor:pointer;
-    }
-
     @media (max-width:900px){
       .controls{
         grid-template-columns:1fr 1fr;
         grid-auto-rows:auto;
       }
-      .modalBody{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -207,7 +163,7 @@
     <div class="wrap">
       <h1>Human Morph Gallery (Developing)</h1>
       <nav>
-        <a class="tab" data-tab="gallery" href="#/gallery">Gallery</a>
+        <a class="tab active" data-tab="gallery" href="#/gallery">Gallery</a>
         <a class="tab" data-tab="az" href="#/a-z">A–Z</a>
         <a class="tab" data-tab="regions" href="#/regions">Regions</a>
         <a class="tab" data-tab="about" href="#/about">About</a>
@@ -217,7 +173,6 @@
         <select id="region">
           <option value="">All regions</option>
         </select>
-        <!-- fixed categories: Average face + Phenotype -->
         <select id="category">
           <option value="">All types</option>
           <option value="Average face">Average face</option>
@@ -231,36 +186,39 @@
   </header>
 
   <main class="wrap">
-    <!-- Gallery is ALWAYS visible at the top -->
+    <!-- Gallery -->
     <section id="view-gallery" class="grid" aria-live="polite"></section>
 
-    <!-- These sections appear BELOW the gallery depending on the tab -->
+    <!-- A–Z -->
     <section id="view-az" class="list" hidden></section>
+
+    <!-- Regions -->
     <section id="view-regions" class="list" hidden></section>
 
+    <!-- About -->
     <section id="view-about" class="list" hidden>
       <h2>About & Methods</h2>
       <p>
         This is a static, free-to-host gallery for average faces and morphs.
-        Images live in <code>/images/</code>; entries are stored directly in the
-        page for now.
+        Images live in <code>/images/</code>; entries are stored in a shared
+        data file. Avoid essentialist language; include sources where possible.
       </p>
       <h3>Disclaimer</h3>
       <p>
         Faces here are averaged from real people, then lightly enhanced for clarity
         and hyperrealism. They illustrate trends in the source sets but are neither
         definitive nor absolute; as more material is gathered or methods improve,
-        each entry may change. Please read notes and sources on each item (if available).
+        each entry may change. Please read notes and sources on each item.
       </p>
     </section>
 
+    <!-- Contribute -->
     <section id="contribute" class="list">
       <h2>Submit a request</h2>
       <p>
         Fill out the form below to request a new phenotype or average face, or to
         share information that can help refine existing entries.
       </p>
-      <!-- Embedded Tally form -->
       <iframe
         src="https://tally.so/r/mDrLBj?transparentBackground=1&hideTitle=1"
         width="100%"
@@ -279,558 +237,230 @@
     <div id="empty" class="empty" hidden>
       Nothing found. Adjust filters or add more morphs.
     </div>
+
     <div class="footer">
       © <span id="year"></span> Your Site.
     </div>
   </main>
 
-  <dialog id="modal">
-    <div class="modalHead">
-      <div>
-        <strong id="mTitle"></strong>
-        <div class="badges" id="mBadges"></div>
-      </div>
-      <div>
-        <button class="close" type="button" onclick="modal.close()">Close</button>
-      </div>
-    </div>
-    <div class="modalBody">
-      <img id="mImg" alt="Morph preview" />
-      <div>
-        <p id="mNotes" style="margin-top:0"></p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div>
-            <div class="pill">Source(s)</div>
-            <ul id="mSources" style="margin-top:8px"></ul>
-          </div>
-          <div>
-            <div class="pill">Tags</div>
-            <div id="mTags" class="chips" style="margin-top:8px"></div>
-          </div>
-        </div>
-        <div style="margin-top:14px">
-          <a id="mFile" download>Download image</a>
-        </div>
-      </div>
-    </div>
-  </dialog>
+  <!-- Load shared data -->
+  <script src="data.js"></script>
 
   <script>
-  // ---------- Starter data: Sinaloid + averages --------------------------
-  // Make sure these images exist in /images/:
-  // sinaloid.jpg, sinaloid-map.jpg, mississipid.jpg, mississipid-map.jpg,
-  // chesapeakid.jpg, chesapeakid-map.jpg,
-  // avg_afghan_pashtun.jpg, avg_salvadorann.jpg, avg_english.jpg,
-  // avg_irish.jpg, avg_bengali.jpg, avg_yakut.jpg
+    const $ = s => document.querySelector(s)
+    const grid = $('#view-gallery'),
+          q = $('#q'),
+          regionSel = $('#region'),
+          catSel = $('#category'),
+          viewAZ = $('#view-az'),
+          viewRegions = $('#view-regions'),
+          viewAbout = $('#view-about'),
+          contributeSection = $('#contribute')
 
-  let DATA = [
-    {
-      id: "sinaloid",
-      title: "Sinaloid",
-      macro: "Latin America",
-      country: "Mexico",
-      region: "Northwest & North-Central Mexico",
-      category: "Phenotype",
-      img: "images/sinaloid.jpg",
-      tags: [
-        "Sinaloid",
-        "Mexico & Central America mestizo",
-        "NW Mexico",
-        "ranching",
-        "mining",
-        "regional variant"
-      ],
-      sources: [ {label:"User composite & notes", url: ""} ],
-      notes: `
-        <h3>Description</h3>
-        <p>
-          A regional variant within the broader Mexico and Central America–Mestizo
-          complex. It developed in the ranching–mining belt of the northwest and
-          north-central Mexico through long-term Spanish–Indigenous admixture.
-        </p>
+    document.getElementById('year').textContent = new Date().getFullYear()
 
-        <h3>Traits</h3>
-        <ul>
-          <li>Skin light- to medium-brown, tanning deeply; stature average to tall with a compact, stockier build.</li>
-          <li>Faces often rounder in men and slightly longer in women; mild neoteny (soft, baby-faced look) is common.</li>
-          <li>Nose medium and usually projecting; lips full.</li>
-          <li>Eyes predominantly dark and slightly upturned; lighter shades appear in a minority; occasional epicanthic folds.</li>
-          <li>Hair dark brown to black; straight or wavy; curls not rare.</li>
-        </ul>
-
-        <img src="images/sinaloid-map.jpg"
-             alt="Sinaloid map"
-             style="display:block;width:100%;margin-top:10px;border-radius:12px;">
-      `
-    },
-    {
-      id: "avgeragepashtun",
-      title: "Average Afghan Pashtun",
-      macro: "South Asia",
-      country: "Afghanistan / Pakistan",
-      region: "Pashtun belt",
-      category: "Average face",
-      img: "images/avg_afghan_pashtun.jpg",
-      tags: ["Afghan","Pashtun","Average face"],
-      sources: [ {label:"Average Afghan Pashtun morph", url: ""} ],
-      notes: "National / regional facial average morph. Add detailed traits and description later."
-    },
-    {
-      id: "mississipid",
-      title: "Mississipid",
-      macro: "North America",
-      country: "United States",
-      region: "Deep South & Great Migration corridors",
-      category: "Phenotype",
-      img: "images/mississipid.jpg",
-      tags: [
-        "Mississipid",
-        "African American",
-        "Deep South",
-        "Great Migration",
-        "Phenotype"
-      ],
-      sources: [ { label: "User composite & notes", url: "" } ],
-      notes: `
-        <h3>Description</h3>
-        <p>
-          Historically, this African American phenotype developed in the plantation
-          South of the United States. From the Deep South, it spread into the Great
-          Lakes region, the East Coast corridor, and the West Coast during the
-          Great Migration. It is the most common phenotypic pattern among African Americans.
-          It is especially common among urban African Americans, 
-          church-based networks, and multi-generation Southern families.
-        </p>
-
-        <h3>Traits</h3>
-        <ul>
-          <li>Medium-to-dark brown skin with warm or reddish undertones.</li>
-          <li>Face usually round or oval; nose typically medium-broad.</li>
-          <li>Lips full; jawline tapered rather than boxy.</li>
-          <li>Eyes predominantly dark brown, with hazel appearing randomly in some individuals; medium-set with slightly hooded lids and, on rare occasions, faint epicanthic folds.</li>
-          <li>Hair texture most often ranges from tight coils to looser curls (approximately 4C to 3C).</li>
-        </ul>
-
-        <img src="images/mississipid-map.jpg"
-             alt="Mississipid distribution map"
-             style="display:block;width:100%;margin-top:10px;border-radius:12px;">
-      `
-    },
-    {
-      id: "chesapeakid",
-      title: "Chesapeakid",
-      macro: "North America",
-      country: "United States",
-      region: "Chesapeake Bay region",
-      category: "Phenotype",
-      img: "images/chesapeakid.jpg.JPEG",
-      tags: [
-        "Chesapeakid",
-        "African American",
-        "Free people of color",
-        "Chesapeake",
-        "Mid-Atlantic",
-        "Phenotype"
-      ],
-      sources: [ { label: "User composite, historical & genetic notes", url: "" } ],
-      notes: `
-        <h3>Description</h3>
-        <p>
-          Chesapeakid is a Black / African American phenotype that developed in the
-          Chesapeake Bay region during the slave era. It grew out of one of the
-          earliest and longest-lasting free people of color communities in the
-          United States.During the twentieth-century Great Migration, Black migrants from the Deep
-          South moved into Mid-Atlantic cities, so older Chesapeakid lineages
-          overlap and blend with Mississippid-types in places like
-          Philadelphia, Baltimore, Washington, D.C., and parts of the industrial
-          North. Most common among the descendants of Chesapeake free people of colour.
-          Similar types can also be found among the mixed-race Louisiana Creole population 
-          and other generationally mixed families in the U.S.
-          </p>
-
-        <h3>Traits</h3>
-        <ul>
-          Faces are medium in size and softly oval
-          Noses are usually medium-wide, with a straight to slightly convex bridge,
-            a rounded tip, and a mild nostril flare.
-          Lips are very full, and the jawline tends to be rounder or squarer than
-            in Mississippid types.
-          Eyes are almond-shaped and predominantly dark brown, with occasional
-            light-brown or hazel shaded.
-          Skin ranges from light brown to dark brown, usually with warm or golden
-            undertones; freckles can appear.
-          Hair is curly to tightly coily, typically ranging from 3A to 4C,
-            and body hair is moderate to heavy.
-        </ul>
-
-        <h3>Sources & context</h3>
-        <p class="muted">
-          This write-up draws on historical work on free people of color and “mulatto”
-          communities in the Chesapeake and Deep South (for example Ira Berlin’s
-          <em>Slaves Without Masters</em>, Paul Heinegg’s genealogical study of free
-          African Americans), colonial and early state laws on racial classification
-          from the Virginia and Maryland archives, census-based research on
-          nineteenth-century “mulatto” populations, and genetic studies of African
-          American ancestry and regional variation (Bryc et al., Shriver et al., and
-          public DNA summaries popularized by Henry Louis Gates Jr.).
-        </p>
-
-        <img
-          src="images/chesapeakid_map.jpg"
-          alt="Approximate core range of the Chesapeakid phenotype in the Chesapeake Bay region"
-          style="display:block;width:100%;margin-top:10px;border-radius:12px;"
-        >
-      `
-    },
-    {
-      id: "avg_yakut",
-      title: "Average Yakut",
-      macro: "North Asia",
-      country: "Russia",
-      region: "Sakha Republic (Yakutia)",
-      category: "Average face",
-      img: "images/avg_yakut.jpg",
-      tags: ["Yakut", "Sakha Republic", "Russia", "Average face"],
-      sources: [{ label: "Average Yakut morph", url: "" }],
-      notes: `
-        <p>
-          The head is mainly rounded, with a short, very broad, relatively flat face
-          and prominent cheekbones. The skin is light to medium yellow-brown; very
-          dark complexions are rare. Hair is usually black, with dark to medium brown
-          also seen; it is straight and coarse, and beard or body hair is sparse.
-          Eyes are mostly dark brown to nearly black, though medium brown and
-          occasional hazel-like tones also appear.
-        </p>
-        <p>
-          The eyes are slightly up-slanted, and monolids or low creases are common.
-          The nose is short to medium, usually straight to slightly concave, sometimes
-          with a somewhat higher bridge or small convexity.
-        </p>
-      `
-    },
-    {
-      id: "averageenglish",
-      title: "Average English",
-      macro: "Europe",
-      country: "United Kingdom",
-      region: "England",
-      category: "Average face",
-      img: "images/avg_english.jpg",
-      tags: ["English","UK","Average face"],
-      sources: [ {label:"Average English morph", url: ""} ],
-      notes: "National facial average morph. Add phenotype notes later."
-    },
-    {
-      id: "avgerageirish",
-      title: "Average Irish",
-      macro: "Europe",
-      country: "Ireland",
-      region: "Ireland",
-      category: "Average face",
-      img: "images/avg_irish.jpg",
-      tags: ["Irish","Ireland","Average face"],
-      sources: [ {label:"Average Irish morph", url: ""} ],
-      notes: "National facial average morph. Add phenotype notes later."
-    },
-    {
-      id: "avgeragebengali_bd",
-      title: "Average Bengali (Bangladesh)",
-      macro: "South Asia",
-      country: "Bangladesh",
-      region: "Bangladesh",
-      category: "Average face",
-      img: "images/avg_bengali.jpg",
-      tags: ["Bangladesh","Bengali","Average face"],
-      sources: [ {label:"Average Bengali morph (Bangladesh)", url: ""} ],
-      notes: `
-        Bengalis of Bangladesh often have broad, round faces, though more angular
-        shapes are also common. The nose is usually straight and narrow, and sometimes
-        has a gently convex or concave bridge. Skin tones range from light brown to
-        deep medium brown, and hair is generally straight to very wavy and dark in
-        color. Lips tend to be medium to full. The eyes are usually dark brown;
-        lighter shades are uncommon, and some individuals may have a faint inner eye
-        fold, high cheekbones, or features that lean toward an East Eurasian
-        appearance.
-      `
+    const hashForTab = {
+      gallery: '#/gallery',
+      az: '#/a-z',
+      regions: '#/regions',
+      about: '#/about'
     }
-  ]
-  // -------------------------------------------------------------------------
-  const $ = s=>document.querySelector(s)
-  const grid = $('#view-gallery'),
-        q = $('#q'),
-        regionSel = $('#region'),
-        catSel = $('#category')
-  const modal = $('#modal')
-  const mTitle = $('#mTitle'),
-        mImg = $('#mImg'),
-        mNotes = $('#mNotes'),
-        mSources = $('#mSources'),
-        mTags = $('#mTags'),
-        mBadges = $('#mBadges'),
-        mFile = $('#mFile')
-  const viewAZ = $('#view-az'),
-        viewRegions = $('#view-regions'),
-        viewAbout = $('#view-about'),
-        contributeSection = $('#contribute')
-  document.getElementById('year').textContent = new Date().getFullYear()
+    let lastViewHash = '#/gallery'
 
-  const hashForTab = {
-    gallery: '#/gallery',
-    az: '#/a-z',
-    regions: '#/regions',
-    about: '#/about'
-  }
-  let lastViewHash = '#/gallery'
+    const tabs = [...document.querySelectorAll('.tab')]
 
-  // Tabs -------------------------------------------------------------
-  const tabs = [...document.querySelectorAll('.tab')]
-  function setTab(name){
-    tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name))
+    function setTab(name){
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name))
 
-    // Gallery always visible; we only show ONE extra section under it
-    viewAZ.hidden      = name !== 'az'
-    viewRegions.hidden = name !== 'regions'
-    viewAbout.hidden   = name !== 'about'
+      viewAZ.hidden      = name !== 'az'
+      viewRegions.hidden = name !== 'regions'
+      viewAbout.hidden   = name !== 'about'
 
-    if (hashForTab[name]) lastViewHash = hashForTab[name]
+      if (hashForTab[name]) lastViewHash = hashForTab[name]
 
-    // Scroll to the chosen section (except gallery)
-    let target = null
-    if(name === 'az') target = viewAZ
-    else if(name === 'regions') target = viewRegions
-    else if(name === 'about') target = viewAbout
-    if(target){
-      target.scrollIntoView({behavior:'smooth'})
-    } else {
-      grid.scrollIntoView({behavior:'smooth'})
-    }
-  }
-
-  // Region dropdown (uses country + region text)
-  function fillRegions(){
-    const current = regionSel.value
-    regionSel.innerHTML = '<option value="">All regions</option>'
-    const labels = new Set()
-    DATA.forEach(d=>{
-      const label = d.country || d.region
-      if(label) labels.add(label)
-    })
-    Array.from(labels).sort().forEach(label=>{
-      const o=document.createElement('option')
-      o.textContent = label
-      o.value = label
-      regionSel.appendChild(o)
-    })
-    regionSel.value = current
-  }
-
-  // Render Gallery ---------------------------------------------------
-  function render(list){
-    grid.innerHTML = ''
-    const empty = document.getElementById('empty')
-    if(!list.length){
-      empty.hidden = false
-      return
-    } else {
-      empty.hidden = true
-    }
-    list.forEach(item=>{
-      const card=document.createElement('article')
-      card.className='card'
-      card.tabIndex=0
-      card.setAttribute('role','button')
-      card.title='Open details'
-      card.innerHTML = `
-        <div class="thumbWrap">
-          <img class="thumb" src="${item.img}" alt="${item.title}" loading="lazy" />
-        </div>
-        <div class="meta">
-          <div class="title">${item.title}</div>
-          <div class="chips">
-            <span class="chip">${item.country || item.region}</span>
-            <span class="chip">${item.category}</span>
-          </div>
-        </div>`
-      card.addEventListener('click',()=>openModal(item))
-      card.addEventListener('keypress',e=>{ if(e.key==='Enter') openModal(item) })
-      grid.appendChild(card)
-    })
-  }
-
-  function openModal(item){
-    mTitle.textContent = item.title
-    const loc = item.country || item.region
-    const macro = item.macro || ''
-    mBadges.innerHTML = `
-      ${loc ? `<span class="pill">${loc}</span>` : ''}
-      ${macro ? `<span class="pill">${macro}</span>` : ''}
-      <span class="pill">${item.category}</span>
-    `
-    mImg.src = item.img
-    mImg.alt = item.title
-    mNotes.innerHTML = item.notes || ''
-    mSources.innerHTML = (item.sources||[]).map(s=>
-      `<li>${s.url
-        ? `<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`
-        : s.label}</li>`
-    ).join('')
-    mTags.innerHTML = (item.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')
-    const ext = (item.img.split('.').pop()||'jpg')
-    mFile.href = item.img
-    mFile.download = `${item.id||item.title}.${ext}`
-    modal.showModal()
-    history.replaceState(null,'',`#/morph/${encodeURIComponent(item.id||item.title)}`)
-  }
-
-  modal.addEventListener('close',()=>{
-    if(location.hash.startsWith('#/morph/')){
-      history.replaceState(null,'', lastViewHash)
-    }
-    route()
-  })
-
-  // Filters ----------------------------------------------------------
-  function applyFilters(){
-    const term = q.value.trim().toLowerCase()
-    const regionFilter = regionSel.value
-    const catFilter = catSel.value
-    const out = DATA.filter(d=>{
-      const text = [
-        d.title,
-        d.country,
-        d.region,
-        d.macro,
-        d.category,
-        d.notes || '',
-        (d.tags||[]).join(' ')
-      ].join(' ').toLowerCase()
-      const matchesText = !term || text.includes(term)
-      const locLabel = d.country || d.region
-      const matchesRegion = !regionFilter || regionFilter === locLabel
-      const matchesCategory = !catFilter || catFilter === d.category
-      return matchesText && matchesRegion && matchesCategory
-    })
-    render(out)
-  }
-  q.addEventListener('input', applyFilters)
-  regionSel.addEventListener('change', applyFilters)
-  catSel.addEventListener('change', applyFilters)
-
-  // A–Z view ---------------------------------------------------------
-  function renderAZ(){
-    const byTitle = [...DATA].sort((a,b)=>a.title.localeCompare(b.title))
-    let html=''
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-    letters.forEach(L=>{
-      const group = byTitle.filter(x=> (x.title||'').toUpperCase().startsWith(L))
-      if(group.length){
-        html += `<h2>${L}</h2><div class="az">` +
-          group.map(x=>`<a href="#/morph/${encodeURIComponent(x.id||x.title)}" data-id="${x.id}">${x.title}</a>`).join('') +
-          '</div>'
+      let target = null
+      if(name === 'az') target = viewAZ
+      else if(name === 'regions') target = viewRegions
+      else if(name === 'about') target = viewAbout
+      if(target){
+        target.scrollIntoView({behavior:'smooth'})
+      } else {
+        grid.scrollIntoView({behavior:'smooth'})
       }
-    })
-    viewAZ.innerHTML = html || '<div class="empty">No entries yet.</div>'
-    viewAZ.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{
-      e.preventDefault()
-      const id=decodeURIComponent(a.getAttribute('href').split('/').pop())
-      const it=DATA.find(d=>(d.id||d.title)===id)
-      if(it) openModal(it)
-    }))
-  }
-
-  // Regions view: macro regions -> countries + search ----------------
-  function renderRegions(){
-    const macroMap = {}
-    DATA.forEach(d=>{
-      const macro = d.macro || 'Other'
-      const country = d.country || d.region || 'Unknown'
-      if(!macroMap[macro]) macroMap[macro] = {}
-      macroMap[macro][country] = (macroMap[macro][country] || 0) + 1
-    })
-    const macros = Object.keys(macroMap).sort()
-    if(!macros.length){
-      viewRegions.innerHTML = '<div class="empty">No regions yet.</div>'
-      return
     }
-    let html = `
-      <div style="margin-bottom:12px">
-        <input id="regionSearch" placeholder="Search by country…" />
-      </div>
-    `
-    macros.forEach(macro=>{
-      const countries = Object.entries(macroMap[macro]).sort((a,b)=>a[0].localeCompare(b[0]))
-      html += `<h2>${macro}</h2><div class="kvs">` +
-        countries.map(([country,count]) =>
-          `<a href="#/gallery" class="az" data-country="${country}">
-             <strong>${country}</strong><br/>
-             <span class="muted">${count} entr${count===1?'y':'ies'}</span>
-           </a>`
-        ).join('') +
-        '</div>'
-    })
-    viewRegions.innerHTML = html
 
-    // Click to filter gallery by country
-    viewRegions.querySelectorAll('a[data-country]').forEach(a=>a.addEventListener('click',e=>{
-      e.preventDefault()
-      const country = a.dataset.country
-      regionSel.value = country
-      setTab('gallery')
-      applyFilters()
-    }))
+    // Region dropdown
+    function fillRegions(){
+      const current = regionSel.value
+      regionSel.innerHTML = '<option value="">All regions</option>'
+      const labels = new Set()
+      window.MORPHS.forEach(d=>{
+        const label = d.country || d.region
+        if(label) labels.add(label)
+      })
+      Array.from(labels).sort().forEach(label=>{
+        const o = document.createElement('option')
+        o.textContent = label
+        o.value = label
+        regionSel.appendChild(o)
+      })
+      regionSel.value = current
+    }
 
-    // Search box to filter countries in-place
-    const search = document.getElementById('regionSearch')
-    if(search){
-      search.addEventListener('input', ()=>{
-        const term = search.value.trim().toLowerCase()
-        viewRegions.querySelectorAll('a[data-country]').forEach(a=>{
-          const name = a.dataset.country.toLowerCase()
-          a.style.display = !term || name.includes(term) ? '' : 'none'
-        })
+    // Render gallery – cards link to morph.html?id=...
+    function render(list){
+      grid.innerHTML = ''
+      const empty = document.getElementById('empty')
+      if(!list.length){
+        empty.hidden = false
+        return
+      } else {
+        empty.hidden = true
+      }
+      list.forEach(item=>{
+        const card = document.createElement('a')
+        card.className = 'card'
+        card.href = `morph.html?id=${encodeURIComponent(item.id)}`
+        card.innerHTML = `
+          <div class="thumbWrap">
+            <img class="thumb" src="${item.img}" alt="${item.title}" loading="lazy" />
+          </div>
+          <div class="meta">
+            <div class="title">${item.title}</div>
+            <div class="chips">
+              <span class="chip">${item.country || item.region}</span>
+              <span class="chip">${item.category}</span>
+            </div>
+          </div>`
+        grid.appendChild(card)
       })
     }
-  }
 
-  // Router -----------------------------------------------------------
-  function route(){
-    const h=location.hash||'#/gallery'
-    if(h.startsWith('#/morph/')){
-      const id=decodeURIComponent(h.split('/').pop())
-      const it=DATA.find(d=>(d.id||d.title)===id)
-      if(it) openModal(it)
-      return
-    } else if(h.startsWith('#/a-z')){
-      setTab('az')
-    } else if(h.startsWith('#/regions')){
-      setTab('regions')
-    } else if(h.startsWith('#/about')){
-      setTab('about')
-    } else {
-      setTab('gallery')
+    function applyFilters(){
+      const term = q.value.trim().toLowerCase()
+      const regionFilter = regionSel.value
+      const catFilter = catSel.value
+      const out = window.MORPHS.filter(d=>{
+        const text = [
+          d.title,
+          d.country,
+          d.region,
+          d.macro,
+          d.category,
+          d.notes || '',
+          (d.tags||[]).join(' ')
+        ].join(' ').toLowerCase()
+        const matchesText = !term || text.includes(term)
+        const locLabel = d.country || d.region
+        const matchesRegion = !regionFilter || regionFilter === locLabel
+        const matchesCategory = !catFilter || catFilter === d.category
+        return matchesText && matchesRegion && matchesCategory
+      })
+      render(out)
     }
-  }
-  window.addEventListener('hashchange', route)
+    q.addEventListener('input', applyFilters)
+    regionSel.addEventListener('change', applyFilters)
+    catSel.addEventListener('change', applyFilters)
 
-  // Contribute button -> scroll to embedded Tally form ---------------
-  const contributeBtn = document.getElementById('contributeBtn')
-  if(contributeBtn){
-    contributeBtn.addEventListener('click',()=>{
-      if(contributeSection){
-        contributeSection.scrollIntoView({behavior:'smooth'})
+    // A–Z view
+    function renderAZ(){
+      const byTitle = [...window.MORPHS].sort((a,b)=>a.title.localeCompare(b.title))
+      let html=''
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+      letters.forEach(L=>{
+        const group = byTitle.filter(x=> (x.title||'').toUpperCase().startsWith(L))
+        if(group.length){
+          html += `<h2>${L}</h2><div class="az">` +
+            group.map(x=>`<a href="morph.html?id=${encodeURIComponent(x.id)}">${x.title}</a>`).join('') +
+            '</div>'
+        }
+      })
+      viewAZ.innerHTML = html || '<div class="empty">No entries yet.</div>'
+    }
+
+    // Regions view
+    function renderRegions(){
+      const macroMap = {}
+      window.MORPHS.forEach(d=>{
+        const macro = d.macro || 'Other'
+        const country = d.country || d.region || 'Unknown'
+        if(!macroMap[macro]) macroMap[macro] = {}
+        macroMap[macro][country] = (macroMap[macro][country] || 0) + 1
+      })
+      const macros = Object.keys(macroMap).sort()
+      if(!macros.length){
+        viewRegions.innerHTML = '<div class="empty">No regions yet.</div>'
+        return
       }
-    })
-  }
+      let html = `
+        <div style="margin-bottom:12px">
+          <input id="regionSearch" placeholder="Search by country…" />
+        </div>
+      `
+      macros.forEach(macro=>{
+        const countries = Object.entries(macroMap[macro]).sort((a,b)=>a[0].localeCompare(b[0]))
+        html += `<h2>${macro}</h2><div class="kvs">` +
+          countries.map(([country,count]) =>
+            `<a href="#/gallery" class="az" data-country="${country}">
+               <strong>${country}</strong><br/>
+               <span class="muted">${count} entr${count===1?'y':'ies'}</span>
+             </a>`
+          ).join('') +
+          '</div>'
+      })
+      viewRegions.innerHTML = html
 
-  // Init -------------------------------------------------------------
-  function init(){
-    fillRegions()
-    applyFilters()
-    renderAZ()
-    renderRegions()
-    route()
-  }
-  init()
+      viewRegions.querySelectorAll('a[data-country]').forEach(a=>a.addEventListener('click',e=>{
+        e.preventDefault()
+        const country = a.dataset.country
+        regionSel.value = country
+        setTab('gallery')
+        applyFilters()
+      }))
+
+      const search = document.getElementById('regionSearch')
+      if(search){
+        search.addEventListener('input', ()=>{
+          const term = search.value.trim().toLowerCase()
+          viewRegions.querySelectorAll('a[data-country]').forEach(a=>{
+            const name = a.dataset.country.toLowerCase()
+            a.style.display = !term || name.includes(term) ? '' : 'none'
+          })
+        })
+      }
+    }
+
+    function route(){
+      const h = location.hash || '#/gallery'
+      if(h.startsWith('#/a-z')){
+        setTab('az')
+      } else if(h.startsWith('#/regions')){
+        setTab('regions')
+      } else if(h.startsWith('#/about')){
+        setTab('about')
+      } else {
+        setTab('gallery')
+      }
+    }
+    window.addEventListener('hashchange', route)
+
+    const contributeBtn = document.getElementById('contributeBtn')
+    if(contributeBtn){
+      contributeBtn.addEventListener('click',()=>{
+        if(contributeSection){
+          contributeSection.scrollIntoView({behavior:'smooth'})
+        }
+      })
+    }
+
+    function init(){
+      fillRegions()
+      applyFilters()
+      renderAZ()
+      renderRegions()
+      route()
+    }
+    init()
   </script>
 </body>
 </html>
