@@ -138,7 +138,7 @@ window.MORPHS = [
         Chesapeakid is a Black / African American phenotype that developed in the
         Chesapeake Bay region during the slave era. It grew out of one of the
         earliest and longest-lasting free people of color communities in the
-        United States, alongside many mixed enslaved families. Before Jim Crow
+        United States. Before Jim Crow
         and the one-drop rule, many people in this group were legally and socially
         classified as “mulatto” and stood out as distinct from both Black and
         white populations.
