@@ -135,7 +135,7 @@ window.MORPHS = [
     notes: `
       <h3>Description</h3>
       <p>
-        Chesapeakid is a Black / African American phenotype that formed in the
+        Chesapeakid is a Black / African American phenotype that developed in the
         Chesapeake Bay region during the slave era. It grew out of one of the
         earliest and longest-lasting free people of color communities in the
         United States, alongside many mixed enslaved families. Before Jim Crow
