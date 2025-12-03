@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Morph detail – Human Morph Gallery</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <style>
+    :root{--bg:#0b0d10;--fg:#e9eef5;--muted:#9fb0c3;--card:#14181f;--accent:#7aa2ff;--chip:#1d2430;--ring:#2a3342}
+    *{box-sizing:border-box} html,body{height:100%}
+    body{
+      margin:0;
+      font:16px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
+      color:var(--fg);
+      background:
+        radial-gradient(1200px 800px at 80% -10%,#162032 0%,transparent 60%),
+        var(--bg);
+    }
+    header{
+      border-bottom:1px solid var(--ring);
+      background:rgba(11,13,16,.8);
+      backdrop-filter:saturate(140%) blur(8px);
+      position:sticky;
+      top:0;
+      z-index:5;
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:16px}
+    a{color:var(--accent)}
+    .pill{
+      font-size:12px;
+      background:var(--chip);
+      border:1px solid var(--ring);
+      padding:3px 8px;
+      border-radius:999px;
+      margin-right:6px;
+      color:var(--muted);
+    }
+    .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    main{padding:20px 16px 36px}
+    .layout{
+      max-width:980px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:minmax(260px,40%) 1fr;
+      gap:20px;
+    }
+    .imgBox img{
+      width:100%;
+      height:auto;
+      border-radius:16px;
+      border:1px solid var(--ring);
+      display:block;
+    }
+    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .chip{
+      background:var(--chip);
+      border:1px solid var(--ring);
+      color:var(--muted);
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:12px;
+    }
+    .sourcesList{
+      margin-top:6px;
+      padding-left:18px;
+    }
+    .muted{opacity:.75}
+    .backLink{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      margin-bottom:14px;
+      text-decoration:none;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .backLink:hover{color:var(--fg)}
+    @media (max-width:900px){
+      .layout{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a href="index.html" class="backLink">← Back to gallery</a>
+      <h1 id="title">Loading…</h1>
+      <div class="badges" id="badges"></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="layout">
+      <div class="imgBox">
+        <img id="img" alt="">
+        <div class="chips" id="tags"></div>
+      </div>
+      <article>
+        <div id="notes"></div>
+        <section style="margin-top:18px">
+          <h3>Source(s)</h3>
+          <ul id="sources" class="sourcesList"></ul>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <!-- shared data -->
+  <script src="data.js"></script>
+  <script>
+    function getParam(name){
+      return new URLSearchParams(window.location.search).get(name)
+    }
+
+    const id = getParam('id')
+    const morph = (window.MORPHS || []).find(m => m.id === id)
+
+    const titleEl = document.getElementById('title')
+    const badgesEl = document.getElementById('badges')
+    const imgEl = document.getElementById('img')
+    const tagsEl = document.getElementById('tags')
+    const notesEl = document.getElementById('notes')
+    const sourcesEl = document.getElementById('sources')
+
+    if(!morph){
+      titleEl.textContent = 'Not found'
+      notesEl.innerHTML = '<p>This morph could not be found. Check the link or return to the gallery.</p>'
+    } else {
+      document.title = morph.title + " – Human Morph Gallery"
+      titleEl.textContent = morph.title
+
+      const loc = morph.country || morph.region
+      const macro = morph.macro || ''
+      badgesEl.innerHTML = `
+        ${loc ? `<span class="pill">${loc}</span>` : ''}
+        ${macro ? `<span class="pill">${macro}</span>` : ''}
+        <span class="pill">${morph.category}</span>
+      `
+
+      imgEl.src = morph.img
+      imgEl.alt = morph.title
+
+      tagsEl.innerHTML = (morph.tags || [])
+        .map(t => `<span class="chip">${t}</span>`).join('')
+
+      notesEl.innerHTML = morph.notes || ''
+
+      sourcesEl.innerHTML = (morph.sources || [])
+        .map(s => {
+          if(s.url){
+            return `<li><a href="${s.url}" target="_blank" rel="noopener">${s.label}</a></li>`
+          }
+          return `<li>${s.label}</li>`
+        }).join('')
+    }
+  </script>
+</body>
+</html>
