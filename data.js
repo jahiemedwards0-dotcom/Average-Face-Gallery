@@ -41,7 +41,35 @@ window.MORPHS = [
            style="display:block;width:100%;margin-top:10px;border-radius:12px;">
     `
   },
-
+{
+  id: "averagefijian_itaukei",
+  title: "Average iTaukei Fijian",
+  macro: "Oceania",
+  country: "Fiji",
+  region: "Fiji",
+  category: "Average face",
+  img: "images/avg_fijian.jpg", // make sure this file exists
+  tags: ["Fiji", "iTaukei", "Melanesian", "Average face"],
+  sources: [
+    { label: "Average iTaukei Fijian morph", url: "" }
+  ],
+  notes: `
+    <p>
+      On average, their skin falls in a medium to deep brown range. The face is
+      short and broad, with a big, strong jaw. The nose is medium in length but
+      wide, with a round and sometimes bulbous tip. The lips are very full,
+      especially the lower lip, and the brow and midface are slightly prominent.
+      A faint epicanthic fold can also appear in some individuals.
+    </p>
+    <p>
+      Hair is usually black and coily to tightly curled, though some people have
+      looser curls or a reddish-brown tone, and a small minority naturally have
+      lighter or blondish hair. The eyes are large and almond-shaped, almost
+      always dark brown to nearly black. Body hair is abundant, and they are 
+      typically very robust and tall.
+    </p>
+  `
+},
   {
     id: "averagepashtun",
     title: "Average Afghan Pashtun",
