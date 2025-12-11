@@ -51,8 +51,7 @@ window.MORPHS = [
   img: "images/avg_fijian.jpg", // make sure this file exists
   tags: ["Fiji", "iTaukei", "Melanesian","Polynesian", "Average face"],
   sources: [
-    { label: "Based on classic and modern anthropological descriptions of iTaukei Fijians 
-      and Melanesians (Davis 1870; Flower 1879; Bellwood 1975; Spriggs 1997; Kong 2007; IGNOU Unit 2).", url: "" }
+    { label: "Based on classic and modern anthropological descriptions of iTaukei Fijians and Melanesians (Davis 1870; Flower 1879; Bellwood 1975; Spriggs 1997; Kong 2007; IGNOU Unit 2).", url: "" }
   ],
   notes: `
     <p>
