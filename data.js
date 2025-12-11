@@ -59,13 +59,13 @@ window.MORPHS = [
       short and broad, with a big, strong jaw. The nose is medium in length but
       wide, with a round and sometimes bulbous tip. The lips are very full,
       especially the lower lip, and the brow and midface are slightly prominent.
-      A faint epicanthic fold can also appear in some individuals.
     </p>
     <p>
       Hair is usually black and coily to tightly curled, though some people have
       looser curls or a reddish-brown tone, and a small minority naturally have
       lighter or blondish hair. The eyes are large and almond-shaped, almost
-      always dark brown to nearly black. Body hair is abundant, and they are 
+      always dark brown to nearly black. A faint epicanthic fold can also appear in some individuals.
+      Body hair is abundant, and they are 
       typically very robust and tall.
     </p>
   `
