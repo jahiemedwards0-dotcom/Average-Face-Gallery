@@ -69,6 +69,7 @@ window.MORPHS = [
       typically very robust and tall.
     </p>
  `
+},
 {
   id: "averagelithuanian",
   title: "Average Lithuanian",
