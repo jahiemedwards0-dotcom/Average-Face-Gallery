@@ -77,7 +77,7 @@ window.MORPHS = [
   country: "Lithuania",
   region: "Lithuania",
   category: "Average face",
-  img: "images/avg_lithuanian.JPEG", // make sure this file exists
+  img: "images/IMG_7383.jpeg", // make sure this file exists
   tags: ["Lithuania","Baltic","Average face"],
   sources: [
     { label: "Forensic Science International (2011) – craniofacial measurements in German, Lithuanian, and Italian men." },
