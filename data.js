@@ -153,7 +153,7 @@ window.MORPHS = [
       individual variation around this average.
     </p>
   `
-}
+},
   {
     id: "mississipid",
     title: "Mississipid (African American phenotype)",
