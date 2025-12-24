@@ -117,7 +117,43 @@ window.MORPHS = [
       </p>
     `
   },
-
+{
+  id: "averagemulato_brazil",
+  title: "Average Mulato Brazilian",
+  macro: "Latin America",
+  country: "Brazil",
+  region: "North & Northeast / coastal Brazil",
+  category: "Average face",
+  img: "images/avg_mulato_brazil.jpg", // make sure this filename matches exactly
+  tags: ["Brazil", "Mulato", "Pardo", "Afro-European", "Average face"],
+  sources: [
+    {
+      label: "Historical and demographic work on Brazilian 'mulato' / 'pardo' populations and coastal mixed communities.",
+      url: ""
+    }
+  ],
+  notes: `
+    <p>
+      This average represents colonial-era mulato Brazilians: populations formed
+      largely from African-descended women and European-descended men, sometimes
+      with additional Indigenous ancestry. Historically they were concentrated in
+      the North and Northeast and along major coastal towns and cities.
+    </p>
+    <p>
+      On average, skin tones range from light brown to medium-dark brown, often
+      with warm golden or slightly reddish undertones. Faces are usually oval to
+      slightly long, with visible but not extreme cheekbones and a tapered jaw.
+      The nose tends to be medium in width with a straight to slightly convex
+      bridge and a rounded, fleshy tip. Lips are medium to full.
+    </p>
+    <p>
+      Hair is typically dark brown to black and wavy to curly, though tighter
+      coils also occur. Eyes are mostly dark brown, with some light-brown or
+      hazel examples. As with any mixed population, there is a wide range of
+      individual variation around this average.
+    </p>
+  `
+}
   {
     id: "mississipid",
     title: "Mississipid (African American phenotype)",
