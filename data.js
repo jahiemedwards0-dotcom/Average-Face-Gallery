@@ -124,7 +124,7 @@ window.MORPHS = [
   country: "Brazil",
   region: "North & Northeast / coastal Brazil",
   category: "Average face",
-  img: "images/avg_mulato_brazil.jpg", // make sure this filename matches exactly
+  img: "images/avg_mulato_brazil.jpeg", // make sure this filename matches exactly
   tags: ["Brazil", "Mulato", "Pardo", "Afro-European", "Average face"],
   sources: [
     {
