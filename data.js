@@ -155,6 +155,38 @@ window.MORPHS = [
   `
 },
   {
+    id: "average_northwest_argentine",
+    title: "Average Northwest Argentine",
+    macro: "Latin America",
+    country: "Argentina",
+    region: "Northwest Argentina",
+    category: "Average face",
+    img: "images/avg_northwest_argentine.jpg",
+    tags: ["Argentina", "Northwest Argentina", "Average face"],
+    sources: [
+      { label: "Average Northwest Argentine morph", url: "" }
+    ],
+    notes: `
+      <p>
+        On average, skin sits in a light to medium brown / light olive-tan range,
+        often with warm or slightly ruddy undertones. The face is oval to compact
+        and can run a bit long, with medium to high cheekbones and a tapered jaw
+        ending in a rounded chin.
+      </p>
+      <p>
+        The nose is mostly mesorrhine, with a straight to slightly arched bridge,
+        moderate bridge height, and a rounded tip; in many people it reads as a
+        fairly long, projecting nose in profile. Brows tend to be thick and
+        relatively straight, and the eyes are almond-shaped, set fairly
+        horizontally, sometimes with a faint inner fold or slightly fuller upper
+        lids.
+      </p>
+      <p>
+        Hair is usually dark brown to black, most often straight to lightly wavy.
+      </p>
+    `
+  },
+  {
     id: "mississipid",
     title: "Mississipid (African American phenotype)",
     macro: "North America",
