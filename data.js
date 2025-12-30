@@ -70,34 +70,38 @@ window.MORPHS = [
     </p>
  `
 },
-{
-  id: "averagelithuanian",
-  title: "Average Lithuanian",
-  macro: "Europe",
-  country: "Lithuania",
-  region: "Lithuania",
-  category: "Average face",
-  img: "images/IMG_7392.jpeg", // make sure this file exists
-  tags: ["Lithuania","Baltic","Average face"],
-  sources: [
-    { label: "Forensic Science International (2011) – craniofacial measurements in German, Lithuanian, and Italian men." },
-    { label: "Kasperavičiūtė et al. (2004) – Y-DNA and mtDNA in Lithuanians." },
-    { label: "Mittnik et al. (2018) – genetic prehistory of the Baltic region." }
-  ],
-  notes: `
-    <p>
-      Lithuanians typically have pale to light beige skin with a cool, sometimes pinkish undertone. 
-      Faces tend to be fairly broad and compact, with cheekbones reading as the widest point 
-      and the jaw tapering cleanly toward the chin. The nose is most often straight to slightly convex 
-      with clear forward projection.
-    </p>
-    <p>
-      Hair is usually dark blond to light or medium brown, often ash-toned, and eyes are most commonly 
-      blue, grey, or green, with brown less frequent. Genetically, Lithuanians form a tight Baltic cluster 
-      with high steppe-derived ancestry mixed with older Baltic hunter-gatherer and early-farmer layers.
-    </p>
-  `
-},
+  {
+    id: "average_northwest_argentine",
+    title: "Average Northwest Argentine",
+    macro: "Latin America",
+    country: "Argentina",
+    region: "Northwest Argentina",
+    category: "Average face",
+    img: "images/avg_northwest_argentine.jpg",
+    tags: ["Argentina", "Northwest Argentina", "Average face"],
+    sources: [
+      { label: "Average Northwest Argentine morph", url: "" }
+    ],
+    notes: `
+      <p>
+        On average, skin sits in a light to medium brown / light olive-tan range,
+        often with warm or slightly ruddy undertones. The face is oval to compact
+        and can run a bit long, with medium to high cheekbones and a tapered jaw
+        ending in a rounded chin.
+      </p>
+      <p>
+        The nose is mostly mesorrhine, with a straight to slightly arched bridge,
+        moderate bridge height, and a rounded tip; in many people it reads as a
+        fairly long, projecting nose in profile. Brows tend to be thick and
+        relatively straight, and the eyes are almond-shaped, set fairly
+        horizontally, sometimes with a faint inner fold or slightly fuller upper
+        lids.
+      </p>
+      <p>
+        Hair is usually dark brown to black, most often straight to lightly wavy.
+      </p>
+    `
+  },
   {
     id: "averagepashtun",
     title: "Average Afghan Pashtun",
