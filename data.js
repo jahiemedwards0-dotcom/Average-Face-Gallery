@@ -99,6 +99,7 @@ window.MORPHS = [
       </p>
       <p>
         Hair is usually dark brown to black, most often straight to lightly wavy.
+        DNA is typically Indigenous-leaning, averaging 58% on average in the region.
       </p>
     `
   },
