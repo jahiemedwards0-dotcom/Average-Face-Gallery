@@ -70,6 +70,42 @@ window.MORPHS = [
     </p>
  `
 },
+ {
+  id: "average_socalwasian",
+  title: "Average SoCal Wasian",
+  macro: "North America",
+  country: "United States",
+  region: "Southern California",
+  category: "Average face",
+  img: "images/avg_socalwasian.jpg", // change extension if needed
+  tags: ["Wasian", "White–Asian", "Mixed", "Southern California", "Average face"],
+  sources: [
+    {
+      label: "User composite of Southern California White–East Asian mixed faces.",
+      url: ""
+    }
+  ],
+  notes: `
+    <p>
+      This morph represents an average White–East Asian (Wasian) type drawn
+      from Southern California. Skin tones typically fall in a very light to
+      light beige or light olive range, often with a neutral or slightly warm
+      undertone.
+    </p>
+    <p>
+      Faces are usually oval to softly heart-shaped, with a round lower face and
+      medium cheekbone prominence. The nose tends to be medium in length with a
+      straight bridge and a rounded to gently defined tip.
+    </p>
+    <p>
+      Eyes are most often brown, with hazel and green also common; lid
+      shapes range from full double-crease lids to softer lids with a faint or
+      partial epicanthic fold. Hair is usually dark brown to black and straight
+      to softly wavy. Overall, the look sits midway between local White American
+      and East Asian averages, with a wide range of individual variation.
+    </p>
+  `
+},
   {
     id: "average_northwest_argentine",
     title: "Average Northwest Argentine",
