@@ -94,11 +94,15 @@ window.MORPHS = [
     </p>
     <p>
       Faces are usually oval to softly heart-shaped, with a round lower face and
-      medium cheekbone prominence. The nose tends to be medium in length with a
-      straight bridge and a rounded to gently defined tip.
+      medium cheekbone prominence. The nose is moderate in bridge height (neither flat nor very high), 
+      with a narrow-to-medium base and a rounded tip; 
+      it often reads slightly more “European” in bridge but softer in the tip and nostrils.
+      Lips are medium to medium-full, with a defined Cupid’s bow and a fuller lower lip. 
+      Skin tone typically falls in a light-beige to light-tan range depending on parental background,
+      and hair is usually dark brown to black, straight to wavy.
     </p>
     <p>
-      Eyes are most often brown, with hazel and green also common; lid
+      Eyes are most often brown, with lighter shades also common; lid
       shapes range from full double-crease lids to softer lids with a faint or
       partial epicanthic fold. Hair is usually dark brown to black and straight
       to softly wavy. Overall, the look sits midway between local White American
@@ -221,15 +225,15 @@ window.MORPHS = [
   notes: `
     <p>
       Ethnic Kazakhs, on average, show an intermediate Eurasian look: mostly East Eurasian ancestry
-      with a substantial West Eurasian component. Faces tend to be medium-long with high
+      with a substantial West Eurasian component. Faces tend to broad and compact (brachycephalic), often medium to slightly long with very prominent
       cheekbones and a slightly convex profile.
     </p>
     <p>
-      The nose is mesorrhine on average (moderate width relative to height), with a low to
+      The nose is mildly leptorrhine to mesorrhine on average (moderate width relative to height; nasal index around 80), with a low to
       medium bridge and a rounded tip; some individuals show a mild dorsal hump. Eyes are
-      almond-shaped, usually dark brown, with epicanthic folds common but often weaker than in
-      East Asians. Skin tones range from light beige to light-brown/olive; hair is black or dark
-      brown and straight to slightly wavy, and men often grow fuller facial hair than typical
+      almond-shaped, usually dark brown but sometimes lighter, with epicanthic folds common but often weaker than in
+      East Asians. Skin tones range from light beige to light-brown/olive; hair is very dark (sometimes lighter), 
+      and straight to slightly wavy, and men often grow fuller facial hair than typical
       East Asians.
     </p>
   `
