@@ -77,7 +77,7 @@ window.MORPHS = [
   country: "United States",
   region: "Southern California",
   category: "Average face",
-  img: "images/avg_socalwasian.jpg", // change extension if needed
+  img: "images/avg_socalwasian.jpeg", // change extension if needed
   tags: ["Wasian", "White–Asian", "Mixed", "Southern California", "Average face"],
   sources: [
     {
