@@ -78,7 +78,7 @@ window.MORPHS = [
   region: "Southern California",
   category: "Average face",
   img: "images/avg_socalwasian.jpeg", // change extension if needed
-  tags: ["Wasian", "White–Asian", "Mixed", "Southern California", "Average face"],
+  tags: ["Wasian", "White–Asian", "Hapa", "Southern California", "Average face"],
   sources: [
     {
       label: "User composite of Southern California White–East Asian mixed faces.",
@@ -192,6 +192,45 @@ window.MORPHS = [
       coils also occur. Eyes are mostly dark brown, with some light-brown or
       hazel examples. As with any mixed population, there is a wide range of
       individual variation around this average.
+    </p>
+  `
+},
+  {
+  id: "averagekazakh",
+  title: "Average Kazakh",
+  macro: "Central Asia",
+  country: "Kazakhstan",
+  region: "Kazakhstan (ethnic Kazakhs)",
+  category: "Average face",
+  img: "images/avg_kazakh.jpeg", // make sure this exists
+  tags: ["Kazakh", "Central Asia", "Eurasian", "Average face"],
+  sources: [
+    {
+      label: "Bidzhanov, D. et al. – External nose anthropometry in ethnic Kazakhs (nasal index, bridge height).",
+      url: ""
+    },
+    {
+      label: "Abilev, S. et al. – Genome-wide structure of Kazakhs and Central Asian populations (East/West Eurasian mix).",
+      url: ""
+    },
+    {
+      label: "Ismagulov, O. – Anthropological studies of Kazakh craniofacial type (mixed ‘Mongoloid–Caucasoid’ pattern).",
+      url: ""
+    }
+  ],
+  notes: `
+    <p>
+      Ethnic Kazakhs, on average, show an intermediate Eurasian look: mostly East Eurasian ancestry
+      with a substantial West Eurasian component. Faces tend to be medium-long with high
+      cheekbones and a slightly convex profile.
+    </p>
+    <p>
+      The nose is mesorrhine on average (moderate width relative to height), with a low to
+      medium bridge and a rounded tip; some individuals show a mild dorsal hump. Eyes are
+      almond-shaped, usually dark brown, with epicanthic folds common but often weaker than in
+      East Asians. Skin tones range from light beige to light-brown/olive; hair is black or dark
+      brown and straight to slightly wavy, and men often grow fuller facial hair than typical
+      East Asians.
     </p>
   `
 },
