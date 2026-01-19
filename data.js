@@ -200,6 +200,43 @@ window.MORPHS = [
   `
 },
   {
+  id: "average_afrobajan",
+  title: "Average Afro-Bajan",
+  macro: "Caribbean",
+  country: "Barbados",
+  region: "Barbados",
+  category: "Average face",
+  img: "images/avg_afrobajan.jpeg",
+  tags: ["Barbados", "Afro-Bajan", "Caribbean", "Average face"],
+  sources: [
+    {
+      label: "Murray T. et al. (2010). African and non-African admixture components in African Americans and an African Caribbean population. Genet Epidemiol 34(6):561–568.",
+      url: ""
+    },
+    {
+      label: "Parra E.J. et al. (2008). Admixture and population stratification in African Caribbean populations. Ann Hum Genet 72(1):90–98.",
+      url: ""
+    }
+  ],
+  notes: `
+    <p>
+      This average represents Afro-Bajans, the majority Black population of Barbados,
+      shaped by nearly four centuries of African-descended continuity on the island.
+      Skin typically falls in a medium- to dark-brown range with warm or slightly
+      reddish undertones. Faces are usually oval to softly rounded, with noticeable
+      soft-tissue fullness in the cheeks and a gently tapered jaw.
+    </p>
+    <p>
+      The nose is generally broad with a fleshy to narrow tip, and the
+      nostrils flare moderately. Eyes are dark brown, often with a visible upper-lid
+      crease and mild lid hooding rather than deep-set sockets. Lips are full, and
+      hair is tightly curled to coily, most often in the 3C–4C range. As with any
+      population average, individual Afro-Bajans span a wide range around this central
+      pattern. Afro-Bajans average around ~87% African, and ~13% European.
+    </p>
+  `
+},
+  {
   id: "averagekazakh",
   title: "Average Kazakh",
   macro: "Central Asia",
