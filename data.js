@@ -146,7 +146,7 @@ window.MORPHS = [
   {
     id: "averagepashtun",
     title: "Average Afghan Pashtun",
-    macro: "South Asia",
+    macro: "South-Central Asia",
     country: "Afghanistan / Pakistan",
     region: "Pashtun belt",
     category: "Average face",
@@ -165,7 +165,7 @@ window.MORPHS = [
     {
     id: "average_nuristani",
     title: "Average Nuristani",
-    macro: "South Asia",
+    macro: "South-Central Asia",
     country: "Afghanistan",
     region: "Nuristan (eastern Hindu Kush)",
     category: "Average face",
