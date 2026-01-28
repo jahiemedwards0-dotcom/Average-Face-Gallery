@@ -80,7 +80,7 @@ window.MORPHS = [
       url: "https://uofuhealth.utah.edu/huntsman/utah-population-database"
     }
   ],
-  notes: 
+  notes: `
     <p>
       This composite is presented as a Utah-centered “Mormon Corridor” (Intermountain West) average
       for LDS pioneer-descended white Americans. It is best understood as the demographic and kinship
@@ -235,7 +235,7 @@ window.MORPHS = [
       </p>
     `
   },
-    {
+ {
     id: "average_nuristani",
     title: "Average Nuristani",
     macro: "South-Central Asia",
