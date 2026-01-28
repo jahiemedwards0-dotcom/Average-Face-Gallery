@@ -39,7 +39,7 @@ window.MORPHS = [
       <img src="images/sinaloid-map.jpg"
            alt="Sinaloid map"
            style="display:block;width:100%;margin-top:10px;border-radius:12px;">
-  ,
+  `,
   }, 
  {
   id: "average_mormon_corridor",
@@ -141,7 +141,7 @@ window.MORPHS = [
       Body hair is abundant, and they are 
       typically very robust and tall.
     </p>
- `
+  `
 },
  {
   id: "average_socalwasian",
