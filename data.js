@@ -39,8 +39,80 @@ window.MORPHS = [
       <img src="images/sinaloid-map.jpg"
            alt="Sinaloid map"
            style="display:block;width:100%;margin-top:10px;border-radius:12px;">
-    `
-  },
+  },  `
+ {
+  id: "average_mormon_corridor",
+  title: "Average Mormon Corridor (LDS pioneer-descended)",
+  macro: "North America",
+  country: "United States",
+  region: "Mormon Corridor (Intermountain West — Utah-centered)",
+  category: "Average face",
+  img: "images/avg_mormon.jpeg",
+  tags: [
+    "Mormon Corridor",
+    "LDS",
+    "Latter-day Saints",
+    "Pioneer descendants",
+    "Utah",
+    "Intermountain West",
+    "Average face"
+  ],
+  sources: [
+    {
+      label:
+        "The Church of Jesus Christ of Latter-day Saints — “Emigration” (1840–1890 totals; British Isles & Scandinavia major sources)",
+      url: "https://www.churchofjesuschrist.org/study/history/topics/emigration?lang=eng"
+    },
+    {
+      label:
+        "McLellan (1984) — “Genetic distances between the Utah Mormons and related populations” (Human Biology; PMC full text)",
+      url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC1684477/"
+    },
+    {
+      label:
+        "HapMap Phase 3 sample label CEU — “Utah residents with Northern and Western European ancestry (CEPH collection)” (Broad Institute)",
+      url: "https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3"
+    },
+    {
+      label:
+        "University of Utah / Huntsman Cancer Institute — Utah Population Database (UPDB) overview (deep pedigrees linked to demographic/medical data)",
+      url: "https://uofuhealth.utah.edu/huntsman/utah-population-database"
+    }
+  ],
+  notes: `
+    <p>
+      This composite is presented as a Utah-centered “Mormon Corridor” (Intermountain West) average
+      for LDS pioneer-descended white Americans. It is best understood as the demographic and kinship
+      outcome of a historically specific conversion, migration, and settlement process: between 1840 and
+      1890, large numbers of Latter-day Saint converts emigrated from Europe to the United States, with
+      major source regions including the British Isles and Scandinavia, alongside smaller inputs from
+      continental Europe.
+    </p>
+
+    <p>
+      Genetically, “Utah Mormon / Utah European-descended” samples have long been discussed in human
+      genetics as broadly Northern/Western European–affiliated rather than a sharply isolated population.
+      Classic gene-frequency comparisons report Utah Mormon similarity to Northern European ancestors,
+      consistent with a large founding population and ongoing gene flow. In modern population genetics,
+      the HapMap/CEPH “CEU” label is explicitly defined as Utah residents with Northern and Western
+      European ancestry, underscoring why Utah-centered European-descent pedigrees are frequently used
+      in research contexts.
+    </p>
+
+    <p>
+      The facial pattern trends long-oval overall. The lower face often reads
+      more square than tapered, with a sturdier jaw. Noses commonly read narrow, typically long and prominent. 
+      Eye shape frequently falls in an almond-to-ovoid range, with mild upper-lid hooding appearing
+      repeatedly in the portrait-heavy sample. Lip vermilion most often reads thin-to-medium.
+    </p>
+
+    <p>
+      Pigmentation trends fair-to-light. Hair most commonly appears brown, with blond
+      and (less often) reddish tones represented. Eye color variation includes blue/gray alongside hazel
+      and brown. 
+    </p>
+  `
+},
 {
   id: "averagefijian_itaukei",
   title: "Average iTaukei Fijian",
