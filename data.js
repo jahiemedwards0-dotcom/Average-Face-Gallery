@@ -162,6 +162,47 @@ window.MORPHS = [
       </p>
     `
   },
+    {
+    id: "average_nuristani",
+    title: "Average Nuristani",
+    macro: "South Asia",
+    country: "Afghanistan",
+    region: "Nuristan (eastern Hindu Kush)",
+    category: "Average face",
+    img: "images/avg_nuristani.jpeg",
+    tags: ["Nuristani", "Afghanistan", "Hindu Kush", "Average face"],
+    sources: [
+      { label: "Encyclopaedia Iranica — “AFGHANISTAN iv. Ethnography.”", url: "" },
+      { label: "Encyclopaedia Iranica — “NURESTÂNI LANGUAGES.”", url: "" },
+      { label: "Ayub et al. 2015 (AJHG) — “The Kalash Genetic Isolate.”", url: "" },
+      { label: "Cacopardo — “Are the Kalasha really of Greek origin?”", url: "" },
+      { label: "Di Cristofaro et al. 2013 (PLOS ONE) — Afghan population genetics.", url: "" },
+      { label: "Narasimhan et al. 2019 (Science) — “The formation of human populations in South and Central Asia.”", url: "" }
+    ],
+    notes: `
+      <p>
+        This average represents Nuristanis from the remote highlands of eastern
+        Afghanistan. Faces tend to be longer and narrower on average, with
+        very fair to medium-brown skin and hair that ranges from blond to dark
+        brown, often wavy. Mixed or light eye colors appear at notable rates
+        compared to surrounding regions.
+      </p>
+      <p>
+        The nose is typically long and prominent, with a fleshy bridge and a
+        straight to aquiline profile. The upper face often shows strong brow
+        ridges, deep-set eyes, and thick, well-shaped eyebrows.
+      </p>
+      <p>
+        Local legend sometimes links Nuristanis to Alexander-era Greek ancestry,
+        but genetic studies do not support a recent Greek origin. The best
+        current view places Nuristanis within Indo-Iranian and broader Hindu
+        Kush populations, shaped by long-term geographic isolation. In regional
+        models, they are often described as having elevated steppe-related and
+        Iran-related ancestry, consistent with older regional layers rather than
+        recent foreign input.
+      </p>
+    `
+  },
 {
   id: "averagemulato_brazil",
   title: "Average Mulato Brazilian",
