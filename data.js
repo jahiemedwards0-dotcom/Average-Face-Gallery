@@ -39,7 +39,8 @@ window.MORPHS = [
       <img src="images/sinaloid-map.jpg"
            alt="Sinaloid map"
            style="display:block;width:100%;margin-top:10px;border-radius:12px;">
-  },  `
+  ,
+  }, 
  {
   id: "average_mormon_corridor",
   title: "Average Mormon Corridor (LDS pioneer-descended)",
@@ -79,7 +80,7 @@ window.MORPHS = [
       url: "https://uofuhealth.utah.edu/huntsman/utah-population-database"
     }
   ],
-  notes: `
+  notes: 
     <p>
       This composite is presented as a Utah-centered “Mormon Corridor” (Intermountain West) average
       for LDS pioneer-descended white Americans. It is best understood as the demographic and kinship
