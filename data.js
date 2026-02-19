@@ -92,6 +92,18 @@ window.MORPHS = [
       { 
         label: "User composite & regional phenotypic notes", 
         url: "" 
+      },
+      { 
+        label: "Via, M. et al. (2011) — History Shaped the Geographic Distribution of Genomic Admixture on the Island of Puerto Rico (PLOS One).", 
+        url: "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0016513" 
+      },
+      { 
+        label: "Martínez-Cruzado, J.C. et al. (2001) — Mitochondrial DNA Analysis Reveals Substantial Native American Ancestry in Puerto Rico (Human Biology).", 
+        url: "https://digitalcommons.wayne.edu/humbiol/vol73/iss4/1/" 
+      },
+      { 
+        label: "Feliciano-Santos, S. (2021) — A Contested Caribbean Indigeneity: Language, Social Practice, and Identity within Puerto Rican Taíno Activism (Rutgers University Press).", 
+        url: "https://www.rutgersuniversitypress.org/a-contested-caribbean-indigeneity/9781978808188" 
       }
     ],
     notes: `
