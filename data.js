@@ -6,6 +6,8 @@ window.MORPHS = [
     macro: "Caribbean",
     country: "Dominican Republic",
     region: "Cibao Valley (Santiago, La Vega, Moca)",
+    lat: 19.3333,
+    lng: -70.5333,
     category: "Phenotype",
     img: "images/cibaenid.jpeg",
     tags: [
@@ -32,8 +34,7 @@ window.MORPHS = [
         population in the post-contact Americas. This stability stems from early
         historical isolation and persistent regional endogamy in the Cibao Valley,
         where admixture began roughly two generations prior to comparable mainland
-        populations. This Dominican phenotype is most commonly found in the Cibao region, 
-        especially among those from historically isolate mountain towns.
+        populations.
       </p>
 
       <h3>Traits</h3>
@@ -69,6 +70,8 @@ window.MORPHS = [
     macro: "Caribbean",
     country: "Puerto Rico",
     region: "Cordillera Central (Indiera barrios)",
+    lat: 18.169,
+    lng: -66.944,
     category: "Phenotype",
     img: "images/indiera.jpeg",
     tags: [
@@ -113,6 +116,8 @@ window.MORPHS = [
     macro: "Latin America",
     country: "Mexico",
     region: "Northwest & North-Central Mexico",
+    lat: 25.172,
+    lng: -107.479,
     category: "Phenotype",
     img: "images/sinaloid.jpg",
     tags: [
@@ -154,6 +159,8 @@ window.MORPHS = [
   macro: "North America",
   country: "United States",
   region: "Mormon Corridor (Intermountain West — Utah-centered)",
+  lat: 40.712,
+  lng: -111.901,
   category: "Average face",
   img: "images/avg_mormon.jpeg",
   tags: [
@@ -227,8 +234,10 @@ window.MORPHS = [
   macro: "Oceania",
   country: "Fiji",
   region: "Fiji",
+  lat: -17.713,
+  lng: 178.065,
   category: "Average face",
-  img: "images/avg_fijian.jpg", // make sure this file exists
+  img: "images/avg_fijian.jpg", 
   tags: ["Fiji", "iTaukei", "Melanesian","Polynesian", "Average face"],
   sources: [
     { label: "Based on classic and modern anthropological descriptions of iTaukei Fijians and Melanesians (Davis 1870; Flower 1879; Bellwood 1975; Spriggs 1997; Kong 2007; IGNOU Unit 2).", url: "" }
@@ -256,8 +265,10 @@ window.MORPHS = [
   macro: "North America",
   country: "United States",
   region: "Southern California",
+  lat: 34.052,
+  lng: -118.243,
   category: "Average face",
-  img: "images/avg_socalwasian.jpeg", // change extension if needed
+  img: "images/avg_socalwasian.jpeg",
   tags: ["Wasian", "White–Asian", "Hapa", "Southern California", "Average face"],
   sources: [
     {
@@ -296,6 +307,8 @@ window.MORPHS = [
     macro: "Latin America",
     country: "Argentina",
     region: "Northwest Argentina",
+    lat: -24.782,
+    lng: -65.423,
     category: "Average face",
     img: "images/avg_northwest_argentine.jpg",
     tags: ["Argentina", "Northwest Argentina", "Average face"],
@@ -329,6 +342,8 @@ window.MORPHS = [
     macro: "South-Central Asia",
     country: "Afghanistan / Pakistan",
     region: "Pashtun belt",
+    lat: 33.000,
+    lng: 69.000,
     category: "Average face",
     img: "images/avg_afghan_pashtun.jpg",
     tags: ["Afghan","Pashtun","Average face"],
@@ -348,6 +363,8 @@ window.MORPHS = [
     macro: "South-Central Asia",
     country: "Afghanistan",
     region: "Nuristan (eastern Hindu Kush)",
+    lat: 35.321,
+    lng: 70.835,
     category: "Average face",
     img: "images/avg_nuristani.jpeg",
     tags: ["Nuristani", "Afghanistan", "Hindu Kush", "Average face"],
@@ -389,8 +406,10 @@ window.MORPHS = [
   macro: "Latin America",
   country: "Brazil",
   region: "North & Northeast / coastal Brazil",
+  lat: -12.971,
+  lng: -38.510,
   category: "Average face",
-  img: "images/avg_mulato_brazil.jpeg", // make sure this filename matches exactly
+  img: "images/avg_mulato_brazil.jpeg",
   tags: ["Brazil", "Mulato", "Pardo", "Afro-European", "Average face"],
   sources: [
     {
@@ -426,6 +445,8 @@ window.MORPHS = [
   macro: "Caribbean",
   country: "Barbados",
   region: "Barbados",
+  lat: 13.193,
+  lng: -59.543,
   category: "Average face",
   img: "images/avg_afrobajan.jpeg",
   tags: ["Barbados", "Afro-Bajan", "Caribbean", "Average face"],
@@ -463,8 +484,10 @@ window.MORPHS = [
   macro: "Central Asia",
   country: "Kazakhstan",
   region: "Kazakhstan (ethnic Kazakhs)",
+  lat: 48.019,
+  lng: 66.923,
   category: "Average face",
-  img: "images/avg_kazakh.jpeg", // make sure this exists
+  img: "images/avg_kazakh.jpeg",
   tags: ["Kazakh", "Central Asia", "Eurasian", "Average face"],
   sources: [
     {
@@ -502,6 +525,8 @@ window.MORPHS = [
     macro: "North America",
     country: "United States",
     region: "Deep South & Great Migration corridors",
+    lat: 32.354,
+    lng: -89.398,
     category: "Phenotype",
     img: "images/mississipid.jpg",
     tags: [
@@ -546,8 +571,10 @@ window.MORPHS = [
     macro: "North America",
     country: "United States",
     region: "Chesapeake Bay region",
+    lat: 38.258,
+    lng: -76.084,
     category: "Phenotype",
-    img: "images/chesapeakid.jpg.JPEG",  // make sure this filename matches your actual image
+    img: "images/chesapeakid.jpg.JPEG",
     tags: [
       "Chesapeakid",
       "African American",
@@ -611,6 +638,8 @@ window.MORPHS = [
     macro: "North Asia",
     country: "Russia",
     region: "Sakha Republic (Yakutia)",
+    lat: 62.035,
+    lng: 129.733,
     category: "Average face",
     img: "images/avg_yakut.jpg",
     tags: ["Yakut", "Sakha Republic", "Russia", "Average face"],
@@ -640,6 +669,8 @@ window.MORPHS = [
     macro: "Europe",
     country: "United Kingdom",
     region: "England",
+    lat: 52.355,
+    lng: -1.174,
     category: "Average face",
     img: "images/avg_english.jpg",
     tags: ["English","UK","Average face"],
@@ -661,6 +692,8 @@ window.MORPHS = [
     macro: "Europe",
     country: "Ireland",
     region: "Ireland",
+    lat: 53.142,
+    lng: -7.692,
     category: "Average face",
     img: "images/avg_irish.jpg",
     tags: ["Irish","Ireland","Average face"],
@@ -681,6 +714,8 @@ window.MORPHS = [
     macro: "South Asia",
     country: "Bangladesh",
     region: "Bangladesh",
+    lat: 23.685,
+    lng: 90.356,
     category: "Average face",
     img: "images/avg_bengali.jpg",
     tags: ["Bangladesh","Bengali","Average face"],
