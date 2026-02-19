@@ -20,6 +20,10 @@ window.MORPHS = [
       { 
         label: "Moreno-Estrada et al. (2013) — Reconstructing the Population History of Puerto Rico and the Caribbean.", 
         url: "https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003925" 
+        },
+      { 
+        label: "Vardarajan et al. (2015) — Genetic Admixture in the Caribbean.", 
+        url: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4646764/" 
       }
     ],
     notes: `
