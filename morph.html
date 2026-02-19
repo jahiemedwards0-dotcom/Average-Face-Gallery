@@ -125,7 +125,7 @@
   <script src="data.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <script>
+ <script>
     function getParam(name){
       return new URLSearchParams(window.location.search).get(name)
     }
@@ -181,30 +181,24 @@
           attribution: '&copy; OpenStreetMap &copy; CARTO'
         }).addTo(map);
 
-        // Check if the data has a specific polygon shape (like Sinaloid)
         if (morph.regionPolygon) {
           L.polygon(morph.regionPolygon, {
-            color: '#fde047',      // Yellow border mimicking your image
+            color: '#fde047',      // Yellow border
             fillColor: '#fef08a',  // Yellow fill
             fillOpacity: 0.5,
             weight: 2
           }).addTo(map);
-          
-          // Adjust map view to fit the entire polygon shape
           map.fitBounds(L.polygon(morph.regionPolygon).getBounds());
           
         } else {
-          // Fallback to circular highlight if no polygon exists
+          // Yellow circular highlight for all other regions
           L.circle([morph.lat, morph.lng], {
-            color: '#7aa2ff',
-            fillColor: '#7aa2ff',
-            fillOpacity: 0.2,
-            radius: 250000
+            color: '#fde047',      // Yellow border
+            fillColor: '#fef08a',  // Yellow fill
+            fillOpacity: 0.4,
+            radius: 350000         // Adjusts the spread of the yellow highlight
           }).addTo(map);
-          L.marker([morph.lat, morph.lng]).addTo(map);
         }
       }
     }
   </script>
-</body>
-</html>
