@@ -699,38 +699,5 @@ window.MORPHS = [
         Irish faces. Detailed trait description will be added later.
       </p>
     `
-  },
-  {
-    id: "averagebengali_bd",
-    title: "Average Bengali (Bangladesh)",
-    macro: "South Asia",
-    country: "Bangladesh",
-    region: "Bangladesh",
-    lat: 23.685,
-    lng: 90.356,
-    regionPolygon: [
-      [26.6, 88.0], [26.0, 89.8], [25.2, 92.8], [23.5, 92.2], 
-      [21.0, 92.2], [21.6, 89.0], [22.6, 88.8], [24.5, 88.0]
-    ],
-    category: "Average face",
-    img: "images/avg_bengali.jpg",
-    tags: ["Bangladesh","Bengali","Average face"],
-    sources: [
-      {label:"Average Bengali morph (Bangladesh)", url: ""}
-    ],
-    notes: `
-      <p>
-        Bengalis of Bangladesh often have broad, round faces, though more angular
-        shapes are also common. The nose is usually medium in size and slightly
-        wide, with a straight to gently convex bridge.
-      </p>
-      <p>
-        Skin tones range from light brown to deep medium brown, and hair is
-        generally straight to very wavy and dark in color. Lips tend to be medium
-        to full. The eyes are usually dark brown—lighter shades are uncommon—and
-        some individuals may have a faint inner eye fold, high cheekbones, or
-        features that lean toward an East Eurasian appearance.
-      </p>
-    `
   }
 ];
