@@ -1,6 +1,50 @@
 // data.js – all morphs / averages live here
 window.MORPHS = [
   {
+    id: "indiera",
+    title: "Indiera (Puerto Rico)",
+    macro: "Caribbean",
+    country: "Puerto Rico",
+    region: "Cordillera Central (Indiera barrios)",
+    category: "Phenotype",
+    img: "images/indiera.jpg",
+    tags: [
+      "Indiera",
+      "Puerto Rico",
+      "Cordillera Central",
+      "Indigenous-shifted",
+      "Boricua",
+      "Phenotype"
+    ],
+    sources: [
+      { 
+        label: "User composite & regional phenotypic notes", 
+        url: "" 
+      }
+    ],
+    notes: `
+      <p>
+        The Indiera phenotype corresponds to the Indigenous-shifted population cluster
+        concentrated in the "Indiera" barrios of Puerto Rico's Cordillera Central.
+        While the island average often leans European, this regional variant represents
+        a distinct phenotype that aligns with the area’s history as a refuge
+        ("Place of the Indians").
+      </p>
+      <p>
+        The face is typically defined by broad, high cheekbones (malar projection)
+        paired with a sharp, robust jawline. Due to reduced orbital depth, the eyes
+        often appear forward-set beneath a thick, low brow. Eye shape tends to be
+        ovoid, frequently showing hooded upper lids or a subtle epicanthic fold.
+      </p>
+      <p>
+        Skin tones are generally deep—often described as <em>canela</em> or bronze
+        with a reddish cast. The nose is usually broad with a rounded, fleshy tip,
+        and hair texture is predominantly straight to wavy, distinguishing it
+        from other local variations.
+      </p>
+    `
+  },
+  {
     id: "sinaloid",
     title: "Sinaloid",
     macro: "Latin America",
