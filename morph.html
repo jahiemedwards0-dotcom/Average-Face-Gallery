@@ -7,6 +7,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
   <style>
     :root{--bg:#0b0d10;--fg:#e9eef5;--muted:#9fb0c3;--card:#14181f;--accent:#7aa2ff;--chip:#1d2430;--ring:#2a3342}
     *{box-sizing:border-box} html,body{height:100%}
@@ -53,7 +56,7 @@
       border:1px solid var(--ring);
       display:block;
     }
-    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px; margin-bottom:16px;}
     .chip{
       background:var(--chip);
       border:1px solid var(--ring);
@@ -77,6 +80,17 @@
       font-size:14px;
     }
     .backLink:hover{color:var(--fg)}
+    
+    /* Map Container Styling */
+    #detail-map {
+      height: 280px; 
+      width: 100%; 
+      border-radius: 16px; 
+      border: 1px solid var(--ring); 
+      display: none; /* Hidden by default until coordinates confirm */
+      z-index: 1;
+    }
+
     @media (max-width:900px){
       .layout{grid-template-columns:1fr}
     }
@@ -96,6 +110,7 @@
       <div class="imgBox">
         <img id="img" alt="">
         <div class="chips" id="tags"></div>
+        <div id="detail-map"></div>
       </div>
       <article>
         <div id="notes"></div>
@@ -107,8 +122,9 @@
     </div>
   </main>
 
-  <!-- shared data -->
   <script src="data.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <script>
     function getParam(name){
       return new URLSearchParams(window.location.search).get(name)
@@ -123,6 +139,7 @@
     const tagsEl = document.getElementById('tags')
     const notesEl = document.getElementById('notes')
     const sourcesEl = document.getElementById('sources')
+    const mapEl = document.getElementById('detail-map')
 
     if(!morph){
       titleEl.textContent = 'Not found'
@@ -154,6 +171,31 @@
           }
           return `<li>${s.label}</li>`
         }).join('')
+
+      // --- MAP INITIALIZATION ---
+      if (morph.lat !== undefined && morph.lng !== undefined) {
+        // Unhide the map container
+        mapEl.style.display = 'block';
+
+        // Initialize map centered on the morph's coordinates
+        const map = L.map('detail-map').setView([morph.lat, morph.lng], 5);
+
+        // Add dark theme tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; OpenStreetMap &copy; CARTO'
+        }).addTo(map);
+
+        // Draw a highlighted circle to represent the regional distribution
+        L.circle([morph.lat, morph.lng], {
+          color: '#7aa2ff',        // Border color
+          fillColor: '#7aa2ff',    // Fill color inside the circle
+          fillOpacity: 0.2,        // Transparency
+          radius: 250000           // Size of the highlight (250km radius)
+        }).addTo(map);
+
+        // Place the exact marker in the center
+        L.marker([morph.lat, morph.lng]).addTo(map);
+      }
     }
   </script>
 </body>
