@@ -32,7 +32,8 @@ window.MORPHS = [
         population in the post-contact Americas. This stability stems from early
         historical isolation and persistent regional endogamy in the Cibao Valley,
         where admixture began roughly two generations prior to comparable mainland
-        populations.
+        populations. This Dominican phenotype is most commonly found in the Cibao region, 
+        especially among those from historically isolate mountain towns.
       </p>
 
       <h3>Traits</h3>
