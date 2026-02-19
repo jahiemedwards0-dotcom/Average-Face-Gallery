@@ -9,8 +9,8 @@ window.MORPHS = [
     lat: 19.3333,
     lng: -70.5333,
     regionPolygon: [
-      [19.85, -71.65], [19.80, -70.70], [19.30, -69.80], 
-      [19.00, -70.00], [19.30, -71.00], [19.50, -71.70]
+      [19.85, -71.70], [19.90, -71.00], [19.65, -70.40], [19.30, -69.60], 
+      [19.00, -69.80], [18.85, -70.25], [19.20, -71.20], [19.50, -71.75]
     ],
     category: "Phenotype",
     img: "images/cibaenid.jpeg",
@@ -76,7 +76,8 @@ window.MORPHS = [
     lat: 18.169,
     lng: -66.944,
     regionPolygon: [
-      [18.25, -67.05], [18.25, -66.50], [18.05, -66.50], [18.05, -67.05]
+      [18.28, -67.08], [18.28, -66.75], [18.20, -66.50], 
+      [18.05, -66.50], [18.05, -66.85], [18.10, -67.08]
     ],
     category: "Phenotype",
     img: "images/indiera.jpeg",
@@ -137,8 +138,9 @@ window.MORPHS = [
     lat: 25.172,
     lng: -107.479,
     regionPolygon: [
-      [42.0, -124.0], [42.0, -109.0], [36.0, -103.0], [32.0, -94.0], 
-      [26.0, -97.0], [22.0, -98.0], [20.0, -105.0], [23.0, -110.0], [32.0, -117.0]
+      [42.0, -124.2], [42.0, -114.0], [37.0, -114.0], [37.0, -109.0], [36.5, -103.0], 
+      [32.0, -103.0], [32.0, -94.0], [29.5, -94.0], [25.8, -97.1], [22.2, -97.8], 
+      [21.0, -99.0], [20.0, -105.0], [23.5, -110.0], [31.5, -114.5], [32.5, -117.1], [34.0, -120.0]
     ],
     category: "Phenotype",
     img: "images/sinaloid.jpg",
@@ -179,8 +181,8 @@ window.MORPHS = [
     lat: 40.712,
     lng: -111.901,
     regionPolygon: [
-      [44.0, -112.0], [44.0, -111.0], [41.0, -110.0], [33.0, -109.0], 
-      [33.0, -112.0], [37.0, -115.0], [42.0, -114.0]
+      [45.0, -116.0], [45.0, -111.0], [41.0, -109.0], [37.0, -109.0], 
+      [32.0, -109.0], [32.0, -114.8], [36.0, -114.8], [39.0, -120.0], [42.0, -120.0]
     ],
     category: "Average face",
     img: "images/avg_mormon.jpeg",
@@ -240,7 +242,8 @@ window.MORPHS = [
     lat: -17.713,
     lng: 178.065,
     regionPolygon: [
-      [-16.0, 176.5], [-16.0, 180.0], [-19.5, 180.0], [-19.5, 176.5]
+      [-15.7, 176.8], [-15.7, 180.0], [-16.5, -179.0], 
+      [-19.2, -179.0], [-19.2, 176.8]
     ],
     category: "Average face",
     img: "images/avg_fijian.jpg", 
@@ -273,8 +276,8 @@ window.MORPHS = [
     lat: 34.052,
     lng: -118.243,
     regionPolygon: [
-      [35.5, -120.0], [35.5, -116.0], [34.0, -114.5], [32.5, -114.5], 
-      [32.5, -117.2], [33.5, -118.5], [34.5, -120.5]
+      [34.5, -120.6], [35.0, -119.5], [35.0, -117.0], [34.0, -115.0], 
+      [32.7, -114.7], [32.5, -117.1], [33.5, -118.0], [34.0, -119.0]
     ],
     category: "Average face",
     img: "images/avg_socalwasian.jpeg",
@@ -317,8 +320,8 @@ window.MORPHS = [
     lat: -24.782,
     lng: -65.423,
     regionPolygon: [
-      [-21.8, -66.3], [-21.8, -62.5], [-28.0, -62.0], 
-      [-30.0, -65.0], [-28.0, -69.0], [-23.0, -67.0]
+      [-21.7, -66.3], [-22.0, -62.5], [-25.5, -61.5], [-28.0, -61.8], 
+      [-30.5, -63.5], [-31.5, -66.0], [-29.5, -69.0], [-26.5, -68.5], [-23.0, -67.5]
     ],
     category: "Average face",
     img: "images/avg_northwest_argentine.jpg",
@@ -356,8 +359,8 @@ window.MORPHS = [
     lat: 33.000,
     lng: 69.000,
     regionPolygon: [
-      [35.0, 69.0], [35.0, 72.0], [30.0, 70.0], 
-      [29.0, 66.0], [31.0, 61.0], [33.0, 62.0], [34.0, 67.0]
+      [35.0, 69.5], [35.0, 72.5], [31.5, 70.5], [29.5, 68.0], 
+      [28.5, 66.0], [29.0, 63.0], [31.0, 61.0], [33.5, 62.0], [34.5, 67.5]
     ],
     category: "Average face",
     img: "images/avg_afghan_pashtun.jpg",
@@ -381,7 +384,7 @@ window.MORPHS = [
     lat: 35.321,
     lng: 70.835,
     regionPolygon: [
-      [36.0, 70.0], [36.2, 71.5], [35.0, 71.5], [34.8, 70.0]
+      [36.1, 70.2], [36.3, 71.6], [35.5, 71.7], [35.0, 71.2], [34.8, 70.0], [35.5, 69.8]
     ],
     category: "Average face",
     img: "images/avg_nuristani.jpeg",
@@ -420,8 +423,9 @@ window.MORPHS = [
     lat: -12.971,
     lng: -38.510,
     regionPolygon: [
-      [-2.0, -44.0], [-5.0, -35.0], [-10.0, -36.0], 
-      [-18.0, -39.0], [-18.0, -42.0], [-10.0, -42.0], [-2.0, -46.0]
+      [4.0, -51.0], [1.0, -47.0], [-2.5, -44.0], [-5.0, -35.2], 
+      [-10.0, -36.0], [-18.0, -39.0], [-23.0, -42.0], [-23.0, -46.0], 
+      [-15.0, -45.0], [-5.0, -48.0], [0.0, -52.0]
     ],
     category: "Average face",
     img: "images/avg_mulato_brazil.jpeg",
@@ -463,7 +467,8 @@ window.MORPHS = [
     lat: 13.193,
     lng: -59.543,
     regionPolygon: [
-      [13.35, -59.65], [13.35, -59.50], [13.05, -59.45], [13.05, -59.60]
+      [13.34, -59.65], [13.34, -59.50], [13.10, -59.43], 
+      [13.04, -59.52], [13.04, -59.58], [13.20, -59.65]
     ],
     category: "Average face",
     img: "images/avg_afrobajan.jpeg",
@@ -501,8 +506,8 @@ window.MORPHS = [
     lat: 48.019,
     lng: 66.923,
     regionPolygon: [
-      [55.0, 70.0], [50.0, 87.0], [42.0, 80.0], [41.0, 68.0], 
-      [45.0, 55.0], [51.0, 46.0], [54.0, 60.0]
+      [55.0, 70.0], [53.0, 77.0], [49.0, 87.0], [42.0, 80.0], [41.0, 68.0], 
+      [43.0, 58.0], [46.0, 55.0], [46.0, 48.0], [51.0, 46.0], [54.0, 60.0]
     ],
     category: "Average face",
     img: "images/avg_kazakh.jpeg",
@@ -538,8 +543,9 @@ window.MORPHS = [
     lat: 32.354,
     lng: -89.398,
     regionPolygon: [
-      [36.5, -94.0], [36.5, -76.0], [32.0, -80.0], [30.0, -82.0], 
-      [29.0, -89.0], [29.5, -95.0], [33.0, -94.0]
+      [42.0, -96.0], [43.0, -87.0], [42.0, -79.0], [41.0, -73.0], 
+      [38.0, -74.0], [33.0, -78.0], [25.5, -80.0], [30.0, -88.0], 
+      [29.0, -95.0], [33.0, -94.0], [38.0, -90.0]
     ],
     category: "Phenotype",
     img: "images/mississipid.jpg",
@@ -582,8 +588,8 @@ window.MORPHS = [
     lat: 38.258,
     lng: -76.084,
     regionPolygon: [
-      [39.7, -77.5], [39.8, -75.5], [38.5, -75.0], 
-      [36.5, -75.8], [36.5, -78.0], [38.0, -78.5]
+      [39.7, -77.5], [39.8, -75.8], [38.5, -75.0], [37.0, -75.8], 
+      [34.5, -76.5], [34.5, -79.0], [36.5, -78.5], [38.0, -78.5]
     ],
     category: "Phenotype",
     img: "images/chesapeakid.jpg.JPEG",
@@ -636,7 +642,8 @@ window.MORPHS = [
     lat: 62.035,
     lng: 129.733,
     regionPolygon: [
-      [76.0, 110.0], [72.0, 160.0], [56.0, 138.0], [56.0, 116.0], [60.0, 106.0]
+      [76.0, 105.0], [74.0, 140.0], [70.0, 162.0], [64.0, 162.0], 
+      [56.0, 138.0], [56.0, 116.0], [60.0, 106.0], [70.0, 106.0]
     ],
     category: "Average face",
     img: "images/avg_yakut.jpg",
@@ -709,6 +716,39 @@ window.MORPHS = [
       <p>
         National facial average morph for Ireland, representing an aggregate of
         Irish faces. Detailed trait description will be added later.
+      </p>
+    `
+  },
+  {
+    id: "averagebengali_bd",
+    title: "Average Bengali (Bangladesh)",
+    macro: "South Asia",
+    country: "Bangladesh",
+    region: "Bangladesh",
+    lat: 23.685,
+    lng: 90.356,
+    regionPolygon: [
+      [26.6, 88.0], [26.0, 89.8], [25.2, 92.8], [23.5, 92.2], 
+      [21.0, 92.2], [21.6, 89.0], [22.6, 88.8], [24.5, 88.0]
+    ],
+    category: "Average face",
+    img: "images/avg_bengali.jpg",
+    tags: ["Bangladesh","Bengali","Average face"],
+    sources: [
+      {label:"Average Bengali morph (Bangladesh)", url: ""}
+    ],
+    notes: `
+      <p>
+        Bengalis of Bangladesh often have broad, round faces, though more angular
+        shapes are also common. The nose is usually medium in size and slightly
+        wide, with a straight to gently convex bridge.
+      </p>
+      <p>
+        Skin tones range from light brown to deep medium brown, and hair is
+        generally straight to very wavy and dark in color. Lips tend to be medium
+        to full. The eyes are usually dark brown—lighter shades are uncommon—and
+        some individuals may have a faint inner eye fold, high cheekbones, or
+        features that lean toward an East Eurasian appearance.
       </p>
     `
   }
