@@ -1,131 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Morph detail – Human Morph Gallery</title>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-  <style>
-    :root{--bg:#0b0d10;--fg:#e9eef5;--muted:#9fb0c3;--card:#14181f;--accent:#7aa2ff;--chip:#1d2430;--ring:#2a3342}
-    *{box-sizing:border-box} html,body{height:100%}
-    body{
-      margin:0;
-      font:16px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
-      color:var(--fg);
-      background:
-        radial-gradient(1200px 800px at 80% -10%,#162032 0%,transparent 60%),
-        var(--bg);
-    }
-    header{
-      border-bottom:1px solid var(--ring);
-      background:rgba(11,13,16,.8);
-      backdrop-filter:saturate(140%) blur(8px);
-      position:sticky;
-      top:0;
-      z-index:5;
-    }
-    .wrap{max-width:980px;margin:0 auto;padding:16px}
-    a{color:var(--accent)}
-    .pill{
-      font-size:12px;
-      background:var(--chip);
-      border:1px solid var(--ring);
-      padding:3px 8px;
-      border-radius:999px;
-      margin-right:6px;
-      color:var(--muted);
-    }
-    .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-    main{padding:20px 16px 36px}
-    .layout{
-      max-width:980px;
-      margin:0 auto;
-      display:grid;
-      grid-template-columns:minmax(260px,40%) 1fr;
-      gap:20px;
-    }
-    .imgBox img{
-      width:100%;
-      height:auto;
-      border-radius:16px;
-      border:1px solid var(--ring);
-      display:block;
-    }
-    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px; margin-bottom:16px;}
-    .chip{
-      background:var(--chip);
-      border:1px solid var(--ring);
-      color:var(--muted);
-      padding:4px 8px;
-      border-radius:999px;
-      font-size:12px;
-    }
-    .sourcesList{
-      margin-top:6px;
-      padding-left:18px;
-    }
-    .muted{opacity:.75}
-    .backLink{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      margin-bottom:14px;
-      text-decoration:none;
-      color:var(--muted);
-      font-size:14px;
-    }
-    .backLink:hover{color:var(--fg)}
-    
-    /* Map Container Styling */
-    #detail-map {
-      height: 280px; 
-      width: 100%; 
-      border-radius: 16px; 
-      border: 1px solid var(--ring); 
-      display: none; /* Hidden by default until coordinates confirm */
-      z-index: 1;
-    }
-
-    @media (max-width:900px){
-      .layout{grid-template-columns:1fr}
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="wrap">
-      <a href="index.html" class="backLink">← Back to gallery</a>
-      <h1 id="title">Loading…</h1>
-      <div class="badges" id="badges"></div>
-    </div>
-  </header>
-
-  <main>
-    <div class="layout">
-      <div class="imgBox">
-        <img id="img" alt="">
-        <div class="chips" id="tags"></div>
-        <div id="detail-map"></div>
-      </div>
-      <article>
-        <div id="notes"></div>
-        <section style="margin-top:18px">
-          <h3>Source(s)</h3>
-          <ul id="sources" class="sourcesList"></ul>
-        </section>
-      </article>
-    </div>
-  </main>
-
-  <script src="data.js"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <script>
+<script>
     function getParam(name){
       return new URLSearchParams(window.location.search).get(name)
     }
@@ -174,29 +47,35 @@
 
       // --- MAP INITIALIZATION ---
       if (morph.lat !== undefined && morph.lng !== undefined) {
-        // Unhide the map container
         mapEl.style.display = 'block';
+        const map = L.map('detail-map').setView([morph.lat, morph.lng], 4);
 
-        // Initialize map centered on the morph's coordinates
-        const map = L.map('detail-map').setView([morph.lat, morph.lng], 5);
-
-        // Add dark theme tiles
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
           attribution: '&copy; OpenStreetMap &copy; CARTO'
         }).addTo(map);
 
-        // Draw a highlighted circle to represent the regional distribution
-        L.circle([morph.lat, morph.lng], {
-          color: '#7aa2ff',        // Border color
-          fillColor: '#7aa2ff',    // Fill color inside the circle
-          fillOpacity: 0.2,        // Transparency
-          radius: 250000           // Size of the highlight (250km radius)
-        }).addTo(map);
-
-        // Place the exact marker in the center
-        L.marker([morph.lat, morph.lng]).addTo(map);
+        // Check if the data has a specific polygon shape (like Sinaloid)
+        if (morph.regionPolygon) {
+          L.polygon(morph.regionPolygon, {
+            color: '#fde047',      // Yellow border mimicking your image
+            fillColor: '#fef08a',  // Yellow fill
+            fillOpacity: 0.5,
+            weight: 2
+          }).addTo(map);
+          
+          // Adjust map view to fit the entire polygon shape
+          map.fitBounds(L.polygon(morph.regionPolygon).getBounds());
+          
+        } else {
+          // Fallback to circular highlight if no polygon exists
+          L.circle([morph.lat, morph.lng], {
+            color: '#7aa2ff',
+            fillColor: '#7aa2ff',
+            fillOpacity: 0.2,
+            radius: 250000
+          }).addTo(map);
+          L.marker([morph.lat, morph.lng]).addTo(map);
+        }
       }
     }
   </script>
-</body>
-</html>
