@@ -7,6 +7,9 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Human Morph Gallery</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
   <style>
     :root{--bg:#0b0d10;--fg:#e9eef5;--muted:#9fb0c3;--card:#14181f;--accent:#7aa2ff;--chip:#1d2430;--ring:#2a3342}
     *{box-sizing:border-box} html,body{height:100%}
@@ -150,6 +153,20 @@
       gap:10px;
     }
 
+    /* Map Popup Customization to fit dark theme */
+    .leaflet-popup-content-wrapper {
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid var(--ring);
+      border-radius: 12px;
+    }
+    .leaflet-popup-tip {
+      background: var(--card);
+    }
+    .leaflet-container a {
+      color: var(--accent);
+    }
+
     @media (max-width:900px){
       .controls{
         grid-template-columns:1fr 1fr;
@@ -164,6 +181,7 @@
       <h1>Human Morph Gallery (Developing)</h1>
       <nav>
         <a class="tab active" data-tab="gallery" href="#/gallery">Gallery</a>
+        <a class="tab" data-tab="map" href="#/map">Map</a>
         <a class="tab" data-tab="az" href="#/a-z">A–Z</a>
         <a class="tab" data-tab="regions" href="#/regions">Regions</a>
         <a class="tab" data-tab="about" href="#/about">About</a>
@@ -186,16 +204,16 @@
   </header>
 
   <main class="wrap">
-    <!-- Gallery -->
     <section id="view-gallery" class="grid" aria-live="polite"></section>
 
-    <!-- A–Z -->
+    <section id="view-map" class="list" hidden>
+      <div id="map-container" style="height: 600px; width: 100%; border-radius: 18px; z-index: 1;"></div>
+    </section>
+
     <section id="view-az" class="list" hidden></section>
 
-    <!-- Regions -->
     <section id="view-regions" class="list" hidden></section>
 
-    <!-- About -->
     <section id="view-about" class="list" hidden>
       <h2>About & Methods</h2>
       <p>
@@ -212,7 +230,6 @@
       </p>
     </section>
 
-    <!-- Contribute -->
     <section id="contribute" class="list">
       <h2>Submit a request</h2>
       <p>
@@ -243,8 +260,8 @@
     </div>
   </main>
 
-  <!-- Load shared data -->
   <script src="data.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
     const $ = s => document.querySelector(s)
@@ -252,6 +269,7 @@
           q = $('#q'),
           regionSel = $('#region'),
           catSel = $('#category'),
+          viewMap = $('#view-map'),
           viewAZ = $('#view-az'),
           viewRegions = $('#view-regions'),
           viewAbout = $('#view-about'),
@@ -261,6 +279,7 @@
 
     const hashForTab = {
       gallery: '#/gallery',
+      map: '#/map',
       az: '#/a-z',
       regions: '#/regions',
       about: '#/about'
@@ -269,9 +288,47 @@
 
     const tabs = [...document.querySelectorAll('.tab')]
 
+    let map; // Map instance
+
+    function initMap() {
+      // If the map is already initialized, just resize it correctly
+      if (map) {
+        map.invalidateSize();
+        return;
+      }
+
+      // Initialize the map centered globally
+      map = L.map('map-container').setView([20, 0], 2);
+
+      // Add dark-themed CartoDB map tiles
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      // Loop through data and add markers if lat/lng are present
+      window.MORPHS.forEach(morph => {
+        if (morph.lat !== undefined && morph.lng !== undefined) {
+          const popupContent = `
+            <div style="text-align: center;">
+              <strong style="display:block; margin-bottom: 6px;">${morph.title}</strong>
+              <img src="${morph.img}" alt="${morph.title}" style="width: 120px; height: auto; border-radius: 8px; margin-bottom: 8px;">
+              <br>
+              <a href="morph.html?id=${encodeURIComponent(morph.id)}" style="font-weight: bold; text-decoration: none;">View Details</a>
+            </div>
+          `;
+          L.marker([morph.lat, morph.lng])
+           .addTo(map)
+           .bindPopup(popupContent);
+        }
+      });
+    }
+
     function setTab(name){
       tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name))
 
+      viewMap.hidden     = name !== 'map'
       viewAZ.hidden      = name !== 'az'
       viewRegions.hidden = name !== 'regions'
       viewAbout.hidden   = name !== 'about'
@@ -282,10 +339,19 @@
       if(name === 'az') target = viewAZ
       else if(name === 'regions') target = viewRegions
       else if(name === 'about') target = viewAbout
+      else if(name === 'map') target = viewMap
+      
       if(target){
         target.scrollIntoView({behavior:'smooth'})
       } else {
         grid.scrollIntoView({behavior:'smooth'})
+      }
+
+      // Initialize or refresh map when tab is opened
+      if(name === 'map') {
+        setTimeout(() => {
+          initMap();
+        }, 50); // Small timeout ensures the container is visible before rendering
       }
     }
 
@@ -432,7 +498,9 @@
 
     function route(){
       const h = location.hash || '#/gallery'
-      if(h.startsWith('#/a-z')){
+      if(h.startsWith('#/map')){
+        setTab('map')
+      } else if(h.startsWith('#/a-z')){
         setTab('az')
       } else if(h.startsWith('#/regions')){
         setTab('regions')
