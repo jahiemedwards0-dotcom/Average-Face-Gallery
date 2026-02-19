@@ -1,13 +1,71 @@
 // data.js – all morphs / averages live here
 window.MORPHS = [
   {
+    id: "cibaenid",
+    title: "Cibaenid (Dominican Republic)",
+    macro: "Caribbean",
+    country: "Dominican Republic",
+    region: "Cibao Valley (Santiago, La Vega, Moca)",
+    category: "Phenotype",
+    img: "images/cibaenid.jpeg",
+    tags: [
+      "Cibaenid",
+      "Cibao",
+      "Dominican Republic",
+      "Tri-hybrid",
+      "Endogamy",
+      "Phenotype"
+    ],
+    sources: [
+      { 
+        label: "Moreno-Estrada et al. (2013) — Reconstructing the Population History of Puerto Rico and the Caribbean.", 
+        url: "https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003925" 
+      }
+    ],
+    notes: `
+      <p>
+        The Cibaenid phenotype represents arguably the oldest stabilized tri-hybrid
+        population in the post-contact Americas. This stability stems from early
+        historical isolation and persistent regional endogamy in the Cibao Valley,
+        where admixture began roughly two generations prior to comparable mainland
+        populations.
+      </p>
+
+      <h3>Traits</h3>
+      <ul>
+        <li>
+          <strong>Face:</strong> Morphology trends oval to slightly elongated, often
+          appearing rounder due to neotonic tendencies stemming from a relatively
+          short midface. Sexual dimorphism is marked: males often show robust
+          mandibular structure, while females exhibit more tapered lower faces.
+        </li>
+        <li>
+          <strong>Nose:</strong> Nasal breadth centers on a mesorrhine range,
+          uniquely characterized by thin bridges opening to relatively broader bases.
+          Profiles are generally straight, shifting into a subtle downturn toward
+          the tip; less commonly, a very mild convexity is present.
+        </li>
+        <li>
+          <strong>Hair:</strong> Texture falls in a straight to loose-curl range,
+          typically dark but sometimes light brown.
+        </li>
+        <li>
+          <strong>Pigmentation:</strong> Skin tone consistently trends warm-toned
+          within a fair-to-light-medium brown spectrum. Though predominantly dark-eyed,
+          light pigmentation variants—specifically hazel and green—occur in a
+          minority of the sample.
+        </li>
+      </ul>
+    `
+  },
+  {
     id: "indiera",
     title: "Indiera (Puerto Rico)",
     macro: "Caribbean",
     country: "Puerto Rico",
     region: "Cordillera Central (Indiera barrios)",
     category: "Phenotype",
-    img: "images/indiera.jpg",
+    img: "images/indiera.jpeg",
     tags: [
       "Indiera",
       "Puerto Rico",
