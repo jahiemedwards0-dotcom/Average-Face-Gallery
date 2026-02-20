@@ -83,12 +83,23 @@
     
     /* Map Container Styling */
     #detail-map {
-      height: 280px; 
+      height: 350px; 
       width: 100%; 
       border-radius: 16px; 
       border: 1px solid var(--ring); 
-      display: none; /* Hidden by default until coordinates confirm */
+      background: #000000; /* Solid black background */
+      display: none;
       z-index: 1;
+    }
+
+    /* KILLS THE HORIZONTAL AND VERTICAL GRID LINES */
+    .leaflet-tile {
+      outline: 1px solid transparent;
+      box-shadow: 0 0 0 1px #0b0d10; /* Bleeds tile color to fill cracks */
+    }
+
+    .leaflet-container {
+      background: #000000 !important;
     }
 
     @media (max-width:900px){
@@ -125,7 +136,7 @@
   <script src="data.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
- <script>
+  <script>
     function getParam(name){
       return new URLSearchParams(window.location.search).get(name)
     }
@@ -175,30 +186,45 @@
       // --- MAP INITIALIZATION ---
       if (morph.lat !== undefined && morph.lng !== undefined) {
         mapEl.style.display = 'block';
-        const map = L.map('detail-map').setView([morph.lat, morph.lng], 4);
+        
+        // Use whole integers for zoomSnap to keep the grid perfectly aligned
+        const map = L.map('detail-map', {
+          zoomSnap: 1,
+          zoomDelta: 1,
+          fadeAnimation: true
+        }).setView([morph.lat, morph.lng], 4);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-          attribution: '&copy; OpenStreetMap &copy; CARTO'
+          attribution: '&copy; CARTO',
+          subdomains: 'abcd',
+          maxZoom: 19,
+          keepBuffer: 2,
+          updateWhenIdle: false,
+          updateWhenZooming: true
         }).addTo(map);
 
         if (morph.regionPolygon) {
           L.polygon(morph.regionPolygon, {
-            color: '#fde047',      // Yellow border
-            fillColor: '#fef08a',  // Yellow fill
-            fillOpacity: 0.5,
+            color: '#fde047',      // Bold Yellow border
+            fillColor: '#fde047',  // Solid Yellow fill
+            fillOpacity: 0.6,      // High visibility
             weight: 2
           }).addTo(map);
-          map.fitBounds(L.polygon(morph.regionPolygon).getBounds());
+          
+          // Focus the map on the specific region shape
+          map.fitBounds(L.polygon(morph.regionPolygon).getBounds(), { padding: [30, 30] });
           
         } else {
-          // Yellow circular highlight for all other regions
+          // Fallback yellow circle highlight
           L.circle([morph.lat, morph.lng], {
-            color: '#fde047',      // Yellow border
-            fillColor: '#fef08a',  // Yellow fill
-            fillOpacity: 0.4,
-            radius: 350000         // Adjusts the spread of the yellow highlight
+            color: '#fde047',
+            fillColor: '#fde047',
+            fillOpacity: 0.5,
+            radius: 350000
           }).addTo(map);
         }
       }
     }
   </script>
+</body>
+</html>
