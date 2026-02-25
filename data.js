@@ -1,21 +1,28 @@
 // data.js – all morphs / averages live here
 window.MORPHS = [
-    {
+  {
     id: "average_mulato_cuban",
     title: "Average Mulato Cuban",
     macro: "Caribbean",
     country: "Cuba",
-    region: "Island-wide (Concentrated in Havana & Oriente)",
+    region: "Havana & Eastern Provinces (Oriente)",
     lat: 21.5218,
     lng: -77.7812,
+    // Multi-polygon: Part 1 is Havana area, Part 2 is the Eastern block (Oriente)
     regionPolygon: [
-      [23.2, -82.5], [23.0, -80.0], [22.5, -78.5], [21.5, -77.0], 
-      [20.5, -74.1], [19.8, -75.0], [20.0, -77.0], [21.0, -80.0], 
-      [22.0, -84.0], [22.5, -85.0], [23.2, -83.5]
+      // Havana & surrounding area
+      [
+        [23.25, -82.60], [23.25, -82.10], [22.85, -82.10], [22.85, -82.60]
+      ],
+      // Eastern Provinces (Las Tunas, Holguín, Granma, Santiago, Guantánamo)
+      [
+        [21.45, -77.80], [21.30, -75.80], [20.60, -74.10], [19.80, -74.10], 
+        [19.80, -77.00], [20.20, -77.80], [21.00, -78.00]
+      ]
     ],
     category: "Average face",
-    img: "images/mulatocuban.jpeg",
-    tags: ["Cuba", "Mulato", "Caribbean", "Tri-hybrid", "Average face"],
+    img: "images/avg_mulato_cuban.jpeg",
+    tags: ["Cuba", "Mulato", "Caribbean", "Havana", "Oriente", "Average face"],
     sources: [
       { 
         label: "User composite & regional phenotypic notes", 
@@ -35,8 +42,9 @@ window.MORPHS = [
       <h3>Traits</h3>
       <ul>
         <li><strong>Face:</strong> Facial breadth tends toward a medium width, though the distribution reaches both narrow and broad extremes. The midface is notably long, anchored by significant cheekbone flare that exceeds the width of the jaw, creating a sharp, V-shaped lower face that persists even among men.</li>
-        <li><strong>Proportions:</strong> The interpupillary distance is approximately 46% of facial width. The sample also shows a reduced mouth-to-nose width ratio—indicating the mouth is narrower relative to the nose compared with published normative data.</li>
-        <li><strong>Pigmentation:</strong> Skin tone remains the most variable metric, spanning from light-intermediate to deep brown. This high variance is physical evidence of a heterogeneous population. While eyes are predominantly dark, hazel, green, and blue variants are expressed.</li>
+        <li><strong>Proportions:</strong> The interpupillary distance is approximately 46% of facial width, aligning with a commonly cited proportional benchmark.</li>
+        <li><strong>Nose:</strong> The nose is typically long and broad at the base. The sample also shows a reduced mouth-to–nose width ratio—indicating the mouth is narrower relative to the nose compared with published normative data.</li>
+        <li><strong>Pigmentation:</strong> Skin tone remains the most variable metric, spanning from light-intermediate to deep brown. This high variance is clear physical evidence of a heterogeneous population. While eyes are predominantly dark, hazel, green, and blue variants are expressed.</li>
         <li><strong>Hair:</strong> Texture spans the full morphological range—from deep waves to tight coils—with straight hair appearing as a minority pattern.</li>
       </ul>
     `
