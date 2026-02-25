@@ -21,7 +21,7 @@ window.MORPHS = [
       ]
     ],
     category: "Average face",
-    img: "images/avg_mulato_cuban.jpeg",
+    img: "images/mulatocuban.jpeg",
     tags: ["Cuba", "Mulato", "Caribbean", "Havana", "Oriente", "Average face"],
     sources: [
       { 
