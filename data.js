@@ -39,7 +39,6 @@ window.MORPHS = [
         <li><strong>Pigmentation:</strong> Skin tone remains the most variable metric, spanning from light-intermediate to deep brown. This high variance is physical evidence of a heterogeneous population. While eyes are predominantly dark, hazel, green, and blue variants are expressed.</li>
         <li><strong>Hair:</strong> Texture spans the full morphological range—from deep waves to tight coils—with straight hair appearing as a minority pattern.</li>
       </ul>
-      <p><em>These are the mulatos of Cuba.</em></p>
     `
   },
   {
