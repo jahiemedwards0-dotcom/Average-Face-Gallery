@@ -204,15 +204,17 @@
         }).addTo(map);
 
         if (morph.regionPolygon) {
-          L.polygon(morph.regionPolygon, {
+          // Detect if it's a Multi-Polygon or a Single Polygon
+          const isMulti = Array.isArray(morph.regionPolygon[0][0]);
+          const layer = (isMulti ? L.multiPolygon : L.polygon)(morph.regionPolygon, { 
             color: '#fde047',      // Bold Yellow border
             fillColor: '#fde047',  // Solid Yellow fill
             fillOpacity: 0.6,      // High visibility
-            weight: 2
+            weight: 2 
           }).addTo(map);
           
           // Focus the map on the specific region shape
-          map.fitBounds(L.polygon(morph.regionPolygon).getBounds(), { padding: [30, 30] });
+          map.fitBounds(layer.getBounds(), { padding: [30, 30] });
           
         } else {
           // Fallback yellow circle highlight
