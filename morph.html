@@ -180,7 +180,6 @@
         <span class="pill">${morph.category}</span>
       `
 
-      // Image logic updated for side profiles
       document.getElementById('img').src = morph.img;
       document.getElementById('img').alt = morph.title;
 
@@ -210,7 +209,6 @@
       if (morph.lat !== undefined && morph.lng !== undefined) {
         mapEl.style.display = 'block';
         
-        // Use whole integers for zoomSnap to keep the grid perfectly aligned
         const map = L.map('detail-map', {
           zoomSnap: 1,
           zoomDelta: 1,
@@ -227,20 +225,24 @@
         }).addTo(map);
 
         if (morph.regionPolygon) {
-          // Detect if it's a Multi-Polygon or a Single Polygon
+          const shapes = [];
           const isMulti = Array.isArray(morph.regionPolygon[0][0]);
-          const layer = (isMulti ? L.multiPolygon : L.polygon)(morph.regionPolygon, { 
-            color: '#fde047',      // Bold Yellow border
-            fillColor: '#fde047',  // Solid Yellow fill
-            fillOpacity: 0.6,      // High visibility
-            weight: 2 
-          }).addTo(map);
           
-          // Focus the map on the specific region shape
-          map.fitBounds(layer.getBounds(), { padding: [30, 30] });
+          if (isMulti) {
+            // Draw each piece of the multi-region separately
+            morph.regionPolygon.forEach(poly => {
+              shapes.push(L.polygon(poly, { color: '#fde047', fillColor: '#fde047', fillOpacity: 0.6, weight: 2 }));
+            });
+          } else {
+            // Draw standard single region
+            shapes.push(L.polygon(morph.regionPolygon, { color: '#fde047', fillColor: '#fde047', fillOpacity: 0.6, weight: 2 }));
+          }
+
+          // Group the shapes to put them on the map and calculate perfect zoom boundaries
+          const group = L.featureGroup(shapes).addTo(map);
+          map.fitBounds(group.getBounds(), { padding: [30, 30] });
           
         } else {
-          // Fallback yellow circle highlight
           L.circle([morph.lat, morph.lng], {
             color: '#fde047',
             fillColor: '#fde047',
@@ -251,5 +253,3 @@
       }
     }
   </script>
-</body>
-</html>
