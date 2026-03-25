@@ -49,13 +49,24 @@
       grid-template-columns:minmax(260px,40%) 1fr;
       gap:20px;
     }
-    .imgBox img{
-      width:100%;
-      height:auto;
-      border-radius:16px;
-      border:1px solid var(--ring);
-      display:block;
+    
+    /* PHOTO GRID FOR SIDE PROFILES */
+    .photo-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
     }
+    .photo-grid.two-cols {
+      grid-template-columns: 1fr 1fr;
+    }
+    .photo-grid img {
+      width: 100%; 
+      height: auto; 
+      border-radius: 16px; 
+      border: 1px solid var(--ring); 
+      display: block;
+    }
+
     .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px; margin-bottom:16px;}
     .chip{
       background:var(--chip);
@@ -119,7 +130,9 @@
   <main>
     <div class="layout">
       <div class="imgBox">
-        <img id="img" alt="">
+        <div class="photo-grid" id="photo-grid">
+          <img id="img" alt="">
+        </div>
         <div class="chips" id="tags"></div>
         <div id="detail-map"></div>
       </div>
@@ -167,8 +180,18 @@
         <span class="pill">${morph.category}</span>
       `
 
-      imgEl.src = morph.img
-      imgEl.alt = morph.title
+      // Image logic updated for side profiles
+      document.getElementById('img').src = morph.img;
+      document.getElementById('img').alt = morph.title;
+
+      if (morph.imgSide) {
+        const grid = document.getElementById('photo-grid');
+        grid.classList.add('two-cols');
+        const sideImg = document.createElement('img');
+        sideImg.src = morph.imgSide;
+        sideImg.alt = morph.title + " Side Profile";
+        grid.appendChild(sideImg);
+      }
 
       tagsEl.innerHTML = (morph.tags || [])
         .map(t => `<span class="chip">${t}</span>`).join('')
