@@ -1,5 +1,55 @@
 // data.js – all morphs / averages live here
 window.MORPHS = [
+    {
+    id: "guinesid",
+    title: "Guinesid",
+    macro: "Sub-Saharan Africa",
+    country: "West African Coast",
+    region: "Gulf of Guinea to Cameroon & Angola",
+    lat: 6.0,
+    lng: 0.0,
+    regionPolygon: [
+      // Main West African Forest Belt (Guinea to Cameroon)
+      [
+        [14.0, -17.0], [15.0, -14.0], [11.0, -10.0], [12.0, -4.0], [8.0, 3.0], 
+        [10.0, 10.0], [6.0, 14.0], [3.0, 10.0], [4.0, 4.0], [5.0, -2.0], 
+        [4.0, -8.0], [9.0, -14.0], [12.0, -17.0]
+      ],
+      // Angolan Coast Sliver
+      [
+        [-6.0, 12.0], [-6.0, 14.0], [-11.0, 14.0], [-11.0, 13.5], [-9.0, 13.0]
+      ]
+    ],
+    category: "Phenotype",
+    img: "images/guinesidfront.jpeg",
+    imgSide: "images/guinesidside.jpeg",
+    tags: ["Guinesid", "West Africa", "Gulf of Guinea", "Maroon", "Phenotype"],
+    sources: [
+      { label: "Phenotypic distribution map and regional notes", url: "" },
+      { label: "Baker, 1981", url: "" },
+      { label: "Pales & St-Péreuse, 1953", url: "" },
+      { label: "von Eickstedt, 1934", url: "" }
+    ],
+    notes: `
+      <p>
+        Native to the coastal littoral of the Gulf of Guinea, this phenotype's distribution 
+        stretches from the Republic of Guinea all the way eastward into Cameroon, and 
+        sporadically down to Angola.
+      </p>
+      <p>
+        Historically, slavery brought this phenotype to the Americas, where it is especially 
+        frequent in maroon-descended Jamaicans, though it mostly serves as a structural 
+        element within admixed, New World phenotypic clusters.
+      </p>
+      <h3>Traits</h3>
+      <ul>
+        <li><strong>Frontal View:</strong> The face is typically quite broad and vertically compressed. The standout feature is the hyper-platyrrhine nose, which is extremely wide and often funnel-shaped.</li>
+        <li><strong>Lateral View:</strong> The skull is markedly dolichocephalic, meaning it is noticeably longer from front to back than it is wide. This is often paired with a very flat nasal root, noticeable alveolar prognathism, and a mildly receding chin.</li>
+        <li><strong>Pigmentation & Soft Tissue:</strong> The skin is typically dark brown, sometimes expressing lighter brown shades. The lips are distinctly thick and full, though historically noted as being slightly thinner than northern phenotypic clusters, and body hair can also be slightly more pronounced.</li>
+        <li><strong>Body:</strong> The Guinesid has a medium to sometimes rather short stature. Their build is heavily muscular and compact, ranging from mesomorphic to endomorphic. They are also mesoskelic, with proportionally average leg length and thick calves.</li>
+      </ul>
+    `
+  },
   {
     id: "average_mulato_cuban",
     title: "Average Mulato Cuban",
