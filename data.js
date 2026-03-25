@@ -21,8 +21,8 @@ window.MORPHS = [
       ]
     ],
     category: "Phenotype",
-    img: "images/guinesidfront.jpg",
-    imgSide: "images/guinesidside.jpg",
+    img: "images/guinesidfront.JPG",
+    imgSide: "images/guinesidside.JPG",
     tags: ["Guinesid", "West Africa", "Gulf of Guinea", "Maroon", "Phenotype"],
     sources: [
       { label: "Phenotypic distribution map and regional notes", url: "" },
