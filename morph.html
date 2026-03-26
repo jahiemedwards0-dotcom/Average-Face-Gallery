@@ -205,7 +205,7 @@
           return `<li>${s.label}</li>`
         }).join('')
 
-      // --- MAP INITIALIZATION ---
+     // --- MAP INITIALIZATION ---
       if (morph.lat !== undefined && morph.lng !== undefined) {
         mapEl.style.display = 'block';
         
@@ -224,32 +224,30 @@
           updateWhenZooming: true
         }).addTo(map);
 
-        if (morph.regionPolygon) {
+        if (morph.polygons) {
+          // NEW LOGIC: Handles "core" (frequent) and "sporadic" (moderate/low) tiered arrays
           const shapes = [];
-          const isMulti = Array.isArray(morph.regionPolygon[0][0]);
-          
-          if (isMulti) {
-            // Draw each piece of the multi-region separately
-            morph.regionPolygon.forEach(poly => {
-              shapes.push(L.polygon(poly, { color: '#fde047', fillColor: '#fde047', fillOpacity: 0.6, weight: 2 }));
-            });
-          } else {
-            // Draw standard single region
-            shapes.push(L.polygon(morph.regionPolygon, { color: '#fde047', fillColor: '#fde047', fillOpacity: 0.6, weight: 2 }));
-          }
-
-          // Group the shapes to put them on the map and calculate perfect zoom boundaries
+          morph.polygons.forEach(layer => {
+            const isCore = layer.type === 'core';
+            shapes.push(L.polygon(layer.coords, {
+              color: '#fde047', 
+              fillColor: '#fde047', 
+              fillOpacity: isCore ? 0.7 : 0.2, // Bright for core, faded for sporadic
+              weight: isCore ? 1.5 : 0.5 
+            }));
+          });
           const group = L.featureGroup(shapes).addTo(map);
           map.fitBounds(group.getBounds(), { padding: [30, 30] });
+
+        } else if (morph.regionPolygon) {
+          // OLD LOGIC FALLBACK: Standard single polygons
+          const isMulti = Array.isArray(morph.regionPolygon[0][0]);
+          const layer = (isMulti ? L.multiPolygon : L.polygon)(morph.regionPolygon, { 
+            color: '#fde047', fillColor: '#fde047', fillOpacity: 0.6, weight: 2 
+          }).addTo(map);
+          map.fitBounds(layer.getBounds(), { padding: [30, 30] });
           
         } else {
-          L.circle([morph.lat, morph.lng], {
-            color: '#fde047',
-            fillColor: '#fde047',
-            fillOpacity: 0.5,
-            radius: 350000
-          }).addTo(map);
+          L.circle([morph.lat, morph.lng], { color: '#fde047', fillColor: '#fde047', fillOpacity: 0.5, radius: 350000 }).addTo(map);
         }
       }
-    }
-  </script>
