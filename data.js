@@ -47,7 +47,6 @@ window.MORPHS = [
     `
   },
   {
-    {
     id: "average_mulato_cuban",
     title: "Average Mulato Cuban",
     macro: "Caribbean",
