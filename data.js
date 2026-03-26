@@ -8,39 +8,35 @@ window.MORPHS = [
     region: "Gulf of Guinea to Cameroon & Angola",
     lat: 6.0,
     lng: 0.0,
-    regionPolygon: [
-      // Main West African Forest Belt (Guinea to Cameroon)
-      [
-        [14.0, -17.0], [15.0, -14.0], [11.0, -10.0], [12.0, -4.0], [8.0, 3.0], 
-        [10.0, 10.0], [6.0, 14.0], [3.0, 10.0], [4.0, 4.0], [5.0, -2.0], 
-        [4.0, -8.0], [9.0, -14.0], [12.0, -17.0]
-      ],
-      // Angolan Coast Sliver
-      [
-        [-6.0, 12.0], [-6.0, 14.0], [-11.0, 14.0], [-11.0, 13.5], [-9.0, 13.0]
-      ]
+    polygons: [
+      {
+        type: "sporadic", // Faded yellow (Wider inland belt & Angola)
+        coords: [
+          // Inland forest belt
+          [ [14.0, -17.0], [15.0, -10.0], [12.0, 0.0], [8.0, 8.0], [10.0, 14.0], [6.0, 15.0], [2.0, 10.0], [4.0, 0.0], [8.0, -15.0] ],
+          // Angola sliver
+          [ [-5.0, 12.0], [-5.0, 14.0], [-12.0, 14.0], [-12.0, 13.0] ]
+        ]
+      },
+      {
+        type: "core", // Bright yellow (Coastal littoral)
+        coords: [
+          [12.0, -16.0], [10.0, -13.0], [6.0, -10.0], [4.0, -7.0], [5.0, -2.0], [4.0, 4.0], [4.0, 9.0], [8.0, 9.0], [6.0, 4.0], [7.0, -2.0], [8.0, -10.0]
+        ]
+      }
     ],
     category: "Phenotype",
     img: "images/guinesidfront.JPG",
     imgSide: "images/guinesidside.JPG",
     tags: ["Guinesid", "West Africa", "Gulf of Guinea", "Maroon", "Phenotype"],
     sources: [
-      { label: "Phenotypic distribution map and regional notes", url: "" },
       { label: "Baker, 1981", url: "" },
       { label: "Pales & St-Péreuse, 1953", url: "" },
       { label: "von Eickstedt, 1934", url: "" }
     ],
     notes: `
-      <p>
-        Native to the coastal littoral of the Gulf of Guinea, this phenotype's distribution 
-        stretches from the Republic of Guinea all the way eastward into Cameroon, and 
-        sporadically down to Angola.
-      </p>
-      <p>
-        Historically, slavery brought this phenotype to the Americas, where it is especially 
-        frequent in maroon-descended Jamaicans, though it mostly serves as a structural 
-        element within admixed, New World phenotypic clusters.
-      </p>
+      <p>Native to the coastal littoral of the Gulf of Guinea, this phenotype's distribution stretches from the Republic of Guinea all the way eastward into Cameroon, and sporadically down to Angola.</p>
+      <p>Historically, slavery brought this phenotype to the Americas, where it is especially frequent in maroon-descended Jamaicans, though it mostly serves as a structural element within admixed, New World phenotypic clusters.</p>
       <h3>Traits</h3>
       <ul>
         <li><strong>Frontal View:</strong> The face is typically quite broad and vertically compressed. The standout feature is the hyper-platyrrhine nose, which is extremely wide and often funnel-shaped.</li>
@@ -51,6 +47,7 @@ window.MORPHS = [
     `
   },
   {
+    {
     id: "average_mulato_cuban",
     title: "Average Mulato Cuban",
     macro: "Caribbean",
@@ -58,45 +55,38 @@ window.MORPHS = [
     region: "Havana & Eastern Provinces (Oriente)",
     lat: 21.5218,
     lng: -77.7812,
-    // Multi-polygon: Part 1 is Havana area, Part 2 is the Eastern block (Oriente)
-    regionPolygon: [
-      // Havana & surrounding area
-      [
-        [23.25, -82.60], [23.25, -82.10], [22.85, -82.10], [22.85, -82.60]
-      ],
-      // Eastern Provinces (Las Tunas, Holguín, Granma, Santiago, Guantánamo)
-      [
-        [21.45, -77.80], [21.30, -75.80], [20.60, -74.10], [19.80, -74.10], 
-        [19.80, -77.00], [20.20, -77.80], [21.00, -78.00]
-      ]
-    ],
-    category: "Average face",
-    img: "images/mulatocuban.jpeg",
-    tags: ["Cuba", "Mulato", "Caribbean", "Havana", "Oriente", "Average face"],
-    sources: [
-      { 
-        label: "User composite & regional phenotypic notes", 
-        url: "" 
+    polygons: [
+      {
+        type: "sporadic", // Faded yellow (Entire Island base)
+        coords: [
+          [23.2, -85.0], [23.2, -80.0], [21.5, -77.0], [20.5, -74.1], [19.8, -75.0], [20.0, -77.0], [22.0, -84.0]
+        ]
       },
-      { 
-        label: "Marcheco-Teruel, B. et al. (2014) — Cuba: Exploring the History of Admixture and the Genetic Basis of Pigmentation Using Autosomal and Uniparental Markers (PLoS Genetics).", 
-        url: "https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1004488" 
+      {
+        type: "core", // Bright yellow (Havana & Oriente hubs)
+        coords: [
+          [ [23.25, -82.60], [23.25, -82.10], [22.85, -82.10], [22.85, -82.60] ],
+          [ [21.45, -77.80], [21.30, -75.80], [20.60, -74.10], [19.80, -74.10], [19.80, -77.00], [20.20, -77.80] ]
+        ]
       }
     ],
+    category: "Average face",
+    img: "images/avg_mulato_cuban.jpeg",
+    tags: ["Cuba", "Mulato", "Caribbean", "Havana", "Oriente", "Average face"],
+    sources: [
+      { label: "User composite & regional phenotypic notes", url: "" },
+      { label: "Marcheco-Teruel, B. et al. (2014) — Cuba: Exploring the History of Admixture and the Genetic Basis of Pigmentation...", url: "https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1004488" }
+    ],
     notes: `
-      <p>
-        In Cuba, “mulato” does not constitute a discrete genetic cluster. While the 
-        mean ancestry skews European, there is substantial overlap across 
-        White- and Black-identified populations.
-      </p>
+      <p>In Cuba, “mulato” does not constitute a discrete genetic cluster. While the mean ancestry skews European, there is substantial overlap across White- and Black-identified populations.</p>
       <h3>Traits</h3>
       <ul>
-        <li><strong>Face:</strong> Facial breadth tends toward a medium width, though the distribution reaches both narrow and broad extremes. The midface is notably long, anchored by significant cheekbone flare that exceeds the width of the jaw, creating a sharp, V-shaped lower face that persists even among men.</li>
-        <li><strong>Proportions:</strong> The interpupillary distance is approximately 46% of facial width, aligning with a commonly cited proportional benchmark.</li>
-        <li><strong>Nose:</strong> The nose is typically long and broad at the base. The sample also shows a reduced mouth-to–nose width ratio—indicating the mouth is narrower relative to the nose compared with published normative data.</li>
-        <li><strong>Pigmentation:</strong> Skin tone remains the most variable metric, spanning from light-intermediate to deep brown. This high variance is clear physical evidence of a heterogeneous population. While eyes are predominantly dark, hazel, green, and blue variants are expressed.</li>
+        <li><strong>Face:</strong> Facial breadth tends toward a medium width. The midface is notably long, anchored by significant cheekbone flare that exceeds the width of the jaw, creating a sharp, V-shaped lower face that persists even among men.</li>
+        <li><strong>Proportions:</strong> The interpupillary distance is approximately 46% of facial width. The sample also shows a reduced mouth-to–nose width ratio.</li>
+        <li><strong>Pigmentation:</strong> Skin tone remains the most variable metric, spanning from light-intermediate to deep brown. This high variance is clear physical evidence of a heterogeneous population.</li>
         <li><strong>Hair:</strong> Texture spans the full morphological range—from deep waves to tight coils—with straight hair appearing as a minority pattern.</li>
       </ul>
+      <p><em>These are the mulatos of Cuba.</em></p>
     `
   },
   {
@@ -641,39 +631,33 @@ window.MORPHS = [
     region: "Deep South & Great Migration corridors",
     lat: 32.354,
     lng: -89.398,
-    regionPolygon: [
-      [42.0, -96.0], [43.0, -87.0], [42.0, -79.0], [41.0, -73.0], 
-      [38.0, -74.0], [33.0, -78.0], [25.5, -80.0], [30.0, -88.0], 
-      [29.0, -95.0], [33.0, -94.0], [38.0, -90.0]
+    polygons: [
+      {
+        type: "sporadic", // Faded yellow (Mid-Atlantic, East TX, Migration Cities)
+        coords: [
+          [42.0, -96.0], [43.0, -87.0], [41.0, -73.0], [38.0, -74.0], [33.0, -78.0], [25.5, -80.0], [29.0, -98.0], [33.0, -98.0]
+        ]
+      },
+      {
+        type: "core", // Bright yellow (Deep South core: LA, MS, AL, GA, SC)
+        coords: [
+          [35.0, -91.0], [35.0, -80.0], [32.0, -80.0], [30.0, -82.0], [30.0, -88.0], [29.0, -91.0], [33.0, -94.0]
+        ]
+      }
     ],
     category: "Phenotype",
     img: "images/mississipid.jpg",
-    tags: [
-      "Mississipid",
-      "African American",
-      "Deep South",
-      "Great Migration",
-      "Phenotype"
-    ],
-    sources: [
-      { label: "User composite & notes", url: "" }
-    ],
+    tags: ["Mississipid", "African American", "Deep South", "Great Migration", "Phenotype"],
+    sources: [{ label: "User composite & notes", url: "" }],
     notes: `
       <h3>Description</h3>
-      <p>
-        Mississipid is an African American phenotype that developed in the
-        plantation South of the United States. From the Deep South, this pattern
-        spread into the Great Lakes region, the East Coast corridor, and the West
-        Coast during the Great Migration. It is one of the most common phenotypic
-        patterns among African Americans today, especially in urban centers,
-        church-based communities, and multi-generation Southern families.
-      </p>
+      <p>Mississipid is an African American phenotype that developed in the plantation South of the United States. From the Deep South, this pattern spread into the Great Lakes region, the East Coast corridor, and the West Coast during the Great Migration. It is one of the most common phenotypic patterns among African Americans today.</p>
       <h3>Traits</h3>
       <ul>
         <li>Medium-to-dark brown skin with warm or reddish undertones.</li>
         <li>Face usually round or oval; nose typically medium-broad.</li>
         <li>Lips full; jawline tapered rather than boxy.</li>
-        <li>Eyes predominantly dark brown, with hazel appearing randomly in some individuals; medium-set with slightly hooded lids and, on rare occasions, faint epicanthic folds.</li>
+        <li>Eyes predominantly dark brown; medium-set with slightly hooded lids.</li>
         <li>Hair texture most often ranges from tight coils to looser curls (roughly 4C to 3C).</li>
       </ul>
     `
