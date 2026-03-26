@@ -205,7 +205,7 @@
           return `<li>${s.label}</li>`
         }).join('')
 
-     // --- MAP INITIALIZATION ---
+      // --- MAP INITIALIZATION ---
       if (morph.lat !== undefined && morph.lng !== undefined) {
         mapEl.style.display = 'block';
         
@@ -251,3 +251,7 @@
           L.circle([morph.lat, morph.lng], { color: '#fde047', fillColor: '#fde047', fillOpacity: 0.5, radius: 350000 }).addTo(map);
         }
       }
+    } // <-- This closes the "if(!morph) { ... } else { ... }" statement
+  </script>
+</body>
+</html>
