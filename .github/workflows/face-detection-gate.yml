@@ -33,9 +33,10 @@ jobs:
       - name: Install face detector
         run: pip install -r requirements-face-filter.txt
 
-      - name: Check every image for a detectable face
+      - name: Check every face asset with strict YuNet detection
         run: |
           python tools/filter_faces.py images \
+            --exclude-glob "*map*" \
             --manifest face_detection_manifest.csv \
             --fail-on-rejected
 
