@@ -1,0 +1,60 @@
+name: Build filtered public-figure ZIP
+
+on:
+  push:
+    branches: [agent/face-detection-gate]
+    paths:
+      - ".github/workflows/build-filtered-public-figures.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install face detector
+        run: pip install -r requirements-face-filter.txt
+
+      - name: Download source image archive
+        run: |
+          curl -L --fail --retry 3 --retry-delay 2 \
+            "https://at.adobe.com/d5pYYYExEZ2ZpFvo" \
+            -o public_figures_source.zip
+          unzip -t public_figures_source.zip
+
+      - name: Filter every image through strict YuNet
+        run: |
+          python tools/filter_faces.py public_figures_source.zip \
+            --output dominican_public_figures_faces_only.zip \
+            --manifest face_detection_manifest.csv
+
+      - name: Summarize result
+        run: |
+          python - <<'PY'
+          import csv, zipfile
+          rows = list(csv.DictReader(open('face_detection_manifest.csv', encoding='utf-8')))
+          passed = sum(r['detected'].lower() == 'true' for r in rows)
+          failed = len(rows) - passed
+          with zipfile.ZipFile('dominican_public_figures_faces_only.zip') as z:
+              imgs = [n for n in z.namelist() if n.lower().endswith(('.jpg','.jpeg','.png','.webp','.bmp','.tif','.tiff'))]
+          summary = f'checked={len(rows)}\npassed={passed}\nrejected={failed}\nimages_in_filtered_zip={len(imgs)}\n'
+          open('face_filter_summary.txt','w').write(summary)
+          print(summary)
+          PY
+
+      - name: Upload filtered ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: dominican-public-figures-faces-only
+          path: |
+            dominican_public_figures_faces_only.zip
+            face_detection_manifest.csv
+            face_filter_summary.txt
+          if-no-files-found: error
