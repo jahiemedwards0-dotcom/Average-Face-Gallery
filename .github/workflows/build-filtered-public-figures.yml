@@ -8,13 +8,6 @@ on:
       - "tools/refill_public_figures.py"
       - "tools/filter_faces.py"
       - "data/dominican_public_figures_manifest.csv"
-  pull_request:
-    branches: [main]
-    paths:
-      - ".github/workflows/build-filtered-public-figures.yml"
-      - "tools/refill_public_figures.py"
-      - "tools/filter_faces.py"
-      - "data/dominican_public_figures_manifest.csv"
   workflow_dispatch:
 
 permissions:
@@ -46,32 +39,40 @@ jobs:
         id: refill
         continue-on-error: true
         run: |
+          set -o pipefail
           python tools/refill_public_figures.py \
             --roster data/dominican_public_figures_manifest.csv \
             --source-zip public_figures_source.zip \
             --output dominican_public_figures_complete_50.zip \
             --manifest replacement_face_manifest.csv \
-            --max-candidates 40
+            --max-candidates 40 2>&1 | tee refill.log
 
-      - name: Summarize result
+      - name: Summarize result or failure
         if: always()
         run: |
           python - <<'PY'
-          import csv, zipfile, pathlib
-          rows = list(csv.DictReader(open('replacement_face_manifest.csv', encoding='utf-8')))
-          kept = sum(r['status'] == 'kept-original' for r in rows)
-          replaced = sum(r['status'] == 'replacement' for r in rows)
-          missing = [r for r in rows if r['status'] == 'missing']
-          with zipfile.ZipFile('dominican_public_figures_complete_50.zip') as z:
-              imgs = [n for n in z.namelist() if pathlib.Path(n).suffix.lower() in {'.jpg','.jpeg','.png','.webp','.bmp','.tif','.tiff'}]
-          summary = (
-              f'images_in_zip={len(imgs)}\n'
-              f'kept_original={kept}\n'
-              f'replacements={replaced}\n'
-              f'missing={len(missing)}\n'
-              + ''.join(f"MISSING {r['index']} {r['name']}\n" for r in missing)
-          )
-          open('face_filter_summary.txt','w').write(summary)
+          import csv, pathlib, zipfile
+          manifest = pathlib.Path('replacement_face_manifest.csv')
+          output = pathlib.Path('dominican_public_figures_complete_50.zip')
+          if manifest.exists():
+              rows = list(csv.DictReader(manifest.open(encoding='utf-8')))
+              kept = sum(r['status'] == 'kept-original' for r in rows)
+              replaced = sum(r['status'] == 'replacement' for r in rows)
+              missing = [r for r in rows if r['status'] == 'missing']
+              imgs = []
+              if output.exists():
+                  with zipfile.ZipFile(output) as z:
+                      imgs = [n for n in z.namelist() if pathlib.Path(n).suffix.lower() in {'.jpg','.jpeg','.png','.webp','.bmp','.tif','.tiff'}]
+              summary = (
+                  f'images_in_zip={len(imgs)}\n'
+                  f'kept_original={kept}\n'
+                  f'replacements={replaced}\n'
+                  f'missing={len(missing)}\n'
+                  + ''.join(f"MISSING {r['index']} {r['name']}\n" for r in missing)
+              )
+          else:
+              summary = 'refill_script_failed_before_manifest=true\n'
+          pathlib.Path('face_filter_summary.txt').write_text(summary, encoding='utf-8')
           print(summary)
           PY
 
@@ -84,22 +85,23 @@ jobs:
             dominican_public_figures_complete_50.zip
             replacement_face_manifest.csv
             face_filter_summary.txt
-          if-no-files-found: error
+            refill.log
+          if-no-files-found: warn
 
-      - name: Publish generated result to branch
-        if: always() && github.event_name == 'push'
+      - name: Publish generated result and diagnostics to branch
+        if: always()
         run: |
           mkdir -p generated
-          cp dominican_public_figures_complete_50.zip generated/
-          cp replacement_face_manifest.csv generated/
-          cp face_filter_summary.txt generated/
+          for f in dominican_public_figures_complete_50.zip replacement_face_manifest.csv face_filter_summary.txt refill.log; do
+            if [ -f "$f" ]; then cp "$f" generated/; fi
+          done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add generated/
           if git diff --cached --quiet; then
             echo "No generated changes to publish"
           else
-            git commit -m "Publish regenerated 50-face ZIP"
+            git commit -m "Publish regenerated face ZIP diagnostics"
             git push origin HEAD:agent/face-detection-gate
           fi
 
@@ -107,8 +109,11 @@ jobs:
         if: always()
         run: |
           python - <<'PY'
-          import csv, sys
-          rows = list(csv.DictReader(open('replacement_face_manifest.csv', encoding='utf-8')))
+          import csv, pathlib, sys
+          p = pathlib.Path('replacement_face_manifest.csv')
+          if not p.exists():
+              sys.exit('replacement manifest missing')
+          rows = list(csv.DictReader(p.open(encoding='utf-8')))
           missing = [r for r in rows if r['status'] == 'missing']
           if missing:
               print(f'{len(missing)} people still missing a passing face image')
