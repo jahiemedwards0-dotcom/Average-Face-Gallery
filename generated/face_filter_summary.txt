@@ -1,1 +1,16 @@
-refill_script_failed_before_manifest=true
+images_in_zip=37
+face_checked_images=37
+missing=13
+MISSING 36 Yanlis Feliz Sena
+MISSING 37 Ailyn Liberato
+MISSING 38 Selanny Puente Estrella
+MISSING 39 Esthefany Rabit
+MISSING 40 Ana Patricia Encarnacion Montero
+MISSING 41 Thais Chantal Cocly Vasquez
+MISSING 44 Julie Millaray Arias Alejo
+MISSING 45 Valerie Mariel Vargas Guzman
+MISSING 46 Harleny Linette De los Santos Baez
+MISSING 47 Jakarlis Marianni Lima Garcia
+MISSING 48 Glorybell Puente Estrella
+MISSING 49 Jismeily Flete Savinon
+MISSING 50 Dilenny Michel Maleno Mendez
