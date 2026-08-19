@@ -1,10 +1,13 @@
-name: Build filtered public-figure ZIP
+name: Build complete 50-face public-figure ZIP
 
 on:
   push:
     branches: [agent/face-detection-gate]
     paths:
       - ".github/workflows/build-filtered-public-figures.yml"
+      - "tools/refill_public_figures.py"
+      - "tools/filter_faces.py"
+      - "data/dominican_public_figures_manifest.csv"
   workflow_dispatch:
 
 jobs:
@@ -22,39 +25,66 @@ jobs:
       - name: Install face detector
         run: pip install -r requirements-face-filter.txt
 
-      - name: Download source image archive
+      - name: Download original 50-image archive
         run: |
           curl -L --fail --retry 3 --retry-delay 2 \
             "https://at.adobe.com/d5pYYYExEZ2ZpFvo" \
             -o public_figures_source.zip
           unzip -t public_figures_source.zip
 
-      - name: Filter every image through strict YuNet
+      - name: Keep passing originals and refill failed people
+        id: refill
+        continue-on-error: true
         run: |
-          python tools/filter_faces.py public_figures_source.zip \
-            --output dominican_public_figures_faces_only.zip \
-            --manifest face_detection_manifest.csv
+          python tools/refill_public_figures.py \
+            --roster data/dominican_public_figures_manifest.csv \
+            --source-zip public_figures_source.zip \
+            --output dominican_public_figures_complete_50.zip \
+            --manifest replacement_face_manifest.csv \
+            --max-candidates 40
 
       - name: Summarize result
+        if: always()
         run: |
           python - <<'PY'
-          import csv, zipfile
-          rows = list(csv.DictReader(open('face_detection_manifest.csv', encoding='utf-8')))
-          passed = sum(r['detected'].lower() == 'true' for r in rows)
-          failed = len(rows) - passed
-          with zipfile.ZipFile('dominican_public_figures_faces_only.zip') as z:
-              imgs = [n for n in z.namelist() if n.lower().endswith(('.jpg','.jpeg','.png','.webp','.bmp','.tif','.tiff'))]
-          summary = f'checked={len(rows)}\npassed={passed}\nrejected={failed}\nimages_in_filtered_zip={len(imgs)}\n'
+          import csv, zipfile, pathlib
+          rows = list(csv.DictReader(open('replacement_face_manifest.csv', encoding='utf-8')))
+          kept = sum(r['status'] == 'kept-original' for r in rows)
+          replaced = sum(r['status'] == 'replacement' for r in rows)
+          missing = [r for r in rows if r['status'] == 'missing']
+          with zipfile.ZipFile('dominican_public_figures_complete_50.zip') as z:
+              imgs = [n for n in z.namelist() if pathlib.Path(n).suffix.lower() in {'.jpg','.jpeg','.png','.webp','.bmp','.tif','.tiff'}]
+          summary = (
+              f'images_in_zip={len(imgs)}\n'
+              f'kept_original={kept}\n'
+              f'replacements={replaced}\n'
+              f'missing={len(missing)}\n'
+              + ''.join(f"MISSING {r['index']} {r['name']}\n" for r in missing)
+          )
           open('face_filter_summary.txt','w').write(summary)
           print(summary)
           PY
 
-      - name: Upload filtered ZIP
+      - name: Upload complete/refill artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dominican-public-figures-faces-only
+          name: dominican-public-figures-complete-50
           path: |
-            dominican_public_figures_faces_only.zip
-            face_detection_manifest.csv
+            dominican_public_figures_complete_50.zip
+            replacement_face_manifest.csv
             face_filter_summary.txt
           if-no-files-found: error
+
+      - name: Require all 50 faces
+        if: always()
+        run: |
+          python - <<'PY'
+          import csv, sys
+          rows = list(csv.DictReader(open('replacement_face_manifest.csv', encoding='utf-8')))
+          missing = [r for r in rows if r['status'] == 'missing']
+          if missing:
+              print(f'{len(missing)} people still missing a passing face image')
+              sys.exit(1)
+          print('All 50 roster entries have a YuNet-detectable face image.')
+          PY
