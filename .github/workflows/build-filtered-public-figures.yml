@@ -28,24 +28,16 @@ jobs:
       - name: Install face detector
         run: pip install -r requirements-face-filter.txt
 
-      - name: Download original 50-image archive
-        run: |
-          curl -L --fail --retry 3 --retry-delay 2 \
-            "https://at.adobe.com/d5pYYYExEZ2ZpFvo" \
-            -o public_figures_source.zip
-          unzip -t public_figures_source.zip
-
-      - name: Keep passing originals and refill failed people
+      - name: Rebuild all 50 roster images from cited sources
         id: refill
         continue-on-error: true
         run: |
           set -o pipefail
           python tools/refill_public_figures.py \
             --roster data/dominican_public_figures_manifest.csv \
-            --source-zip public_figures_source.zip \
             --output dominican_public_figures_complete_50.zip \
             --manifest replacement_face_manifest.csv \
-            --max-candidates 40 2>&1 | tee refill.log
+            --max-candidates 45 2>&1 | tee refill.log
 
       - name: Summarize result or failure
         if: always()
@@ -56,7 +48,6 @@ jobs:
           output = pathlib.Path('dominican_public_figures_complete_50.zip')
           if manifest.exists():
               rows = list(csv.DictReader(manifest.open(encoding='utf-8')))
-              kept = sum(r['status'] == 'kept-original' for r in rows)
               replaced = sum(r['status'] == 'replacement' for r in rows)
               missing = [r for r in rows if r['status'] == 'missing']
               imgs = []
@@ -65,8 +56,7 @@ jobs:
                       imgs = [n for n in z.namelist() if pathlib.Path(n).suffix.lower() in {'.jpg','.jpeg','.png','.webp','.bmp','.tif','.tiff'}]
               summary = (
                   f'images_in_zip={len(imgs)}\n'
-                  f'kept_original={kept}\n'
-                  f'replacements={replaced}\n'
+                  f'face_checked_images={replaced}\n'
                   f'missing={len(missing)}\n'
                   + ''.join(f"MISSING {r['index']} {r['name']}\n" for r in missing)
               )
