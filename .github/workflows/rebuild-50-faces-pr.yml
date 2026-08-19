@@ -1,0 +1,82 @@
+name: Rebuild verified 50-face ZIP (PR)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/rebuild-50-faces-pr.yml"
+      - "tools/refill_public_figures.py"
+      - "tools/filter_faces.py"
+      - "data/dominican_public_figures_manifest.csv"
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install detector
+        run: pip install -r requirements-face-filter.txt
+
+      - name: Rebuild identity-safe face set
+        id: rebuild
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python tools/refill_public_figures.py \
+            --roster data/dominican_public_figures_manifest.csv \
+            --output dominican_public_figures_complete_50.zip \
+            --manifest replacement_face_manifest.csv \
+            --max-candidates 45 2>&1 | tee rebuild.log
+
+      - name: Write summary
+        if: always()
+        run: |
+          python - <<'PY'
+          import csv, pathlib, zipfile
+          p = pathlib.Path('replacement_face_manifest.csv')
+          if not p.exists():
+              pathlib.Path('rebuild_summary.txt').write_text('manifest_missing=true\n')
+              raise SystemExit(0)
+          rows = list(csv.DictReader(p.open(encoding='utf-8')))
+          missing = [r for r in rows if r['status'] == 'missing']
+          imgs = []
+          if pathlib.Path('dominican_public_figures_complete_50.zip').exists():
+              with zipfile.ZipFile('dominican_public_figures_complete_50.zip') as z:
+                  imgs = [n for n in z.namelist() if pathlib.Path(n).suffix.lower() in {'.jpg','.jpeg','.png','.webp','.bmp','.tif','.tiff'}]
+          text = f'images_in_zip={len(imgs)}\nmissing={len(missing)}\n' + ''.join(f"MISSING {r['index']} {r['name']}\n" for r in missing)
+          pathlib.Path('rebuild_summary.txt').write_text(text)
+          print(text)
+          PY
+
+      - name: Upload rebuild artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-50-face-rebuild
+          path: |
+            dominican_public_figures_complete_50.zip
+            replacement_face_manifest.csv
+            rebuild_summary.txt
+            rebuild.log
+          if-no-files-found: warn
+
+      - name: Require 50 passing faces
+        if: always()
+        run: |
+          python - <<'PY'
+          import csv, pathlib, sys
+          p = pathlib.Path('replacement_face_manifest.csv')
+          if not p.exists():
+              sys.exit(1)
+          rows = list(csv.DictReader(p.open(encoding='utf-8')))
+          missing = [r for r in rows if r['status'] == 'missing']
+          if missing or len(rows) != 50:
+              sys.exit(1)
+          print('50/50 identity-safe images passed YuNet.')
+          PY
