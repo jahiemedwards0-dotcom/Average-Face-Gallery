@@ -2,8 +2,10 @@
 """Build a 50-person photo ZIP from cited public-figure sources.
 
 Every downloaded candidate is decoded and passed through the repository's strict YuNet
-face detector. Zero-face candidates are discarded. The script keeps trying alternate
-page/Commons/Wikipedia image candidates for the same roster entry until one passes.
+face detector. Zero-face candidates are discarded. For official-profile roster rows,
+only candidates from the cited official page (or another page carrying the exact same
+Volleyball World player ID) are eligible, except for explicitly verified image overrides.
+This prevents a fuzzy name search from silently substituting the wrong person.
 """
 
 from __future__ import annotations
@@ -33,6 +35,17 @@ from filter_faces import (
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff"}
 USER_AGENT = "Mozilla/5.0 (compatible; FaceValidationBot/1.0; +https://github.com/)"
 
+# These two official-profile pages did not expose a usable portrait to the page scraper.
+# The overrides are exact-name images that were manually verified against the roster person.
+EXACT_IMAGE_OVERRIDES = {
+    "Esmery Martinez": [
+        "https://upload.wikimedia.org/wikipedia/commons/2/28/Esmery_Mart%C3%ADnez_8_Kocaeli_Kad%C4%B1n_Basketbol_20251108_%281%29.jpg"
+    ],
+    "Rosa Angelica Santana": [
+        "https://hoy.com.do/wp-content/uploads/2022/09/Rosa-Angelica-Ramirez-Santana_-01.jpg"
+    ],
+}
+
 
 def request(url: str, *, accept: str, timeout: int = 25, max_bytes: int = 25_000_000):
     req = urllib.request.Request(
@@ -51,7 +64,11 @@ def request(url: str, *, accept: str, timeout: int = 25, max_bytes: int = 25_000
 
 
 def request_text(url: str) -> tuple[str, str]:
-    data, _, final = request(url, accept="text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8", max_bytes=8_000_000)
+    data, _, final = request(
+        url,
+        accept="text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8",
+        max_bytes=8_000_000,
+    )
     return data.decode("utf-8", errors="replace"), final
 
 
@@ -75,7 +92,9 @@ def direct_commons_url(source_url: str) -> str | None:
     if "commons.wikimedia.org" not in parsed.netloc or marker not in parsed.path:
         return None
     title = urllib.parse.unquote(parsed.path.split(marker, 1)[1])
-    return "https://commons.wikimedia.org/wiki/Special:Redirect/file/" + urllib.parse.quote(title, safe="()_',-.~")
+    return "https://commons.wikimedia.org/wiki/Special:Redirect/file/" + urllib.parse.quote(
+        title, safe="()_',-.~"
+    )
 
 
 def extract_attr(tag: str, attr: str) -> str | None:
@@ -85,7 +104,11 @@ def extract_attr(tag: str, attr: str) -> str | None:
 
 def extract_page_candidates(page_url: str, text: str, person_name: str) -> list[str]:
     weighted: list[tuple[int, str]] = []
-    tokens = [t.lower() for t in re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ]+", person_name) if len(t) >= 4]
+    tokens = [
+        t.lower()
+        for t in re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ]+", person_name)
+        if len(t) >= 4
+    ]
 
     for pattern in (
         r'<meta[^>]+(?:property|name)=["\'](?:og:image(?::url)?|twitter:image(?::src)?)["\'][^>]+content=["\']([^"\']+)',
@@ -105,7 +128,11 @@ def extract_page_candidates(page_url: str, text: str, person_name: str) -> list[
                 srcs.append(u)
         srcset = extract_attr(tag, "srcset")
         if srcset:
-            srcs.extend(part.strip().split(" ", 1)[0] for part in srcset.split(",") if part.strip())
+            srcs.extend(
+                part.strip().split(" ", 1)[0]
+                for part in srcset.split(",")
+                if part.strip()
+            )
         for u in srcs:
             if u.startswith("//"):
                 u = "https:" + u
@@ -113,12 +140,15 @@ def extract_page_candidates(page_url: str, text: str, person_name: str) -> list[
                 u = urllib.parse.urljoin(page_url, u)
             if not u.startswith("http"):
                 continue
-            score = 1
-            if tokens and any(t in alt for t in tokens):
-                score = 0
+            score = 0 if tokens and any(t in alt for t in tokens) else 1
             weighted.append((score, u))
 
-    for m in re.finditer(r"https?:\\?/\\?/images\.volleyballworld\.com[^\"'<>\s]+", text, flags=re.I):
+    # Volleyball World embeds player photos as Cloudinary URLs under fivb-prd.
+    for m in re.finditer(
+        r"https?:\\?/\\?/images\.volleyballworld\.com[^\"'<>\s]+",
+        text,
+        flags=re.I,
+    ):
         weighted.append((0, clean_url(m.group(0))))
 
     for m in re.finditer(r"https?:\\?/\\?/[^\"'<>\s]+", text, flags=re.I):
@@ -129,7 +159,20 @@ def extract_page_candidates(page_url: str, text: str, person_name: str) -> list[
 
     def penalty(url: str) -> int:
         low = url.lower()
-        return 5 if any(x in low for x in ("logo", "flag", "icon", "sprite", "banner", "advert", "sponsor", "placeholder", "tournament")) else 0
+        return 5 if any(
+            x in low
+            for x in (
+                "logo",
+                "flag",
+                "icon",
+                "sprite",
+                "banner",
+                "advert",
+                "sponsor",
+                "placeholder",
+                "tournament",
+            )
+        ) else 0
 
     seen = set()
     out = []
@@ -142,17 +185,19 @@ def extract_page_candidates(page_url: str, text: str, person_name: str) -> list[
 
 
 def commons_search(name: str, limit: int = 12) -> list[str]:
-    params = urllib.parse.urlencode({
-        "action": "query",
-        "generator": "search",
-        "gsrsearch": name,
-        "gsrnamespace": 6,
-        "gsrlimit": limit,
-        "prop": "imageinfo",
-        "iiprop": "url|mime",
-        "format": "json",
-        "origin": "*",
-    })
+    params = urllib.parse.urlencode(
+        {
+            "action": "query",
+            "generator": "search",
+            "gsrsearch": name,
+            "gsrnamespace": 6,
+            "gsrlimit": limit,
+            "prop": "imageinfo",
+            "iiprop": "url|mime",
+            "format": "json",
+            "origin": "*",
+        }
+    )
     try:
         text, _ = request_text("https://commons.wikimedia.org/w/api.php?" + params)
         payload = json.loads(text)
@@ -167,17 +212,19 @@ def commons_search(name: str, limit: int = 12) -> list[str]:
 
 
 def wikipedia_pageimages(name: str, lang: str) -> list[str]:
-    params = urllib.parse.urlencode({
-        "action": "query",
-        "generator": "search",
-        "gsrsearch": name,
-        "gsrlimit": 5,
-        "prop": "pageimages",
-        "piprop": "original|thumbnail",
-        "pithumbsize": 1600,
-        "format": "json",
-        "origin": "*",
-    })
+    params = urllib.parse.urlencode(
+        {
+            "action": "query",
+            "generator": "search",
+            "gsrsearch": name,
+            "gsrlimit": 5,
+            "prop": "pageimages",
+            "piprop": "original|thumbnail",
+            "pithumbsize": 1600,
+            "format": "json",
+            "origin": "*",
+        }
+    )
     try:
         text, _ = request_text(f"https://{lang}.wikipedia.org/w/api.php?" + params)
         payload = json.loads(text)
@@ -192,27 +239,85 @@ def wikipedia_pageimages(name: str, lang: str) -> list[str]:
     return out
 
 
+def volleyball_profile_pages(source: str) -> list[str]:
+    """Return official pages that carry the exact same Volleyball World player ID."""
+    parsed = urllib.parse.urlparse(source)
+    if "volleyballworld.com" not in parsed.netloc:
+        return []
+    m = re.search(r"/players/(\d+)", parsed.path)
+    if not m:
+        return []
+    player_id = m.group(1)
+    base = "https://en.volleyballworld.com/volleyball/competitions"
+    # Current and recent competition routes. Same numeric player ID is the identity key.
+    routes = [
+        f"{base}/volleyball-nations-league/players/{player_id}",
+        f"{base}/women-world-championship/players/{player_id}",
+        f"{base}/women-u21-world-championship/players/{player_id}",
+        f"{base}/women-u19-world-championship/players/{player_id}",
+        f"{base}/girls-u17-world-championship/players/{player_id}",
+        source,
+    ]
+    seen = set()
+    return [u for u in routes if not (u in seen or seen.add(u))]
+
+
+def official_page_candidates(page_url: str, name: str) -> list[str]:
+    try:
+        text, final_page = request_text(page_url)
+    except Exception as exc:
+        print(f"  official page fetch failed: {type(exc).__name__}: {page_url}")
+        return []
+    candidates = extract_page_candidates(final_page, text, name)
+    if "volleyballworld.com" in urllib.parse.urlparse(final_page).netloc:
+        # Do not let flags, competition artwork, favicons or advertising faces qualify.
+        # Player portraits on Volleyball World use the fivb-prd Cloudinary namespace.
+        candidates = [
+            u
+            for u in candidates
+            if "images.volleyballworld.com" in urllib.parse.urlparse(u).netloc
+            and "/fivb-prd/" in u.lower()
+        ]
+    return candidates
+
+
 def candidate_urls(row: dict) -> list[str]:
     source = row["source_url"]
     name = row["name"]
+    source_type = (row.get("source_type") or "").lower()
+    official = "official profile" in source_type
     urls: list[str] = []
+
+    urls.extend(EXACT_IMAGE_OVERRIDES.get(name, []))
+
     direct = direct_commons_url(source)
     if direct:
         urls.append(direct)
-    try:
-        text, final_page = request_text(source)
-        urls.extend(extract_page_candidates(final_page, text, name))
-    except Exception as exc:
-        print(f"  source page fetch failed: {type(exc).__name__}: {exc}")
-    urls.extend(commons_search(name))
-    urls.extend(wikipedia_pageimages(name, "en"))
-    urls.extend(wikipedia_pageimages(name, "es"))
+
+    pages = volleyball_profile_pages(source) if "volleyballworld.com" in source else [source]
+    for page in pages:
+        urls.extend(official_page_candidates(page, name))
+
+    # Fuzzy Wikimedia/Wikipedia search is permitted only for roster rows whose cited
+    # source is itself Wikimedia/Wikipedia. It is never an identity fallback for an
+    # official-profile row.
+    if not official:
+        urls.extend(commons_search(name))
+        urls.extend(wikipedia_pageimages(name, "en"))
+        urls.extend(wikipedia_pageimages(name, "es"))
+
     seen = set()
     return [u for u in urls if u and not (u in seen or seen.add(u))]
 
 
 def extension_for(url: str, content_type: str) -> str:
-    mapping = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/bmp": ".bmp", "image/tiff": ".tif"}
+    mapping = {
+        "image/jpeg": ".jpg",
+        "image/png": ".png",
+        "image/webp": ".webp",
+        "image/bmp": ".bmp",
+        "image/tiff": ".tif",
+    }
     if content_type in mapping:
         return mapping[content_type]
     ext = Path(urllib.parse.urlparse(url).path).suffix.lower()
@@ -221,7 +326,9 @@ def extension_for(url: str, content_type: str) -> str:
 
 def validate_candidate(url: str, tmp_dir: Path, model_path: Path, used_hashes: set[str]):
     try:
-        data, content_type, final_url = request(url, accept="image/avif,image/webp,image/apng,image/*,*/*;q=0.8")
+        data, content_type, final_url = request(
+            url, accept="image/avif,image/webp,image/apng,image/*,*/*;q=0.8"
+        )
     except Exception as exc:
         return None, f"download-error:{type(exc).__name__}"
     if len(data) < 4_000:
@@ -244,8 +351,12 @@ def validate_candidate(url: str, tmp_dir: Path, model_path: Path, used_hashes: s
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--roster", type=Path, required=True)
-    ap.add_argument("--output", type=Path, default=Path("dominican_public_figures_complete_50.zip"))
-    ap.add_argument("--manifest", type=Path, default=Path("replacement_face_manifest.csv"))
+    ap.add_argument(
+        "--output", type=Path, default=Path("dominican_public_figures_complete_50.zip")
+    )
+    ap.add_argument(
+        "--manifest", type=Path, default=Path("replacement_face_manifest.csv")
+    )
     ap.add_argument("--max-candidates", type=int, default=45)
     args = ap.parse_args()
 
@@ -279,35 +390,51 @@ def main() -> int:
                 dest = out_dir / f"{idx:02d}_{safe}{temp_path.suffix.lower()}"
                 shutil.move(str(temp_path), dest)
                 used_hashes.add(digest)
-                rows_out.append({
-                    "index": idx,
-                    "name": name,
-                    "status": "replacement",
-                    "source_page": row["source_url"],
-                    "image_url": final_url,
-                    "detector": result["detector"],
-                    "score": result["score"],
-                    "face_count": result["face_count"],
-                    "sha256": digest,
-                })
-                print(f"    {n:02d} PASS {result['detector']} score={result['score']}: {final_url}")
+                rows_out.append(
+                    {
+                        "index": idx,
+                        "name": name,
+                        "status": "replacement",
+                        "source_page": row["source_url"],
+                        "image_url": final_url,
+                        "detector": result["detector"],
+                        "score": result["score"],
+                        "face_count": result["face_count"],
+                        "sha256": digest,
+                    }
+                )
+                print(
+                    f"    {n:02d} PASS {result['detector']} score={result['score']}: {final_url}"
+                )
                 kept = True
                 break
             if not kept:
-                rows_out.append({
-                    "index": idx,
-                    "name": name,
-                    "status": "missing",
-                    "source_page": row["source_url"],
-                    "image_url": "",
-                    "detector": "",
-                    "score": "",
-                    "face_count": 0,
-                    "sha256": "",
-                })
-                print("  MISSING: no candidate passed strict face detection")
+                rows_out.append(
+                    {
+                        "index": idx,
+                        "name": name,
+                        "status": "missing",
+                        "source_page": row["source_url"],
+                        "image_url": "",
+                        "detector": "",
+                        "score": "",
+                        "face_count": 0,
+                        "sha256": "",
+                    }
+                )
+                print("  MISSING: no identity-safe candidate passed strict face detection")
 
-        fields = ["index", "name", "status", "source_page", "image_url", "detector", "score", "face_count", "sha256"]
+        fields = [
+            "index",
+            "name",
+            "status",
+            "source_page",
+            "image_url",
+            "detector",
+            "score",
+            "face_count",
+            "sha256",
+        ]
         with args.manifest.open("w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=fields)
             w.writeheader()
