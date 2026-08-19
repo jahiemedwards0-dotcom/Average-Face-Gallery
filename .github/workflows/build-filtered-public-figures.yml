@@ -17,6 +17,9 @@ on:
       - "data/dominican_public_figures_manifest.csv"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -82,6 +85,23 @@ jobs:
             replacement_face_manifest.csv
             face_filter_summary.txt
           if-no-files-found: error
+
+      - name: Publish generated result to branch
+        if: always() && github.event_name == 'push'
+        run: |
+          mkdir -p generated
+          cp dominican_public_figures_complete_50.zip generated/
+          cp replacement_face_manifest.csv generated/
+          cp face_filter_summary.txt generated/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/
+          if git diff --cached --quiet; then
+            echo "No generated changes to publish"
+          else
+            git commit -m "Publish regenerated 50-face ZIP"
+            git push origin HEAD:agent/face-detection-gate
+          fi
 
       - name: Require all 50 faces
         if: always()
