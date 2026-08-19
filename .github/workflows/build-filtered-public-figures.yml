@@ -8,6 +8,13 @@ on:
       - "tools/refill_public_figures.py"
       - "tools/filter_faces.py"
       - "data/dominican_public_figures_manifest.csv"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-filtered-public-figures.yml"
+      - "tools/refill_public_figures.py"
+      - "tools/filter_faces.py"
+      - "data/dominican_public_figures_manifest.csv"
   workflow_dispatch:
 
 jobs:
