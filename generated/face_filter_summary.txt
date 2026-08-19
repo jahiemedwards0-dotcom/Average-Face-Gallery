@@ -1,0 +1,1 @@
+refill_script_failed_before_manifest=true
