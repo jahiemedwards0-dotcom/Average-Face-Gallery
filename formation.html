@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Mulattid Formation — Animated 9:16 Layer</title>
+  <style>
+    :root {
+      --ink: #171710;
+      --paper: #f4efdF;
+      --ocean: #dce9e6;
+      --land: #d6c99c;
+      --land-edge: #6e684e;
+      --iberian: #b33d2f;
+      --taino: #d7902d;
+      --african: #385f92;
+      --muted: #6d6a5e;
+      --cream: #fffaf0;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #111; }
+    body { display: grid; place-items: center; font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif; }
+
+    .film {
+      position: relative;
+      width: min(100vw, 56.25vh);
+      height: min(100vh, 177.7778vw);
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 50% 16%, rgba(255,255,255,.88), transparent 34%),
+        repeating-linear-gradient(0deg, rgba(23,23,16,.018) 0 1px, transparent 1px 5px),
+        var(--paper);
+      isolation: isolate;
+    }
+
+    .film::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px rgba(23,23,16,.12), inset 0 0 70px rgba(35,28,10,.09);
+      z-index: 30;
+    }
+
+    svg { width: 100%; height: 100%; display: block; }
+
+    #camera { transform-origin: 0 0; will-change: transform; }
+    #ocean-lines path {
+      fill: none;
+      stroke: #86a8a3;
+      stroke-width: 3;
+      opacity: .28;
+      stroke-dasharray: 20 16;
+      animation: current 4.8s linear infinite;
+    }
+    @keyframes current { to { stroke-dashoffset: -72; } }
+
+    .land {
+      fill: var(--land);
+      stroke: var(--land-edge);
+      stroke-width: 5;
+      vector-effect: non-scaling-stroke;
+    }
+    .coast-detail { fill: none; stroke: #918765; stroke-width: 2; opacity: .55; vector-effect: non-scaling-stroke; }
+    .island { fill: #d6c99c; stroke: #6e684e; stroke-width: 3; vector-effect: non-scaling-stroke; }
+    .island.pulse { animation: islandPulse 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes islandPulse { 50% { transform: scale(1.09); fill: #e4a444; } }
+
+    .map-label {
+      font-size: 32px;
+      font-weight: 850;
+      letter-spacing: .14em;
+      fill: #38372f;
+      paint-order: stroke;
+      stroke: var(--paper);
+      stroke-width: 10;
+      stroke-linejoin: round;
+    }
+    .map-label.small { font-size: 22px; letter-spacing: .08em; }
+
+    .route {
+      fill: none;
+      stroke: var(--iberian);
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-dasharray: 18 16;
+      vector-effect: non-scaling-stroke;
+      opacity: 0;
+    }
+    #route-africa { stroke: var(--african); }
+
+    .ship-body { fill: #7b4b28; stroke: var(--ink); stroke-width: 5; }
+    .ship-mast { stroke: var(--ink); stroke-width: 5; stroke-linecap: round; }
+    .ship-sail { fill: #fff9e8; stroke: var(--ink); stroke-width: 4; }
+    .ship-flag { fill: var(--iberian); }
+    .ship { opacity: 0; filter: drop-shadow(0 12px 8px rgba(0,0,0,.17)); }
+
+    .stick { overflow: visible; }
+    .stick .bone { stroke: var(--ink); stroke-width: 8; stroke-linecap: round; fill: none; }
+    .stick .head { stroke: var(--ink); stroke-width: 7; fill: var(--cream); }
+    .stick .clothes { stroke: var(--ink); stroke-width: 5; stroke-linejoin: round; }
+    .stick .detail { stroke: var(--ink); stroke-width: 4; stroke-linecap: round; fill: none; }
+    .world-object .detail { stroke: var(--ink); stroke-width: 4; stroke-linecap: round; fill: none; }
+    .stick .taino-cloth { fill: var(--taino); }
+    .stick .iberian-cloth { fill: var(--iberian); }
+    .stick .african-cloth { fill: var(--african); }
+
+    .hut-roof { fill: #a46f34; stroke: var(--ink); stroke-width: 5; }
+    .hut-wall { fill: #d7b36a; stroke: var(--ink); stroke-width: 5; }
+    .fort { fill: #d0c5aa; stroke: var(--ink); stroke-width: 6; }
+    .mine { fill: #5f5546; stroke: var(--ink); stroke-width: 6; }
+    .sugar { fill: #5f8c5d; stroke: var(--ink); stroke-width: 4; }
+
+    .world-object { opacity: 0; transition: opacity .3s linear; }
+    .visible { opacity: 1; }
+
+    .figure-row .stick { opacity: 0; transform-box: fill-box; transform-origin: center bottom; }
+    .scene-collapse .stick { transition: opacity .45s ease, transform .45s ease; }
+
+    .caption {
+      position: absolute;
+      left: 7.4%;
+      right: 7.4%;
+      top: 7.5%;
+      z-index: 20;
+      pointer-events: none;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 13px;
+      font-size: clamp(11px, 2.4vw, 19px);
+      font-weight: 900;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .eyebrow::before { content: ""; width: 34px; height: 4px; background: currentColor; border-radius: 9px; }
+    .headline {
+      max-width: 94%;
+      margin: 0;
+      font-size: clamp(36px, 8.8vw, 76px);
+      line-height: .93;
+      letter-spacing: -.055em;
+      font-weight: 950;
+      text-wrap: balance;
+    }
+    .subline {
+      margin-top: 13px;
+      max-width: 82%;
+      color: #4e4b40;
+      font-size: clamp(13px, 3.1vw, 24px);
+      line-height: 1.2;
+      font-weight: 720;
+    }
+    .caption > * { opacity: 0; transform: translateY(20px); transition: opacity .45s ease, transform .6s cubic-bezier(.2,.8,.2,1); }
+    .caption.show > * { opacity: 1; transform: translateY(0); }
+    .caption.show .headline { transition-delay: .06s; }
+    .caption.show .subline { transition-delay: .12s; }
+
+    .date-stamp {
+      position: absolute;
+      right: 6%;
+      top: 7%;
+      z-index: 21;
+      min-width: 130px;
+      padding: 11px 16px 10px;
+      border: 4px solid var(--ink);
+      background: rgba(255,250,240,.9);
+      font-size: clamp(20px, 5.8vw, 45px);
+      line-height: 1;
+      text-align: center;
+      font-weight: 950;
+      letter-spacing: -.04em;
+      transform: rotate(2deg) scale(.85);
+      opacity: 0;
+      transition: opacity .3s ease, transform .45s cubic-bezier(.2,.8,.2,1);
+    }
+    .date-stamp.show { opacity: 1; transform: rotate(2deg) scale(1); }
+
+    .dna-card {
+      position: absolute;
+      inset: 13% 7.4% auto;
+      z-index: 24;
+      padding: 26px 24px 25px;
+      border: 5px solid var(--ink);
+      border-radius: 7px;
+      background: rgba(255,250,240,.96);
+      box-shadow: 12px 12px 0 rgba(23,23,16,.14);
+      opacity: 0;
+      transform: translateY(45px) rotate(-1deg);
+      pointer-events: none;
+      transition: opacity .45s ease, transform .55s cubic-bezier(.2,.8,.2,1);
+    }
+    .dna-card.show { opacity: 1; transform: translateY(0) rotate(-1deg); }
+    .dna-title { font-size: clamp(23px, 5.6vw, 46px); font-weight: 950; letter-spacing: -.04em; }
+    .dna-note { margin-top: 5px; color: var(--muted); font-weight: 750; font-size: clamp(11px, 2.6vw, 20px); }
+    .bar { display: grid; grid-template-columns: 52fr 40fr 8fr; height: 44px; margin: 22px 0 17px; border: 4px solid var(--ink); overflow: hidden; }
+    .bar span:nth-child(1) { background: var(--iberian); }
+    .bar span:nth-child(2) { background: var(--african); }
+    .bar span:nth-child(3) { background: var(--taino); }
+    .legend { display: grid; gap: 11px; }
+    .legend-row { display: grid; grid-template-columns: 18px 1fr auto; gap: 10px; align-items: center; font-size: clamp(12px, 3vw, 22px); font-weight: 830; }
+    .swatch { width: 18px; height: 18px; border: 3px solid var(--ink); }
+    .legend-row:nth-child(1) .swatch { background: var(--iberian); }
+    .legend-row:nth-child(2) .swatch { background: var(--african); }
+    .legend-row:nth-child(3) .swatch { background: var(--taino); }
+
+    .progress {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 9px;
+      background: rgba(23,23,16,.12);
+      z-index: 40;
+    }
+    .progress > i { display: block; height: 100%; width: 0%; background: var(--ink); }
+
+    .controls {
+      position: absolute;
+      left: 5.5%;
+      right: 5.5%;
+      bottom: 2.4%;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: .28;
+      transition: opacity .2s ease;
+    }
+    .film:hover .controls, .film.paused .controls { opacity: 1; }
+    button {
+      appearance: none;
+      border: 3px solid var(--ink);
+      border-radius: 99px;
+      background: rgba(255,250,240,.88);
+      color: var(--ink);
+      padding: 9px 13px;
+      font: 850 12px/1 ui-sans-serif,system-ui,sans-serif;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .scene-dot { font-size: 12px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; padding: 8px 11px; background: rgba(255,250,240,.76); }
+    .clean .controls, .clean .progress { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      #ocean-lines path, .island.pulse { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="film" id="film" aria-label="Animated formation sequence in vertical 9 by 16 format">
+    <div class="caption" id="caption">
+      <div class="eyebrow" id="eyebrow">Formation</div>
+      <h1 class="headline" id="headline">The colonial Caribbean</h1>
+      <div class="subline" id="subline">A population formed across three continents.</div>
+    </div>
+    <div class="date-stamp" id="dateStamp">1492</div>
+
+    <svg viewBox="0 0 1080 1920" role="img" aria-label="Moving Atlantic map with stick figures, ships and historical locations">
+      <defs>
+        <symbol id="ship-symbol" viewBox="0 0 190 150">
+          <path class="ship-body" d="M18 111 Q91 143 174 106 L153 132 Q88 151 35 132 Z" />
+          <path class="ship-mast" d="M93 115V14M44 111L93 31L151 110" />
+          <path class="ship-sail" d="M88 26L50 104H88ZM99 27V104H145Z" />
+          <path class="ship-flag" d="M95 13h39l-11 13 11 13H95Z" />
+        </symbol>
+
+        <symbol id="stick-taino" class="stick" viewBox="0 0 130 250">
+          <circle class="head" cx="65" cy="34" r="25" />
+          <path class="bone" d="M65 60V143M65 84L24 119M65 84L106 119M65 142L30 222M65 142L101 222" />
+          <path class="clothes taino-cloth" d="M39 128H91L105 165H25Z" />
+          <path class="detail" d="M40 61Q65 78 90 61" />
+        </symbol>
+
+        <symbol id="stick-iberian" class="stick" viewBox="0 0 130 250">
+          <circle class="head" cx="65" cy="34" r="25" />
+          <path class="bone" d="M65 60V143M65 84L24 119M65 84L106 119M65 142L30 222M65 142L101 222" />
+          <path class="clothes iberian-cloth" d="M35 69Q65 57 95 69L88 151H42Z" />
+          <path class="clothes iberian-cloth" d="M33 13Q65 -3 97 13L88 32H42Z" />
+          <path class="detail" d="M47 69V146M83 69V146" />
+        </symbol>
+
+        <symbol id="stick-african" class="stick" viewBox="0 0 130 250">
+          <circle class="head" cx="65" cy="34" r="25" />
+          <path class="bone" d="M65 60V143M65 84L24 119M65 84L106 119M65 142L30 222M65 142L101 222" />
+          <path class="clothes african-cloth" d="M39 67L94 87L84 154L30 132Z" />
+          <path class="clothes african-cloth" d="M41 16Q65 -4 89 16L83 28H47Z" />
+          <path class="detail" d="M36 95L87 114M32 115L84 135" />
+        </symbol>
+
+        <symbol id="hut" viewBox="0 0 150 150">
+          <path class="hut-wall" d="M30 66H120V134H30Z" />
+          <path class="hut-roof" d="M12 70L75 16L138 70Z" />
+          <path class="detail" d="M68 134V91H91V134" />
+        </symbol>
+
+        <symbol id="fort-symbol" viewBox="0 0 190 160">
+          <path class="fort" d="M19 59H171V145H19ZM19 34H52V62H19ZM78 34H112V62H78ZM138 34H171V62H138Z" />
+          <path class="detail" d="M76 145V102Q95 80 114 102V145" />
+        </symbol>
+      </defs>
+
+      <rect width="1080" height="1920" fill="var(--ocean)" />
+
+      <g id="camera">
+        <g id="ocean-lines">
+          <path d="M-20 310C230 220 450 410 690 330S1050 230 1220 345" />
+          <path d="M-40 560C210 475 430 635 700 548S1040 440 1210 575" />
+          <path d="M-30 820C210 740 470 895 710 805S1035 710 1210 825" />
+          <path d="M-50 1080C225 995 450 1160 710 1065S1040 965 1210 1090" />
+          <path d="M-20 1340C220 1265 470 1410 710 1325S1045 1230 1210 1350" />
+          <path d="M-40 1590C200 1505 450 1670 700 1575S1030 1485 1210 1605" />
+        </g>
+
+        <g id="landmasses">
+          <path class="land" d="M-75 190L72 118L195 144L250 222L340 270L373 350L335 410L260 390L205 455L123 432L58 508L-30 478Z" />
+          <path class="land" d="M215 688L302 655L365 700L403 790L392 908L350 1010L318 1166L260 1305L218 1215L224 1094L181 980L195 844L158 763Z" />
+          <path class="land" d="M708 286L770 235L855 250L930 221L1014 284L1108 300L1165 405L1110 488L1019 468L960 538L864 514L804 550L727 489L681 402Z" />
+          <path class="land" d="M688 655L779 595L888 619L952 708L962 816L916 941L862 1080L774 1189L699 1119L663 1008L623 914L641 796L609 717Z" />
+          <path class="coast-detail" d="M709 650Q779 705 792 805T830 1005M226 690Q315 745 329 875T286 1120" />
+          <ellipse class="island" cx="435" cy="647" rx="31" ry="10" transform="rotate(-13 435 647)" />
+          <ellipse class="island pulse" id="hispaniola" cx="485" cy="674" rx="42" ry="13" transform="rotate(-10 485 674)" />
+          <ellipse class="island" cx="539" cy="674" rx="16" ry="7" transform="rotate(-8 539 674)" />
+          <ellipse class="island" cx="577" cy="690" rx="10" ry="5" />
+          <ellipse class="island" cx="609" cy="706" rx="8" ry="4" />
+        </g>
+
+        <text class="map-label" x="775" y="510">IBERIA</text>
+        <text class="map-label" x="725" y="930">AFRICA</text>
+        <text class="map-label small" x="410" y="735">HISPANIOLA</text>
+
+        <path id="route-iberia" class="route" d="M800 525C720 490 620 520 550 590S500 651 486 672" />
+        <path id="route-africa" class="route" d="M720 830C652 787 580 742 490 676" />
+        <use id="shipIberia" class="ship" href="#ship-symbol" width="150" height="118" />
+        <use id="shipAfrica" class="ship" href="#ship-symbol" width="150" height="118" />
+
+        <g id="tainoWorld" class="world-object">
+          <use href="#hut" x="378" y="775" width="115" height="115" />
+          <use href="#hut" x="502" y="800" width="102" height="102" />
+          <g class="figure-row scene-taino">
+            <use class="stick" href="#stick-taino" x="375" y="880" width="80" height="154" />
+            <use class="stick" href="#stick-taino" x="445" y="902" width="76" height="146" />
+            <use class="stick" href="#stick-taino" x="518" y="882" width="84" height="161" />
+            <use class="stick" href="#stick-taino" x="585" y="915" width="72" height="138" />
+            <use class="stick" href="#stick-taino" x="650" y="890" width="78" height="150" />
+          </g>
+        </g>
+
+        <g id="colonialIntrusion" class="world-object">
+          <use href="#fort-symbol" x="510" y="755" width="138" height="116" />
+          <path class="mine" d="M642 890Q702 815 762 890Z" />
+          <path class="detail" d="M684 864L726 944M726 864L684 944" />
+          <use class="stick" href="#stick-iberian" x="600" y="905" width="73" height="140" />
+          <use class="stick" href="#stick-iberian" x="683" y="902" width="73" height="140" />
+        </g>
+
+        <g id="africanArrival" class="world-object figure-row scene-africa">
+          <use class="stick" href="#stick-african" x="368" y="840" width="76" height="146" />
+          <use class="stick" href="#stick-african" x="435" y="858" width="72" height="138" />
+          <use class="stick" href="#stick-african" x="505" y="831" width="80" height="154" />
+          <use class="stick" href="#stick-african" x="577" y="857" width="73" height="140" />
+          <use class="stick" href="#stick-african" x="646" y="838" width="78" height="150" />
+        </g>
+
+        <g id="colonialSociety" class="world-object">
+          <use href="#fort-symbol" x="444" y="680" width="166" height="140" />
+          <path class="sugar" d="M337 950Q330 850 361 774M371 950Q369 838 408 755M721 950Q730 833 690 758M754 950Q760 845 730 786" />
+          <g id="mergeFigures">
+            <use class="stick merge taino" href="#stick-taino" x="250" y="1030" width="100" height="192" />
+            <use class="stick merge iberian" href="#stick-iberian" x="490" y="1015" width="100" height="192" />
+            <use class="stick merge african" href="#stick-african" x="735" y="1030" width="100" height="192" />
+            <use class="stick child one" href="#stick-taino" x="420" y="1245" width="78" height="150" />
+            <use class="stick child two" href="#stick-african" x="510" y="1225" width="83" height="160" />
+            <use class="stick child three" href="#stick-iberian" x="605" y="1242" width="78" height="150" />
+          </g>
+        </g>
+      </g>
+    </svg>
+
+    <section class="dna-card" id="dnaCard" aria-label="On-screen DNA summary">
+      <div class="dna-title">DNA carries the history.</div>
+      <div class="dna-note">Dominican autosomal estimate</div>
+      <div class="bar" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="legend">
+        <div class="legend-row"><i class="swatch"></i><span>European</span><b>52%</b></div>
+        <div class="legend-row"><i class="swatch"></i><span>Sub-Saharan African</span><b>40%</b></div>
+        <div class="legend-row"><i class="swatch"></i><span>Indigenous</span><b>8%</b></div>
+      </div>
+    </section>
+
+    <div class="controls" aria-label="Animation controls">
+      <button type="button" id="playPause">Pause</button>
+      <span class="scene-dot" id="sceneLabel">Opening</span>
+      <button type="button" id="restart">Restart</button>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+  </main>
+
+  <script>
+    (() => {
+      const TOTAL = 31500;
+      const film = document.getElementById('film');
+      const camera = document.getElementById('camera');
+      const caption = document.getElementById('caption');
+      const eyebrow = document.getElementById('eyebrow');
+      const headline = document.getElementById('headline');
+      const subline = document.getElementById('subline');
+      const dateStamp = document.getElementById('dateStamp');
+      const dnaCard = document.getElementById('dnaCard');
+      const progressBar = document.getElementById('progressBar');
+      const playPause = document.getElementById('playPause');
+      const restart = document.getElementById('restart');
+      const sceneLabel = document.getElementById('sceneLabel');
+      const routeIberia = document.getElementById('route-iberia');
+      const routeAfrica = document.getElementById('route-africa');
+      const shipIberia = document.getElementById('shipIberia');
+      const shipAfrica = document.getElementById('shipAfrica');
+      const tainoWorld = document.getElementById('tainoWorld');
+      const colonialIntrusion = document.getElementById('colonialIntrusion');
+      const africanArrival = document.getElementById('africanArrival');
+      const colonialSociety = document.getElementById('colonialSociety');
+
+      const query = new URLSearchParams(location.search);
+      if (query.get('clean') === '1') film.classList.add('clean');
+
+      const scenes = [
+        { start: 0, end: 2500, name: 'Opening', eyebrow: 'Formation', headline: 'The colonial Caribbean', subline: 'A population formed across three continents.' },
+        { start: 2500, end: 8000, name: 'Atlantic crossing', eyebrow: 'Searching for Asia', headline: 'Iberian ships sailed west.', subline: 'Instead, they reached the Caribbean.', date: '1492' },
+        { start: 8000, end: 13000, name: 'Taíno world', eyebrow: 'Hispaniola', headline: 'The island was already inhabited.', subline: 'Taíno towns, farms and political territories.', date: '1492' },
+        { start: 13000, end: 16500, name: 'Colonial collapse', eyebrow: 'Spanish conquest', headline: 'The population collapsed.', subline: 'Forced labor · warfare · famine · epidemics' },
+        { start: 16500, end: 22000, name: 'African trafficking', eyebrow: 'Forced migration', headline: 'The Spanish turned toward Africa.', subline: 'West and West-Central African captives were transported to Hispaniola.', date: '1502–1518' },
+        { start: 22000, end: 27000, name: 'Colonial society', eyebrow: 'Across generations', headline: 'Three populations entered one society.', subline: 'Iberian · African · surviving Taíno' },
+        { start: 27000, end: 31500, name: 'Genetic layer', eyebrow: '', headline: '', subline: '' }
+      ];
+
+      const cameraKeys = [
+        { t: 0, x: 20, y: 40, s: .96 },
+        { t: 2500, x: -615, y: -240, s: 1.72 },
+        { t: 5200, x: -125, y: 10, s: 1.08 },
+        { t: 8000, x: -760, y: -790, s: 2.55 },
+        { t: 13000, x: -760, y: -790, s: 2.55 },
+        { t: 16500, x: -120, y: -40, s: 1.08 },
+        { t: 18500, x: -720, y: -760, s: 1.75 },
+        { t: 22000, x: -760, y: -790, s: 2.55 },
+        { t: 27000, x: -225, y: -230, s: 1.35 },
+        { t: 31500, x: -225, y: -230, s: 1.35 }
+      ];
+
+      let running = query.get('autoplay') !== '0';
+      let elapsed = Math.max(0, Math.min(TOTAL - 1, Number(query.get('t') || 0) * 1000));
+      let last = performance.now();
+      let activeScene = -1;
+
+      const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+      const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const local = (start, end) => clamp((elapsed - start) / (end - start));
+
+      function cameraAt(t) {
+        let a = cameraKeys[0], b = cameraKeys[cameraKeys.length - 1];
+        for (let i = 0; i < cameraKeys.length - 1; i++) {
+          if (t >= cameraKeys[i].t && t <= cameraKeys[i + 1].t) { a = cameraKeys[i]; b = cameraKeys[i + 1]; break; }
+        }
+        const p = ease(clamp((t - a.t) / (b.t - a.t || 1)));
+        return { x: a.x + (b.x - a.x) * p, y: a.y + (b.y - a.y) * p, s: a.s + (b.s - a.s) * p };
+      }
+
+      function placeOnPath(node, path, p, offset = 0) {
+        const len = path.getTotalLength();
+        const at = path.getPointAtLength(clamp(p) * len);
+        const ahead = path.getPointAtLength(Math.min(len, clamp(p) * len + 3));
+        const angle = Math.atan2(ahead.y - at.y, ahead.x - at.x) * 180 / Math.PI;
+        node.setAttribute('transform', `translate(${at.x - 75} ${at.y - 64 + offset}) rotate(${angle} 75 64)`);
+      }
+
+      function setRoute(path, p) {
+        const len = path.getTotalLength();
+        path.style.opacity = p > 0 ? 1 : 0;
+        path.style.strokeDasharray = `${len}`;
+        path.style.strokeDashoffset = `${len * (1 - clamp(p))}`;
+      }
+
+      function setCaption(sceneIndex) {
+        if (sceneIndex === activeScene) return;
+        activeScene = sceneIndex;
+        const s = scenes[sceneIndex];
+        caption.classList.remove('show');
+        dateStamp.classList.remove('show');
+        setTimeout(() => {
+          eyebrow.textContent = s.eyebrow;
+          headline.textContent = s.headline;
+          subline.textContent = s.subline;
+          caption.style.display = sceneIndex === 6 ? 'none' : 'block';
+          if (s.date) { dateStamp.textContent = s.date; dateStamp.classList.add('show'); }
+          if (sceneIndex !== 6) caption.classList.add('show');
+        }, 120);
+        sceneLabel.textContent = s.name;
+      }
+
+      function figures(selector, p, collapse = false) {
+        document.querySelectorAll(selector).forEach((node, i) => {
+          const appear = clamp((p - i * .08) / .3);
+          const vanish = collapse ? 1 - clamp((p - .42 - i * .035) / .35) : 1;
+          node.style.opacity = appear * vanish;
+          node.style.transform = `translateY(${(1 - appear) * 35}px) scale(${.82 + .18 * appear}) rotate(${Math.sin((p + i) * 4) * 1.4}deg)`;
+        });
+      }
+
+      function render() {
+        const cam = cameraAt(elapsed);
+        camera.style.transform = `translate(${cam.x}px, ${cam.y}px) scale(${cam.s})`;
+        progressBar.style.width = `${elapsed / TOTAL * 100}%`;
+
+        const sceneIndex = Math.min(scenes.length - 1, scenes.findIndex(s => elapsed >= s.start && elapsed < s.end));
+        setCaption(sceneIndex < 0 ? scenes.length - 1 : sceneIndex);
+
+        const voyage = local(2500, 8000);
+        setRoute(routeIberia, ease(voyage));
+        shipIberia.style.opacity = voyage > .04 && voyage < .98 ? 1 : 0;
+        placeOnPath(shipIberia, routeIberia, ease(voyage));
+
+        const taino = local(8000, 13000);
+        tainoWorld.classList.toggle('visible', elapsed >= 8000 && elapsed < 16500);
+        figures('.scene-taino .stick', taino, elapsed >= 13000);
+        colonialIntrusion.classList.toggle('visible', elapsed >= 11100 && elapsed < 18000);
+        if (elapsed >= 13000 && elapsed < 16500) figures('.scene-taino .stick', local(13000, 16500), true);
+
+        const african = local(16500, 22000);
+        setRoute(routeAfrica, ease(african));
+        shipAfrica.style.opacity = african > .04 && african < .94 ? 1 : 0;
+        placeOnPath(shipAfrica, routeAfrica, ease(african), 5);
+        africanArrival.classList.toggle('visible', elapsed >= 19600 && elapsed < 27000);
+        figures('.scene-africa .stick', local(19600, 22500));
+
+        const society = local(22000, 27000);
+        colonialSociety.classList.toggle('visible', elapsed >= 22000 && elapsed < 28600);
+        document.querySelectorAll('#mergeFigures .merge').forEach((node, i) => {
+          const p = clamp((society - i * .05) / .42);
+          const targetX = [165, -75, -320][i];
+          node.style.opacity = p;
+          node.style.transform = `translate(${targetX * ease(p)}px, ${(1-p)*45}px) scale(${.83 + .17*p})`;
+        });
+        document.querySelectorAll('#mergeFigures .child').forEach((node, i) => {
+          const p = clamp((society - .44 - i * .07) / .34);
+          node.style.opacity = p;
+          node.style.transform = `translateY(${(1-p)*55}px) scale(${.78 + .22*p})`;
+        });
+
+        dnaCard.classList.toggle('show', elapsed >= 27000);
+      }
+
+      function tick(now) {
+        if (running) {
+          elapsed += now - last;
+          if (elapsed >= TOTAL) elapsed %= TOTAL;
+        }
+        last = now;
+        render();
+        requestAnimationFrame(tick);
+      }
+
+      function toggle() {
+        running = !running;
+        film.classList.toggle('paused', !running);
+        playPause.textContent = running ? 'Pause' : 'Play';
+        last = performance.now();
+      }
+
+      playPause.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+      restart.addEventListener('click', e => { e.stopPropagation(); elapsed = 0; activeScene = -1; running = true; film.classList.remove('paused'); playPause.textContent = 'Pause'; });
+      film.addEventListener('click', e => { if (!e.target.closest('button')) toggle(); });
+      window.addEventListener('keydown', e => {
+        if (e.code === 'Space') { e.preventDefault(); toggle(); }
+        if (e.key.toLowerCase() === 'r') { elapsed = 0; activeScene = -1; }
+      });
+
+      film.classList.toggle('paused', !running);
+      playPause.textContent = running ? 'Pause' : 'Play';
+      render();
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>
