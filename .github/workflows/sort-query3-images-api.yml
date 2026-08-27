@@ -1,0 +1,47 @@
+name: Sort query-3 images by pose (API)
+
+on:
+  push:
+    branches:
+      - sort-query3-images
+    paths:
+      - 'tools/query3_pose_sort.py'
+      - 'tools/query3_pose_sort_api.py'
+      - '.github/workflows/sort-query3-images-api.yml'
+  workflow_dispatch:
+
+jobs:
+  sort-images-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install 'numpy<2' 'mediapipe==0.10.14' 'requests>=2.31' 'Pillow>=10'
+
+      - name: Download and classify images
+        env:
+          OUTPUT_DIR: query3_pose_sorted
+        run: python tools/query3_pose_sort_api.py
+
+      - name: Show counts
+        if: always()
+        run: cat query3_pose_sorted/README.txt || true
+
+      - name: Upload sorted images
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: query3-pose-sorted-api
+          path: query3_pose_sorted/
+          if-no-files-found: error
+          retention-days: 7
