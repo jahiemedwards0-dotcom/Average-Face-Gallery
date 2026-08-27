@@ -1,0 +1,5 @@
+opencv-python-headless==4.13.0.92
+pandas==2.2.3
+Pillow==12.3.0
+PyYAML==6.0.3
+requests==2.32.5
