@@ -1,0 +1,27 @@
+wikimedia:
+  repository_url: "https://github.com/jahiemedwards0-dotcom/Average-Face-Gallery"
+  contact_identifier: "https://github.com/jahiemedwards0-dotcom/Average-Face-Gallery"
+  user_agent_template: "MestizoFaceHarvester/1.0 ({repository_url}; contact: {contact_identifier})"
+  thumbnail_width: 500
+  metadata_batch_size: 10
+  max_retries: 4
+  consecutive_429_stop: 3
+
+yunet:
+  model_url: "https://raw.githubusercontent.com/opencv/opencv_zoo/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx"
+  min_confidence: 0.75
+  min_face_area_fraction: 0.04
+  similar_face_area_ratio: 0.70
+
+github:
+  release_tag: "wikimedia-harvest-checkpoint"
+
+paths:
+  input_csv: "expanded_manifest.csv"
+  input_compressed: "expanded_manifest.csv.bz2"
+  output_dir: "output"
+  download_dir: "work/downloaded"
+  organized_dir: "work/organized"
+  package_dir: "packages"
+  contact_sheet_dir: "output/contact_sheets"
+  yunet_model: "models/face_detection_yunet_2023mar.onnx"
