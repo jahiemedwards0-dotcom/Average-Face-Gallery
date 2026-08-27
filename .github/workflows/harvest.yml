@@ -74,7 +74,7 @@ jobs:
       - name: Reconstruct and expand exact 4,212-row input manifest
         shell: bash
         run: |
-          cat data/manifest/expanded_manifest.csv.bz2.b64.part-* | base64 --decode > expanded_manifest.csv.bz2
+          bash src/reconstruct_manifest.sh
           python - <<'PY'
           import bz2, hashlib, shutil
           from pathlib import Path
