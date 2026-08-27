@@ -1,5 +1,24 @@
 {
+  "mode": "test",
   "candidate_records_total": 4212,
-  "status": "not_processed",
-  "note": "Candidate records are linked candidates, not downloaded files."
+  "candidate_records_in_current_scope": 50,
+  "download_attempts": 0,
+  "download_attempted_records": 0,
+  "successfully_verified_image_files": 0,
+  "successfully_verified_image_records": 0,
+  "unique_hashes": 0,
+  "reused_resumed_records": 0,
+  "failed_downloads": 0,
+  "rejected_decode": 0,
+  "duplicates": 0,
+  "accepted_classifications": 0,
+  "accepted_front": 0,
+  "accepted_three_quarter": 0,
+  "accepted_side": 0,
+  "manual_review": 0,
+  "rejected_no_face": 0,
+  "rejections": 0,
+  "duplicate_file": 0,
+  "not_processed": 4212,
+  "generated_at": "2026-08-27T22:05:24.949435+00:00"
 }

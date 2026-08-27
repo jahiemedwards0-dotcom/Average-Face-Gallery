@@ -1,1 +1,25 @@
 region,country,csv_candidates,successfully_downloaded,download_failures,unique_hashes,accepted_front,accepted_three_quarter,accepted_side,manual_review,rejected_no_face,unknown_gender_count
+Jujuy,Argentina,38,0,0,0,0,0,0,0,0,0
+Salta,Argentina,63,0,0,0,0,0,0,0,0,0
+Aysén,Chile,12,0,0,0,0,0,0,0,0,0
+Biobío,Chile,176,0,0,0,0,0,0,0,0,0
+La Araucanía,Chile,100,0,0,0,0,0,0,0,0,0
+Los Lagos,Chile,76,0,0,0,0,0,0,0,0,0
+Los Ríos,Chile,44,0,0,0,0,0,0,0,0,0
+Magallanes,Chile,47,0,0,0,0,0,0,0,0,0
+Maule,Chile,94,0,0,0,0,0,0,0,0,0
+O'Higgins,Chile,125,0,0,0,0,0,0,0,0,0
+Santiago Metropolitan,Chile,1617,0,0,0,0,0,0,0,0,3
+Valparaíso,Chile,324,0,0,0,0,0,0,0,0,0
+Boyacá,Colombia,90,0,0,0,0,0,0,0,0,1
+Cundinamarca,Colombia,627,0,0,0,0,0,0,0,0,0
+Huila,Colombia,25,0,0,0,0,0,0,0,0,0
+Norte de Santander,Colombia,42,0,0,0,0,0,0,0,0,0
+Santander,Colombia,98,0,0,0,0,0,0,0,0,0
+San Salvador Department,El Salvador,109,0,0,0,0,0,0,0,0,0
+Guatemala Department,Guatemala,166,0,0,0,0,0,0,0,0,0
+Aguascalientes,Mexico,54,0,0,0,0,0,0,0,0,0
+Durango,Mexico,51,0,0,0,0,0,0,0,0,0
+Morelos,Mexico,44,0,0,0,0,0,0,0,0,0
+Querétaro,Mexico,38,0,0,0,0,0,0,0,0,0
+Sinaloa,Mexico,152,0,0,0,0,0,0,0,0,0
