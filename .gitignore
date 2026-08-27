@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+models/*.onnx
+downloads/unique/*
+organized/*
+packages/*.zip
+!packages/.gitkeep
+output/contact_sheets/*.jpg
