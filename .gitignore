@@ -1,0 +1,8 @@
+expanded_manifest.csv
+expanded_manifest.csv.bz2
+work/
+models/
+packages/
+output/contact_sheets/
+__pycache__/
+*.pyc
