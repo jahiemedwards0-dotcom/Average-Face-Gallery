@@ -6,6 +6,7 @@ on:
       - chatgpt/pose-sort-query3
     paths:
       - ".github/workflows/pose-sort-query3.yml"
+      - "pose_sort/**"
   workflow_dispatch:
 
 jobs:
