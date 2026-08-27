@@ -26,9 +26,9 @@ ROOT = Path(__file__).resolve().parent.parent
 WORK = ROOT / "pose_sort_output"
 CACHE = ROOT / "pose_sort_cache"
 PARTS = [ROOT / "pose_sort" / f"query3.part{i}" for i in range(4)]
-MAX_OUTPUT_DIM = 1800
-MAX_PROCESS_DIM = 1400
-DOWNLOAD_WORKERS = 8
+MAX_OUTPUT_DIM = 1200
+MAX_PROCESS_DIM = 1100
+DOWNLOAD_WORKERS = 16
 _tls = threading.local()
 
 
@@ -38,7 +38,15 @@ def slugify(text: str, max_len: int = 90) -> str:
     return (text[:max_len] or "person").strip("_")
 
 
-def with_width(url: str, width: int = 1800) -> str:
+def normalize_source(url: str) -> str:
+    url = str(url).strip()
+    if url.startswith("http://commons.wikimedia.org/"):
+        url = "https://commons.wikimedia.org/" + url[len("http://commons.wikimedia.org/"):]
+    return url
+
+
+def with_width(url: str, width: int = 1200) -> str:
+    url = normalize_source(url)
     parts = urlsplit(url)
     q = dict(parse_qsl(parts.query, keep_blank_values=True))
     q["width"] = str(width)
@@ -56,19 +64,18 @@ def load_dataframe() -> pd.DataFrame:
 def make_session() -> requests.Session:
     s = requests.Session()
     s.headers.update({
-        "User-Agent": "ChatGPT-PoseSorter/1.1 (Wikimedia Commons research batch)",
+        "User-Agent": "ChatGPT-PoseSorter/1.2 (Wikimedia Commons research batch)",
         "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
     })
     retry = Retry(
-        total=3,
-        connect=3,
-        read=3,
-        backoff_factor=0.6,
+        total=2,
+        connect=2,
+        read=2,
+        backoff_factor=0.4,
         status_forcelist=(429, 500, 502, 503, 504),
         allowed_methods=frozenset(["GET"]),
     )
     s.mount("https://", HTTPAdapter(max_retries=retry, pool_connections=4, pool_maxsize=4))
-    s.mount("http://", HTTPAdapter(max_retries=retry, pool_connections=4, pool_maxsize=4))
     return s
 
 
@@ -81,10 +88,11 @@ def thread_session() -> requests.Session:
 def download_one(idx: int, source_url: str) -> dict:
     cache_path = CACHE / f"{idx:04d}.jpg"
     session = thread_session()
+    source_url = normalize_source(source_url)
     last_error = None
     for u in (with_width(source_url, MAX_OUTPUT_DIM), source_url):
         try:
-            r = session.get(u, timeout=(12, 45), allow_redirects=True)
+            r = session.get(u, timeout=(8, 25), allow_redirects=True)
             r.raise_for_status()
             if not r.content:
                 raise ValueError("empty response")
@@ -92,7 +100,7 @@ def download_one(idx: int, source_url: str) -> dict:
             im.seek(0)
             im = ImageOps.exif_transpose(im).convert("RGB")
             im.thumbnail((MAX_OUTPUT_DIM, MAX_OUTPUT_DIM), Image.Resampling.LANCZOS)
-            im.save(cache_path, "JPEG", quality=92, optimize=True)
+            im.save(cache_path, "JPEG", quality=91, optimize=True)
             return {"idx": idx, "cache_path": str(cache_path), "downloaded_url": r.url, "error": ""}
         except Exception as exc:
             last_error = exc
