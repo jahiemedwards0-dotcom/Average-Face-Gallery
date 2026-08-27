@@ -1,0 +1,156 @@
+name: Wikimedia Commons face harvest
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        type: choice
+        options: [test, full]
+        default: test
+      batch_size:
+        description: "Checkpoint processing chunk size (full mode remains all 4,212 unless start_index changes)"
+        required: true
+        default: "250"
+      start_index:
+        description: "Zero-based start index for full-mode resume"
+        required: true
+        default: "0"
+      delay_seconds:
+        description: "Delay between image requests"
+        required: true
+        default: "2"
+      retry_failed:
+        description: "Retry records previously marked download_failed"
+        required: true
+        type: boolean
+        default: false
+      package_size:
+        description: "Approximate candidate records per Release ZIP"
+        required: true
+        default: "250"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/harvest.yml"
+      - "src/**"
+      - "config.yaml"
+      - "requirements.txt"
+      - "data/manifest/**"
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: wikimedia-commons-harvest
+  cancel-in-progress: false
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore durable checkpoint from Release
+        shell: bash
+        run: |
+          mkdir -p packages
+          gh release download wikimedia-harvest-checkpoint \
+            --pattern checkpoint_state.zip \
+            --dir packages \
+            --repo "$GITHUB_REPOSITORY" || true
+          if [[ -f packages/checkpoint_state.zip ]]; then
+            unzip -oq packages/checkpoint_state.zip -d .
+          fi
+
+      - name: Reconstruct and expand exact 4,212-row input manifest
+        shell: bash
+        run: |
+          cat data/manifest/expanded_manifest.csv.bz2.b64.part-* | base64 --decode > expanded_manifest.csv.bz2
+          python - <<'PY'
+          import bz2, hashlib, shutil
+          from pathlib import Path
+          src=Path("expanded_manifest.csv.bz2")
+          dst=Path("expanded_manifest.csv")
+          with bz2.open(src,"rb") as s, dst.open("wb") as d:
+              shutil.copyfileobj(s,d)
+          digest=hashlib.sha256(dst.read_bytes()).hexdigest()
+          expected="39ae38585ffacd57e22589b747dd59459235590d64e305e38c701e5c5320a4e0"
+          if digest != expected:
+              raise SystemExit(f"Input SHA-256 mismatch: {digest}")
+          PY
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run harvest
+        shell: bash
+        run: |
+          MODE="${{ inputs.mode || 'test' }}"
+          BATCH_SIZE="${{ inputs.batch_size || '250' }}"
+          START_INDEX="${{ inputs.start_index || '0' }}"
+          DELAY="${{ inputs.delay_seconds || '2' }}"
+          PACKAGE_SIZE="${{ inputs.package_size || '250' }}"
+          RETRY=""
+          if [[ "${{ inputs.retry_failed || 'false' }}" == "true" ]]; then
+            RETRY="--retry-failed"
+          fi
+          python src/collect.py \
+            --mode "$MODE" \
+            --batch-size "$BATCH_SIZE" \
+            --start-index "$START_INDEX" \
+            --delay-seconds "$DELAY" \
+            --package-size "$PACKAGE_SIZE" \
+            $RETRY
+
+      - name: Upload test contact sheets as workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harvest-test-contact-sheets-${{ github.run_id }}
+          path: output/contact_sheets/
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Upload manifests as workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harvest-manifests-${{ github.run_id }}
+          path: |
+            output/download_manifest.csv
+            output/classification_manifest.csv
+            output/regional_summary.csv
+            output/final_summary.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Commit cumulative machine-readable manifests
+        if: always()
+        shell: bash
+        run: |
+          if [[ ! -f output/download_manifest.csv ]]; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/download_manifest.csv output/classification_manifest.csv output/regional_summary.csv output/final_summary.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Update Wikimedia harvest checkpoint [skip ci]"
+          git pull --rebase origin main
+          git push
