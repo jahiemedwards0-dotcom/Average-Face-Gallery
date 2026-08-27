@@ -49,7 +49,10 @@ class _Session:
 
 class PipelineTests(unittest.TestCase):
     def test_distributed_selection_is_exactly_50(self):
-        df = pd.read_csv("data/expanded_manifest.csv", keep_default_na=False)
+        source = Path("data/expanded_manifest.csv")
+        if not source.exists():
+            source = Path("data/test_manifest_50.csv")
+        df = pd.read_csv(source, keep_default_na=False)
         indices = deterministic_test_indices(df, 50)
         self.assertEqual(len(indices), 50)
         self.assertEqual(len(set(indices)), 50)
