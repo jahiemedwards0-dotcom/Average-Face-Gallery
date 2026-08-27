@@ -1,0 +1,134 @@
+name: Wikimedia face harvest test
+
+on:
+  push:
+    branches: [harvest-test]
+    paths:
+      - ".github/workflows/harvest.yml"
+      - "src/**"
+      - "tests/**"
+      - "requirements.txt"
+      - "config.yaml"
+      - "data/test_manifest_50.csv"
+  workflow_dispatch:
+    inputs:
+      delay_seconds:
+        description: "Delay between image requests"
+        required: true
+        default: "2"
+      retry_failed:
+        description: "Retry prior failed test records"
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wikimedia-harvest-test
+  cancel-in-progress: false
+
+jobs:
+  test-harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout harvest branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate fixed 50-record test input
+        run: |
+          python - <<'PY'
+          import pandas as pd
+          p = 'data/test_manifest_50.csv'
+          df = pd.read_csv(p, keep_default_na=False)
+          assert len(df) == 50, f'Expected exactly 50 rows, got {len(df)}'
+          assert df['candidate_id'].astype(str).nunique() == 50, 'candidate_id values are not unique'
+          assert df['region'].nunique() >= 10, 'test is not distributed across enough regions'
+          print('rows:', len(df))
+          print('regions:', df['region'].nunique())
+          print('countries:', df['country'].nunique())
+          PY
+
+      - name: Run deterministic unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Download YuNet model
+        run: |
+          mkdir -p models
+          curl -fL --retry 3 --retry-delay 5 \
+            https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx \
+            -o models/face_detection_yunet_2023mar.onnx
+          test -s models/face_detection_yunet_2023mar.onnx
+
+      - name: Run exact 50-record harvest test
+        id: harvest
+        shell: bash
+        run: |
+          set +e
+          ARGS=(
+            --input data/test_manifest_50.csv
+            --mode test
+            --batch-size 50
+            --delay-seconds "${{ inputs.delay_seconds || '2' }}"
+            --package-size 250
+            --repo-url "https://github.com/${{ github.repository }}"
+          )
+          if [ "${{ inputs.retry_failed || true }}" = "true" ]; then
+            ARGS+=(--retry-failed)
+          fi
+          python -m src.collect "${ARGS[@]}"
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Print exact test summary
+        if: always()
+        run: |
+          if [ -f output/final_summary.json ]; then
+            cat output/final_summary.json
+          else
+            echo 'No final_summary.json was produced.'
+          fi
+
+      - name: Upload test manifests and contact sheets
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wikimedia-harvest-test-${{ github.run_number }}
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            output/download_manifest.csv
+            output/classification_manifest.csv
+            output/regional_summary.csv
+            output/final_summary.json
+            output/test_selection.csv
+            output/test_result.json
+            output/test_success.json
+            output/contact_sheets/*.jpg
+            packages/*.zip
+
+      - name: Enforce harvest test success
+        if: always()
+        run: |
+          code="${{ steps.harvest.outputs.exit_code }}"
+          if [ -z "$code" ]; then
+            echo 'Harvest step did not return an exit code.'
+            exit 1
+          fi
+          if [ "$code" != "0" ]; then
+            echo "50-record test did not pass (pipeline exit $code)."
+            exit "$code"
+          fi
+          test -f output/test_success.json
