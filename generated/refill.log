@@ -1,0 +1,381 @@
+
+[01/50] Marileidy Paulino
+  candidates=72
+    01 PASS yunet@180 score=0.8653: https://upload.wikimedia.org/wikipedia/commons/3/35/Marileidy_Paulino_Oregon_2022.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[02/50] Tokischa
+  candidates=37
+    01 PASS yunet@0 score=0.7806: https://upload.wikimedia.org/wikipedia/commons/c/ce/Tokischa_2021.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[03/50] Fiordaliza Cofil
+  candidates=48
+    01 PASS yunet@0 score=0.9369: https://upload.wikimedia.org/wikipedia/commons/e/e3/Fiordaliza_Cofil_Oregon_2022_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[04/50] Lineisy Montero
+  candidates=32
+    01 PASS yunet@0 score=0.8153: https://upload.wikimedia.org/wikipedia/commons/5/5e/Lineisy_Montero_Paris_Fashion_Week_Autumn_Winter_2019.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[05/50] Andreína Martínez
+  candidates=35
+    01 PASS yunet@0 score=0.9258: https://upload.wikimedia.org/wikipedia/commons/3/3e/Andre%C3%ADna_Mart%C3%ADnez_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[06/50] Yailín La Más Viral
+  candidates=33
+    01 PASS yunet@0 score=0.9085: https://upload.wikimedia.org/wikipedia/commons/9/9a/Yailin_La_Mas_Viral.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[07/50] Nairoby Abigail Jiménez
+  candidates=60
+    01 PASS yunet@0 score=0.9291: https://upload.wikimedia.org/wikipedia/commons/5/58/2018-10-12_Badminton_Mixed_International_Team_Bronze_medal_match_6_at_2018_Summer_Youth_Olympics_by_Sandro_Halank%E2%80%93003.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[08/50] Emily Tosta
+  candidates=25
+    01 PASS yunet@0 score=0.9364: https://upload.wikimedia.org/wikipedia/commons/7/71/Emily_tosta_2023_2.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[09/50] Elibeidy Dani
+  candidates=31
+    01 PASS yunet@0 score=0.9313: https://upload.wikimedia.org/wikipedia/commons/b/b0/Elibeidy_Dani%2C_Prada_FW_2017_Men%27s_%26_Women%27s.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[10/50] Chelsy Bautista
+  candidates=34
+    01 PASS yunet@0 score=0.8756: https://upload.wikimedia.org/wikipedia/commons/8/81/Chelsy_Bautista.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[11/50] Esmery Martinez
+  source page fetch failed: HTTPError: HTTP Error 403: Forbidden
+  candidates=8
+    01 PASS yunet@0 score=0.9350: https://upload.wikimedia.org/wikipedia/commons/2/28/Esmery_Mart%C3%ADnez_8_Kocaeli_Kad%C4%B1n_Basketbol_20251108_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+
+[12/50] Ceylin del Carmen Alvarado
+  candidates=49
+    01 PASS yunet@0 score=0.9471: https://upload.wikimedia.org/wikipedia/commons/8/82/2025_LBL_Presentation_-_Ceylin_del_Carmen_Alvarado.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[13/50] Ellie Jean
+  candidates=45
+    01 PASS yunet@0 score=0.9441: https://upload.wikimedia.org/wikipedia/commons/d/d6/Ellie_Jean_Gotham_FC_v_Racing_Louisville_3_May_2026-140.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+
+[14/50] Lucía León
+  candidates=53
+    01 PASS yunet@0 score=0.8782: https://upload.wikimedia.org/wikipedia/commons/a/a8/Luc%C3%ADa_Le%C3%B3n_%281%29.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=thumbnail_unscaled
+
+[15/50] Dorian McMenemy
+  candidates=37
+    01 DROP yunet-none: https://resources.fina.org/photo-resources/2020/09/28/86dd0ae2-0883-48db-95f8-f90aa6aaa93a/fina-org.jpg?width=1024&height=512
+    02 DROP yunet-none: https://resources.fina.org/photo-resources/2020/09/28/86dd0ae2-0883-48db-95f8-f90aa6aaa93a/fina-org.jpg?width=1200&height=630
+    03 PASS yunet@0 score=0.9482: https://resources.fina.org/photo-resources/2024/10/05/97c9fefd-7f88-4ef6-a8af-98be1af16c61/9d99696b-c8be-4b29-9ffb-ab16e0680b70?width=350
+
+[16/50] Rosa Angelica Santana
+  candidates=9
+    01 DROP too-small: https://worldathletics.org/static/search-white.svg
+    02 DROP not-decodable-image: https://worldathletics.org/_next/static/images/medal-be49b48cd6c926be27837e3991e9b2ce.svg
+    03 DROP not-decodable-image: https://media.aws.iaaf.org/logos/wa-logo.svg
+    04 DROP too-small: https://worldathletics.org/static/wa-plus-navbar-logo.png
+    05 DROP not-decodable-image: https://worldathletics.org/_next/static/images/athleteBannerGradient-56a5ded28ac822fab9a162c693bdf7d6.svg
+    06 DROP yunet-none: https://media.aws.iaaf.org/media/BannerV2/ultimate-championships-banner.png
+    07 DROP not-decodable-image: https://media.aws.iaaf.org/logos/WA-logo-white.svg
+    08 PASS yunet@0 score=0.9007: https://upload.wikimedia.org/wikipedia/commons/1/1a/Rosa_Damasceno_%28Alfred_Fillon%2C_1875_-_B%26W%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original
+
+[17/50] Yaneirys Rodriguez
+  candidates=22
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9464: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/n7i4s9jqxxzzqx7hpn4q.webp
+
+[18/50] Alondra Tapia
+  candidates=25
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9415: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/v1nrpqqgnnxpglv1iwx3.webp
+
+[19/50] Flormarie Heredia
+  candidates=18
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9473: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/epyy9zrfodta6rt5whdu.webp
+
+[20/50] Geraldine Gonzalez
+  candidates=44
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9495: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/aukm4jljcaeeb73ys5gm.webp
+
+[21/50] Massiel Matos
+  candidates=24
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9430: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/oiki7le2kb7ixql2ghvj.webp
+
+[22/50] Camila De la Rosa
+  candidates=32
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9516: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/opoezy9pipu7b6tqhfsz.webp
+
+[23/50] Florangel Terrero
+  candidates=20
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9486: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/ndg2c8qg5w4n4qget0ql.webp
+
+[24/50] Brayelin Martinez
+  candidates=40
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9481: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/wfnygehcxpzkmgtqmbfs.webp
+
+[25/50] Jineiry Martinez
+  candidates=39
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9480: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/fzeptgw3bbakfsncfx3h.webp
+
+[26/50] Gaila Gonzalez
+  candidates=25
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9492: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/ezavmjouvcaixftkj3ad.webp
+
+[27/50] Larysmer Martinez
+  candidates=26
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9485: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/mpbwcoquxpf5mdv2seqk.webp
+
+[28/50] Katielle Alonzo
+  candidates=21
+    01 PASS yunet@0 score=0.9465: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/ximl414smbp0nzbspkfp.webp
+
+[29/50] Vielka Peralta
+  candidates=22
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9539: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_png/fivb-prd/wcdnfafxa9xbixvvwjws.png
+
+[30/50] Ariana Rodriguez Fung
+  candidates=25
+    01 PASS yunet@0 score=0.9421: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/d04dkyuccjqd5asltkxt.webp
+
+[31/50] Angelica Hinojosa
+  candidates=26
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9392: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_png/fivb-prd/dc7qja1j4dol68eoof06.png
+
+[32/50] Natalia Martinez
+  candidates=35
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 DROP not-decodable-image: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon.ico
+    03 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-16.png
+    04 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-32.png
+    05 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-64.png
+    06 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-96.png
+    07 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-128.png
+    08 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-152.png
+    09 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-167.png
+    10 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-180.png
+    11 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-192.png
+    12 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-196.png
+    13 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/safari-pinned-tab.svg
+    14 DROP yunet-none: https://images.volleyballworld.com/image/upload/assets/competition-logos/Events%202025/Volleyball/Women%E2%80%99s%20World%20Championship/VWC-W-THA2025-Square.pn
+    15 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1649675159/assets/competition-logos/Events%202022/Volleyball/Women%20WCH%202022/WWCH2022-logo-cta-orange-
+    16 PASS yunet@0 score=0.9108: https://upload.wikimedia.org/wikipedia/commons/b/b9/Jessica_Martinez.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+
+[33/50] Madeline Guillen
+  candidates=24
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9545: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/dmyvadjnlwad5b5pz4zq.webp
+
+[34/50] Samaret Caraballo
+  candidates=20
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 PASS yunet@0 score=0.9435: https://images.volleyballworld.com/image/upload/t_editorial_squared_6_desktop/f_auto/fivb-prd/vk6jimz2opbm5fyvgrfj.webp
+
+[35/50] Iliana Rodriguez Fung
+  candidates=29
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 DROP not-decodable-image: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon.ico
+    03 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-16.png
+    04 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-32.png
+    05 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-64.png
+    06 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-96.png
+    07 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-128.png
+    08 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-152.png
+    09 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-167.png
+    10 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-180.png
+    11 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-192.png
+    12 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-196.png
+    13 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/safari-pinned-tab.svg
+    14 DROP yunet-none: https://images.volleyballworld.com/image/upload/assets/competition-logos/Events%202025/Volleyball/Women%E2%80%99s%20World%20Championship/VWC-W-THA2025-Square.pn
+    15 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1649675159/assets/competition-logos/Events%202022/Volleyball/Women%20WCH%202022/WWCH2022-logo-cta-orange-
+    16 DROP not-decodable-image: https://upload.wikimedia.org/wikipedia/commons/8/87/My_SARAH_G_INTERVIEW_experience_%28raw_video%29.webm?utm_source=en.wikipedia.org&utm_campaign=api&utm_conten
+    17 PASS yunet@0 score=0.9400: https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/My_SARAH_G_INTERVIEW_experience_%28raw_video%29.webm/1920px--My_SARAH_G_INTERVIEW_experience_%28raw_video%29.webm.jpg
+
+[36/50] Yanlis Feliz Sena
+  candidates=15
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 DROP not-decodable-image: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon.ico
+    03 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-16.png
+    04 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-32.png
+    05 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-64.png
+    06 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-96.png
+    07 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-128.png
+    08 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-152.png
+    09 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-167.png
+    10 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-180.png
+    11 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-192.png
+    12 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-196.png
+    13 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/safari-pinned-tab.svg
+    14 DROP yunet-none: https://images.volleyballworld.com/image/upload/assets/competition-logos/Events%202025/Volleyball/Women%E2%80%99s%20World%20Championship/VWC-W-THA2025-Square.pn
+    15 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1649675159/assets/competition-logos/Events%202022/Volleyball/Women%20WCH%202022/WWCH2022-logo-cta-orange-
+  MISSING: no candidate passed strict face detection
+
+[37/50] Ailyn Liberato
+  candidates=16
+    01 DROP not-decodable-image: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon.ico
+    02 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-16.png
+    03 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-32.png
+    04 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-64.png
+    05 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-96.png
+    06 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-128.png
+    07 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-152.png
+    08 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-167.png
+    09 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-180.png
+    10 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-192.png
+    11 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-196.png
+    12 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/safari-pinned-tab.svg
+    13 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_png/assets/competition-logos/Events%202023/Volleyball/Women
+    14 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_png/v1684229065/assets/competition-logos/Events%202023/Volleyball/Women
+    15 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/8/8f/Volleyball_at_the_2025_Junior_Pan_American_Games_pictogram.webp?utm_source=en.wikipedia.org&utm_campaign=api
+    16 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/8/8f/Volleyball_at_the_2025_Junior_Pan_American_Games_pictogram.webp?utm_source=en.wikipedia.org&utm_campaign=api
+  MISSING: no candidate passed strict face detection
+
+[38/50] Selanny Puente Estrella
+  candidates=16
+    01 DROP not-decodable-image: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon.ico
+    02 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-16.png
+    03 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-32.png
+    04 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-64.png
+    05 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-96.png
+    06 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-128.png
+    07 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-152.png
+    08 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-167.png
+    09 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-180.png
+    10 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-192.png
+    11 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-196.png
+    12 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/safari-pinned-tab.svg
+    13 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_png/assets/competition-logos/Events%202023/Volleyball/Women
+    14 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_png/v1684229065/assets/competition-logos/Events%202023/Volleyball/Women
+    15 DROP not-decodable-image: https://upload.wikimedia.org/wikipedia/commons/9/9f/Flag_of_the_Dominican_Republic.svg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original
+    16 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_the_Dominican_Republic.svg/1920px-Flag_of_the_Dominican_Republic.svg.png?utm_source=en.wikiped
+  MISSING: no candidate passed strict face detection
+
+[39/50] Esthefany Rabit
+  candidates=19
+    01 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1632149419/assets/backgrounds/WWCH-NL-PL-black-Rail_background-2
+    02 DROP not-decodable-image: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon.ico
+    03 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-16.png
+    04 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-32.png
+    05 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-64.png
+    06 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-96.png
+    07 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-128.png
+    08 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-152.png
+    09 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-167.png
+    10 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-180.png
+    11 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-192.png
+    12 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-196.png
+    13 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/safari-pinned-tab.svg
+    14 DROP yunet-none: https://images.volleyballworld.com/image/upload/assets/competition-logos/Events%202025/Volleyball/Women%E2%80%99s%20World%20Championship/VWC-W-THA2025-Square.pn
+    15 DROP yunet-none: https://images.volleyballworld.com/image/upload/f_png/v1649675159/assets/competition-logos/Events%202022/Volleyball/Women%20WCH%202022/WWCH2022-logo-cta-orange-
+    16 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/9/9d/Santo_Domingo_%28Dominican_Republic%29_taken_atop_Novocentro_tower_viewing_the_city_to_the_southwest_2010.jp
+    17 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Santo_Domingo_%28Dominican_Republic%29_taken_atop_Novocentro_tower_viewing_the_city_to_the_southwest_2
+    18 DROP not-decodable-image: https://upload.wikimedia.org/wikipedia/commons/9/9f/Flag_of_the_Dominican_Republic.svg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original
+    19 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_the_Dominican_Republic.svg/1920px-Flag_of_the_Dominican_Republic.svg.png?utm_source=en.wikiped
+  MISSING: no candidate passed strict face detection
+
+[40/50] Ana Patricia Encarnacion Montero
+  candidates=29
+    01 DROP not-decodable-image: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon.ico
+    02 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-16.png
+    03 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-32.png
+    04 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-64.png
+    05 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-96.png
+    06 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-128.png
+    07 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-152.png
+    08 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-167.png
+    09 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-180.png
+    10 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-192.png
+    11 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-196.png
+    12 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/safari-pinned-tab.svg
+    13 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/assets/competition-logos/Events%202026/Volleyball/Volleyball%20Girls
+    14 DROP download-error:HTTPError: https://images.volleyballworld.com/image/private/f_png/v1713967180/assets/competition-logos/Events%202024/Volleyball/Volleyball%20Girls
+    15 DROP not-decodable-image: https://upload.wikimedia.org/wikipedia/commons/b/b3/Carranza_Patricias_Argentinas.djvu?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=origi
+    16 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/d/d5/Logo_de_la_XX_edici%C3%B3n_de_los_Juegos_Bolivarianos.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_c
+    17 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/d/d5/Logo_de_la_XX_edici%C3%B3n_de_los_Juegos_Bolivarianos.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_c
+    18 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/8/8a/East_Harlem_Skyline_%2848200097101%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original
+    19 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/East_Harlem_Skyline_%2848200097101%29.jpg/1920px-East_Harlem_Skyline_%2848200097101%29.jpg?utm_source=
+    20 DROP not-decodable-image: https://upload.wikimedia.org/wikipedia/commons/9/9f/Flag_of_the_Dominican_Republic.svg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original
+    21 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_the_Dominican_Republic.svg/1920px-Flag_of_the_Dominican_Republic.svg.png?utm_source=en.wikiped
+    22 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/b/be/Bas%C3%ADlica_de_Nuestra_Se%C3%B1ora_de_la_Chiquinquira.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm
+    23 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Bas%C3%ADlica_de_Nuestra_Se%C3%B1ora_de_la_Chiquinquira.jpg/1920px-Bas%C3%ADlica_de_Nuestra_Se%C3%B1or
+    24 DROP not-decodable-image: https://upload.wikimedia.org/wikipedia/commons/e/ee/COA_Count_of_Chinchon.svg?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=original
+    25 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/COA_Count_of_Chinchon.svg/1920px-COA_Count_of_Chinchon.svg.png?utm_source=es.wikipedia.org&utm_campaig
+    26 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/3/3d/H%C3%A9roes_Canal_13.png?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=original
+    27 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/3/3d/H%C3%A9roes_Canal_13.png?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled
+    28 DROP not-decodable-image: https://upload.wikimedia.org/wikipedia/commons/2/2c/COA_Marquess_of_Gri%C3%B1%C3%B3n.svg?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=original
+    29 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/COA_Marquess_of_Gri%C3%B1%C3%B3n.svg/1920px-COA_Marquess_of_Gri%C3%B1%C3%B3n.svg.png?utm_source=es.wik
+  MISSING: no candidate passed strict face detection
+
+[41/50] Thais Chantal Cocly Vasquez
+  source page fetch failed: HTTPError: HTTP Error 404: Not Found
+  candidates=0
+  MISSING: no candidate passed strict face detection
+
+[42/50] Estel Santos Mateo
+  source page fetch failed: HTTPError: HTTP Error 404: Not Found
+  candidates=7
+    01 DROP not-decodable-image: https://upload.wikimedia.org/wikipedia/commons/e/e7/Poetes_balears._Setgle_XIX_%281873%29.djvu?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_conte
+    02 PASS yunet@0 score=0.8827: https://upload.wikimedia.org/wikipedia/commons/3/3a/Mateo_01.jpg?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=original
+
+[43/50] Aurelina Ruiz Rosario
+  source page fetch failed: HTTPError: HTTP Error 404: Not Found
+  candidates=2
+    01 PASS yunet@0 score=0.9325: https://upload.wikimedia.org/wikipedia/commons/d/d0/Dorival_caymmi_1938.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original
+
+[44/50] Julie Millaray Arias Alejo
+  source page fetch failed: HTTPError: HTTP Error 404: Not Found
+  candidates=0
+  MISSING: no candidate passed strict face detection
+
+[45/50] Valerie Mariel Vargas Guzman
+  source page fetch failed: HTTPError: HTTP Error 404: Not Found
+  candidates=4
+    01 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/c/c4/Narcoslogo.jpg?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=original
+    02 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/c/c4/Narcoslogo.jpg?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled
+    03 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/6/6e/Logo_rojo.jpg?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=original
+    04 DROP yunet-none: https://upload.wikimedia.org/wikipedia/commons/6/6e/Logo_rojo.jpg?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled
+  MISSING: no candidate passed strict face detection
+
+[46/50] Harleny Linette De los Santos Baez
+  source page fetch failed: HTTPError: HTTP Error 404: Not Found
+  candidates=0
+  MISSING: no candidate passed strict face detection
+
+[47/50] Jakarlis Marianni Lima Garcia
+  source page fetch failed: HTTPError: HTTP Error 404: Not Found
+  candidates=0
+  MISSING: no candidate passed strict face detection
+
+[48/50] Glorybell Puente Estrella
+  source page fetch failed: HTTPError: HTTP Error 404: Not Found
+  candidates=0
+  MISSING: no candidate passed strict face detection
+
+[49/50] Jismeily Flete Savinon
+  source page fetch failed: HTTPError: HTTP Error 404: Not Found
+  candidates=0
+  MISSING: no candidate passed strict face detection
+
+[50/50] Dilenny Michel Maleno Mendez
+  candidates=14
+    01 DROP not-decodable-image: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon.ico
+    02 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-16.png
+    03 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-32.png
+    04 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-64.png
+    05 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-96.png
+    06 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-128.png
+    07 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-152.png
+    08 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-167.png
+    09 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-180.png
+    10 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-192.png
+    11 DROP too-small: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/favicon-196.png
+    12 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_auto/assets/favicons/safari-pinned-tab.svg
+    13 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_png/assets/competition-logos/Events%202023/Volleyball/Women
+    14 DROP download-error:HTTPError: https://images.volleyballworld.com/image/upload/f_png/v1684229065/assets/competition-logos/Events%202023/Volleyball/Women
+  MISSING: no candidate passed strict face detection
+
+RESULT total=37/50 missing=13 output=dominican_public_figures_complete_50.zip

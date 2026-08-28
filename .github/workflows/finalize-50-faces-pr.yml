@@ -1,0 +1,93 @@
+name: Finalize verified 50-face ZIP (PR)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/finalize-50-faces-pr.yml"
+      - "tools/fill_last_face.py"
+      - "tools/filter_faces.py"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install strict face detector
+        run: pip install -r requirements-face-filter.txt
+
+      - name: Download 49-face verified patch artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p prior
+          gh run download 32221096138 \
+            --repo jahiemedwards0-dotcom/Average-Face-Gallery \
+            --name verified-50-face-patched \
+            --dir prior
+          test -f prior/dominican_public_figures_complete_50.zip
+          test -f prior/replacement_face_manifest.csv
+
+      - name: Fill final Jazlyn Oviedo slot
+        run: |
+          python tools/fill_last_face.py \
+            --input-zip prior/dominican_public_figures_complete_50.zip \
+            --input-manifest prior/replacement_face_manifest.csv \
+            --output final_candidate_50.zip \
+            --output-manifest final_replacement_manifest.csv
+
+      - name: Re-run strict YuNet over all 50 images
+        run: |
+          python tools/filter_faces.py final_candidate_50.zip \
+            --output dominican_public_figures_50_faces_verified.zip \
+            --manifest final_face_detection_manifest.csv \
+            --fail-on-rejected
+
+      - name: Verify exact count, uniqueness, and detector result
+        run: |
+          python - <<'PY'
+          import csv, hashlib, pathlib, zipfile
+
+          image_exts = {'.jpg','.jpeg','.png','.webp','.bmp','.tif','.tiff'}
+          zip_path = pathlib.Path('dominican_public_figures_50_faces_verified.zip')
+          with zipfile.ZipFile(zip_path) as z:
+              image_names = [n for n in z.namelist() if pathlib.Path(n).suffix.lower() in image_exts]
+              hashes = [hashlib.sha256(z.read(n)).hexdigest() for n in image_names]
+
+          face_rows = list(csv.DictReader(open('final_face_detection_manifest.csv', encoding='utf-8')))
+          roster_rows = list(csv.DictReader(open('final_replacement_manifest.csv', encoding='utf-8')))
+
+          assert len(image_names) == 50, f'expected 50 images, got {len(image_names)}'
+          assert len(set(hashes)) == 50, 'duplicate image bytes detected'
+          assert len(face_rows) == 50, f'expected 50 face-scan rows, got {len(face_rows)}'
+          assert all(r['detected'].lower() == 'true' for r in face_rows), 'a final face scan failed'
+          assert len(roster_rows) == 50, f'expected 50 roster rows, got {len(roster_rows)}'
+          assert all(r['status'] != 'missing' for r in roster_rows), 'replacement manifest still has a missing slot'
+
+          pathlib.Path('final_summary.txt').write_text(
+              'images=50\nunique_image_hashes=50\nface_scan_passed=50\nface_scan_rejected=0\n',
+              encoding='utf-8',
+          )
+          print('50 images; 50 unique hashes; 50/50 passed strict YuNet; 0 rejected')
+          PY
+
+      - name: Upload final ZIP and manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: dominican-public-figures-50-faces-verified
+          path: |
+            dominican_public_figures_50_faces_verified.zip
+            final_face_detection_manifest.csv
+            final_replacement_manifest.csv
+            final_summary.txt
+          if-no-files-found: error
